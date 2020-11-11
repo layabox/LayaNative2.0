@@ -1,0 +1,329 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="downloadCache">
+      <UniqueIdentifier>{3f5c5bd7-853c-4636-bedc-7e8ff9a4981b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="downloadMgr">
+      <UniqueIdentifier>{e8bc0b24-fc64-48b1-a55d-1222f6d75240}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="event">
+      <UniqueIdentifier>{7691b011-e1f7-4542-9ff8-49317e1bec3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="fileSystem">
+      <UniqueIdentifier>{c4c37ed1-ce6e-464d-bf57-819c5c96e0f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="imageLib">
+      <UniqueIdentifier>{11fb53b7-e1f4-4d12-aabc-7ded01f7c2ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="misc">
+      <UniqueIdentifier>{c63d89be-0324-4d1d-a79d-4ce56587d188}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resource">
+      <UniqueIdentifier>{179f548f-8778-40d9-95e6-2ee358baaab1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="util">
+      <UniqueIdentifier>{83114a8d-9f83-4091-aaa6-e43fa8bdf490}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="util\rapidxml">
+      <UniqueIdentifier>{afd6de01-1914-429f-8e94-6b7261c7f62d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resource\Audio">
+      <UniqueIdentifier>{d06354d7-0d5f-47de-a946-d60f48125376}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="fontMgr">
+      <UniqueIdentifier>{063b01b0-16d8-4357-be08-b3cb4a161d3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="math">
+      <UniqueIdentifier>{6008e6d8-9cc0-45e5-8b31-96d9ed790acf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="buffer">
+      <UniqueIdentifier>{fe27facc-9a04-4383-8ef2-6b5dd97916ec}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\source\common\util\JCJson.cpp">
+      <Filter>util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\common\util\JCXml.cpp">
+      <Filter>util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\common\resource\Audio\JCAudioWavplayer.cpp">
+      <Filter>resource\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\common\resource\Audio\JCWaveInfo.cpp">
+      <Filter>resource\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\common\resource\Audio\JCWaveParser.cpp">
+      <Filter>resource\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\common\resource\Audio\JCOggParser.cpp">
+      <Filter>resource\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\common\util\JCColor.cpp">
+      <Filter>util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\common\downloadCache\JCFileTable.cpp">
+      <Filter>downloadCache</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\common\downloadCache\JCServerFileCache.cpp">
+      <Filter>downloadCache</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\common\fileSystem\JCFileSystem.cpp">
+      <Filter>fileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\common\util\JCMemorySurvey.cpp">
+      <Filter>util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\common\downloadMgr\JCDownloadMgr.cpp">
+      <Filter>downloadMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\common\event\JCEmitter.cpp">
+      <Filter>event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\common\event\JCEventBase.cpp">
+      <Filter>event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\common\imageLib\JCImageRW.cpp">
+      <Filter>imageLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\common\imageLib\JCJpegImg.cpp">
+      <Filter>imageLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\common\imageLib\JCPngImg.cpp">
+      <Filter>imageLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\common\resource\JCFileResManager.cpp">
+      <Filter>resource</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\common\misc\JCWorkSemaphore.cpp">
+      <Filter>misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\common\misc\JCWorkerThread.cpp">
+      <Filter>misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\common\util\JCCommonMethed.cpp">
+      <Filter>util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\common\util\JCZipFile.cpp">
+      <Filter>util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\common\util\JCLayaUrl.cpp">
+      <Filter>util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\common\misc\JCLayaThreadPool.cpp">
+      <Filter>misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\common\resource\JCResource.cpp">
+      <Filter>resource</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\common\misc\JCGetClockExact.cpp">
+      <Filter>misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\common\resource\JCResManager.cpp">
+      <Filter>resource</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\common\downloadMgr\JCCurlWrap.cpp">
+      <Filter>downloadMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\common\util\JCCrypto.cpp">
+      <Filter>util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\common\util\Log.cpp">
+      <Filter>util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\common\util\JCZlib.cpp">
+      <Filter>util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\common\util\JCIniFile.cpp">
+      <Filter>util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\common\imageLib\JCGifImg.cpp">
+      <Filter>imageLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\common\downloadMgr\JCHttpHeader.cpp">
+      <Filter>downloadMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\common\util\JCFlog.cpp">
+      <Filter>util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\common\fontMgr\JCFontInfo.cpp">
+      <Filter>fontMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\common\fontMgr\JCFontManager.cpp">
+      <Filter>fontMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\common\fontMgr\JCFreeTypeRender.cpp">
+      <Filter>fontMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\common\math\Matrix32.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\common\buffer\JCBuffer.cpp">
+      <Filter>buffer</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\source\common\util\JCJson.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\util\JCXml.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\util\Log.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\util\rapidxml\rapidxml.hpp">
+      <Filter>util\rapidxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\util\rapidxml\rapidxml_iterators.hpp">
+      <Filter>util\rapidxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\util\rapidxml\rapidxml_print.hpp">
+      <Filter>util\rapidxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\util\rapidxml\rapidxml_utils.hpp">
+      <Filter>util\rapidxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\resource\Audio\JCAudioInterface.h">
+      <Filter>resource\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\resource\Audio\JCAudioWavPlayer.h">
+      <Filter>resource\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\resource\Audio\JCMp3Interface.h">
+      <Filter>resource\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\resource\Audio\JCWaveInfo.h">
+      <Filter>resource\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\resource\Audio\JCWaveParser.h">
+      <Filter>resource\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\resource\Audio\JCOggParser.h">
+      <Filter>resource\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\util\JCColor.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\downloadCache\JCFileSource.h">
+      <Filter>downloadCache</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\downloadCache\JCFileTable.h">
+      <Filter>downloadCache</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\downloadCache\JCIosFileSource.h">
+      <Filter>downloadCache</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\downloadCache\JCServerFileCache.h">
+      <Filter>downloadCache</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\fileSystem\JCFileSystem.h">
+      <Filter>fileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\util\JCMemorySurvey.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\downloadMgr\JCDownloadMgr.h">
+      <Filter>downloadMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\event\JCEmitter.h">
+      <Filter>event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\event\JCEventBase.h">
+      <Filter>event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\imageLib\JCImageRW.h">
+      <Filter>imageLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\resource\JCFileResManager.h">
+      <Filter>resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\misc\JCWorkSemaphore.h">
+      <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\misc\JCWorkerThread.h">
+      <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\util\JCCommonMethod.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\util\JCZipFile.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\util\JCLayaUrl.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\misc\JCCondition.h">
+      <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\misc\JCLayaThreadPool.h">
+      <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\misc\JCSingleton.h">
+      <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\util\ListNode.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\util\JCSimpleCRC.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\misc\JCThreadPool.h">
+      <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\resource\JCResource.h">
+      <Filter>resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\misc\JCGetClockExact.h">
+      <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\resource\JCResManager.h">
+      <Filter>resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\downloadMgr\JCCurlWrap.h">
+      <Filter>downloadMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\util\JCCrypto.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\util\JCZlib.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\util\JCIThreadCmdMgr.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\JCIGLRender.h" />
+    <ClInclude Include="..\..\..\source\common\util\JCIniFile.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\JCIOSFTInterface.h" />
+    <ClInclude Include="..\..\..\source\common\imageLib\JCGifImg.h">
+      <Filter>imageLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\downloadMgr\JCHttpHeader.h">
+      <Filter>downloadMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\util\JCFlog.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\util\RefObject.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\fontMgr\JCFontInfo.h">
+      <Filter>fontMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\fontMgr\JCFontManager.h">
+      <Filter>fontMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\fontMgr\JCFreeTypeRender.h">
+      <Filter>fontMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\math\Matrix32.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\buffer\JCBuffer.h">
+      <Filter>buffer</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

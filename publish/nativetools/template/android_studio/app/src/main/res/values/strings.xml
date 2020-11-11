@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">LayaBox</string>
+    <string name="on_back_pressed">再次点击后退键退出游戏!</string>
+    <string name="alert_dialog_title">提示</string>
+</resources>

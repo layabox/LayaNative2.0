@@ -1,0 +1,25 @@
+interface context {
+	void context();
+	void setSize(long w,long h);
+	void setType(long nType);
+	long getID();
+};
+interface conchNode2D {
+	void conchNode2D();
+	long getID();
+	void setRootNode();
+};
+interface _conchGraphics {
+	void _conchGraphics();
+	long getID();
+};
+interface _conchParticleTemplate2D {
+	void _conchParticleTemplate2D();
+	void setShader(long nID,DOMString vs,DOMString ps);
+	long getID();
+}; 
+interface conchImage {
+	void conchImage();
+	void setImageInfo(DOMString url,long w,long h);
+	long getImageID();
+}; 

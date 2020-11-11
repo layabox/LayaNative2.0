@@ -1,0 +1,464 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\App">
+      <UniqueIdentifier>{a2cefc8c-e84f-476f-bc50-f613aad0ff5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="WindowsEnv">
+      <UniqueIdentifier>{f7e1ec3c-7e61-4daa-9d4f-151d6524fd16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\JSWrapper">
+      <UniqueIdentifier>{04a06e51-6a74-424c-bf74-b531814d05c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\JSWrapper\JSInterface">
+      <UniqueIdentifier>{feaa4d64-49ef-40b9-a258-47703c4465da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\JSWrapper\JSInterface\V8">
+      <UniqueIdentifier>{db85d0ff-5a27-4545-98fb-834d09970efe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\JSWrapper\LayaWrap">
+      <UniqueIdentifier>{42dc2311-6e95-4841-a13a-2ebc53f70d39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Test">
+      <UniqueIdentifier>{370e5cf3-a9da-4d42-9081-33fafe0a6d2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Test\Cases">
+      <UniqueIdentifier>{bb881151-1c66-4cba-8bcd-60ca4b9d7860}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Audio">
+      <UniqueIdentifier>{19394a51-4c4e-42f6-92fc-da2e3f6b4d82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Audio\windows">
+      <UniqueIdentifier>{7dc089c9-31ef-47f0-9c2b-267fdee8fc46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\WebSocket">
+      <UniqueIdentifier>{13261174-0e24-4935-82d6-c52e05dde0c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\JSWrapper\v8debug">
+      <UniqueIdentifier>{c60011db-04fa-4872-82ff-335a4b4c96eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\JSWrapper\LayaWrap\Animation">
+      <UniqueIdentifier>{2ba18cee-7e94-4979-91e8-82fd252f21c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\JSWrapper\LayaWrap\Bullet">
+      <UniqueIdentifier>{a80b87b9-df97-4d7b-838b-d7252d549fff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Bridge">
+      <UniqueIdentifier>{117de6c6-4b9d-49e9-bf15-535e18c3b9d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\JSWrapper\LayaWrap\Video">
+      <UniqueIdentifier>{c14b3e59-fd9f-46ce-a560-a9ced8815b5e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\JSWrapper\LayaWrap\EditBox">
+      <UniqueIdentifier>{17d7d0a5-c394-43fb-a889-f16878660767}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+    <Text Include="..\..\..\..\source\conch\Test\测试方法.txt">
+      <Filter>Source Files\Test</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\source\conch\WindowsEnv\AppMessage.h">
+      <Filter>WindowsEnv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\WindowsEnv\esUtil.h">
+      <Filter>WindowsEnv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\WindowsEnv\gles.h">
+      <Filter>WindowsEnv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\WindowsEnv\winWindows.h">
+      <Filter>WindowsEnv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JCConch.h">
+      <Filter>Source Files\App</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JCConchRender.h">
+      <Filter>Source Files\App</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\WindowsEnv\JCConchApp.h">
+      <Filter>WindowsEnv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JCSystemConfig.h">
+      <Filter>Source Files\App</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\JSInterface\JSInterface.h">
+      <Filter>Source Files\JSWrapper\JSInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\JSInterface\V8\JSArrayBuffer.h">
+      <Filter>Source Files\JSWrapper\JSInterface\V8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\JSInterface\V8\JsBinder.h">
+      <Filter>Source Files\JSWrapper\JSInterface\V8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\JSInterface\V8\JSCProxyTLS.h">
+      <Filter>Source Files\JSWrapper\JSInterface\V8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\JSInterface\V8\JSCProxyTrnasfer.h">
+      <Filter>Source Files\JSWrapper\JSInterface\V8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\JSInterface\V8\JSCProxyType.h">
+      <Filter>Source Files\JSWrapper\JSInterface\V8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\JSInterface\V8\JSEnv.h">
+      <Filter>Source Files\JSWrapper\JSInterface\V8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSGlobalExportCFun.h">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSFile.h">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSFileReader.h">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JsBlob.h">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>WindowsEnv</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>WindowsEnv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSConchConfig.h">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSConsole.h">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSDOMParser.h">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSInput.h">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSWebSocket.h">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSXmlAttr.h">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSXmlNode.h">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\XMLHttpRequest.h">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSRuntime.h">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSImage.h">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\Test\JCTestManager.h">
+      <Filter>Source Files\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSAudio.h">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\Audio\JCAudioManager.h">
+      <Filter>Source Files\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\Audio\windows\JCAudioMp3Player.h">
+      <Filter>Source Files\Audio\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSAppCache.h">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\WebSocket\WebSocket.h">
+      <Filter>Source Files\WebSocket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSZip.h">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSNotify.h">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSFileSystem.h">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JCThreadCmdMgr.h">
+      <Filter>Source Files\App</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\v8debug\debug-agent.h">
+      <Filter>Source Files\JSWrapper\v8debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\v8debug\V8Socket.h">
+      <Filter>Source Files\JSWrapper\v8debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSHistory.h">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSTextMemoryCanvas.h">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSShaderActiveInfo.h">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSTextBitmapInfo.h">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSShaderPrecisionFormat.h">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSLayaGL.h">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\v8debug\V8WSSv.h">
+      <Filter>Source Files\JSWrapper\v8debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JCScriptRuntime.h">
+      <Filter>Source Files\App</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\Bullet\bullet_glue.h">
+      <Filter>Source Files\JSWrapper\LayaWrap\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\Bullet\JSbtBindHelper.h">
+      <Filter>Source Files\JSWrapper\LayaWrap\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\Bullet\JSbtBindHelper.h">
+      <Filter>Source Files\JSWrapper\LayaWrap\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\Bridge\JCConchBridge.h">
+      <Filter>Source Files\Bridge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\Video\JSVideo.h">
+      <Filter>Source Files\JSWrapper\LayaWrap\Video</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\Video\VideoCache.h">
+      <Filter>Source Files\JSWrapper\LayaWrap\Video</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSWindowEditBox.h">
+      <Filter>Source Files\JSWrapper\LayaWrap\EditBox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\EditBox\WinEditBox.h">
+      <Filter>Source Files\JSWrapper\LayaWrap\EditBox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\WindowsEnv\WinCtrl.h">
+      <Filter>WindowsEnv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSCallbackFuncObj.h">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\Bullet\LayaBulletExport.h">
+      <Filter>Source Files\JSWrapper\LayaWrap\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\WebSocket\Uri.h">
+      <Filter>Source Files\WebSocket</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Conch6.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\WindowsEnv\esUtil.c">
+      <Filter>WindowsEnv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\WindowsEnv\gles.cpp">
+      <Filter>WindowsEnv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\WindowsEnv\winWindows.cpp">
+      <Filter>WindowsEnv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\JCConch.cpp">
+      <Filter>Source Files\App</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\JCConchRender.cpp">
+      <Filter>Source Files\App</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\WindowsEnv\JCConchApp.cpp">
+      <Filter>WindowsEnv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\JCSystemConfig.cpp">
+      <Filter>Source Files\App</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\JSWrapper\JSInterface\JSInterface.cpp">
+      <Filter>Source Files\JSWrapper\JSInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\JSWrapper\JSInterface\V8\JSArrayBuffer.cpp">
+      <Filter>Source Files\JSWrapper\JSInterface\V8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\JSWrapper\JSInterface\V8\JsBinder.cpp">
+      <Filter>Source Files\JSWrapper\JSInterface\V8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\JSWrapper\JSInterface\V8\JSEnv.cpp">
+      <Filter>Source Files\JSWrapper\JSInterface\V8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSGlobalExportCFun.cpp">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSFile.cpp">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSFileReader.cpp">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>WindowsEnv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSConchConfig.cpp">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSConsole.cpp">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSDOMParser.cpp">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSInput.cpp">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSWebSocket.cpp">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSXmlAttr.cpp">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSXmlNode.cpp">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\XMLHttpRequest.cpp">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSRuntime.cpp">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSImage.cpp">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\Test\JCTestManager.cpp">
+      <Filter>Source Files\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\Test\Cases\testSample.cpp">
+      <Filter>Source Files\Test\Cases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\Test\Cases\testBuffer.cpp">
+      <Filter>Source Files\Test\Cases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSAudio.cpp">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\Audio\JCAudioManager.cpp">
+      <Filter>Source Files\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\Audio\windows\JCAudioMp3player.cpp">
+      <Filter>Source Files\Audio\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSAppCache.cpp">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\WebSocket\WebSocket.cpp">
+      <Filter>Source Files\WebSocket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSZip.cpp">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSNotify.cpp">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSFileSystem.cpp">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\JCThreadCmdMgr.cpp">
+      <Filter>Source Files\App</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\JSWrapper\v8debug\debug-agent.cpp">
+      <Filter>Source Files\JSWrapper\v8debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\JSWrapper\v8debug\V8Win32Socket.cpp">
+      <Filter>Source Files\JSWrapper\v8debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\Test\Cases\testArrayBufferAlloc.cpp">
+      <Filter>Source Files\Test\Cases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\Test\Cases\testRenderFrame.cpp">
+      <Filter>Source Files\Test\Cases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\Test\Cases\testCmdDispatcher.cpp">
+      <Filter>Source Files\Test\Cases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSHistory.cpp">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\Test\Cases\testURL.cpp">
+      <Filter>Source Files\Test\Cases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\Test\Cases\testDiskRW.cpp">
+      <Filter>Source Files\Test\Cases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSTextMemoryCanvas.cpp">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSShaderActiveInfo.cpp">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSTextBitmapInfo.cpp">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSShaderPrecisionFormat.cpp">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSLayaGL.cpp">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\JSWrapper\v8debug\V8WSSv.cpp">
+      <Filter>Source Files\JSWrapper\v8debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\JCScriptRuntime.cpp">
+      <Filter>Source Files\App</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\Bullet\bullet_glue.cpp">
+      <Filter>Source Files\JSWrapper\LayaWrap\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\Bridge\JCConchBridge.cpp">
+      <Filter>Source Files\Bridge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\Video\JSVideo_AndroidImpl.cpp">
+      <Filter>Source Files\JSWrapper\LayaWrap\Video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\Video\JSVideo_Win32Impl.cpp">
+      <Filter>Source Files\JSWrapper\LayaWrap\Video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\Video\JSVideo_CommonImpl.cpp">
+      <Filter>Source Files\JSWrapper\LayaWrap\Video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\Video\VideoCache.cpp">
+      <Filter>Source Files\JSWrapper\LayaWrap\Video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\Video\JSVideo_IOSImpl.cpp">
+      <Filter>Source Files\JSWrapper\LayaWrap\Video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSWindowEditBox.cpp">
+      <Filter>Source Files\JSWrapper\LayaWrap\EditBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\EditBox\WinEditBox.cpp">
+      <Filter>Source Files\JSWrapper\LayaWrap\EditBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\WindowsEnv\WinCtrl.cpp">
+      <Filter>WindowsEnv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSCallbackFuncObj.cpp">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\Bullet\LayaBulletExport.cpp">
+      <Filter>Source Files\JSWrapper\LayaWrap\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\Bullet\LayaBulletExportImp.cpp">
+      <Filter>Source Files\JSWrapper\LayaWrap\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\WebSocket\Uri.cpp">
+      <Filter>Source Files\WebSocket</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

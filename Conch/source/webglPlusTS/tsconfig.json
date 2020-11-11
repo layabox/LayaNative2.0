@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "module": "system",
+        "noLib": true,
+        "target": "es6",
+        "noImplicitAny": false,
+        "rootDir": ".",
+        "removeComments": true,
+        "sourceMap": false,
+        "outFile": "../../../Redist/scripts/webglPlus.js"
+    },
+    "files": [
+        "webglPlus.ts"
+    ]
+}

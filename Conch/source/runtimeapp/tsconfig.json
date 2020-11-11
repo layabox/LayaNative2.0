@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "noLib": true,
+        "target": "es6",
+        "noImplicitAny": false,
+        "rootDir": ".",
+        "outDir": "../../../Redist/scripts/",
+        "removeComments": true,
+        "sourceMap": false
+    }
+}

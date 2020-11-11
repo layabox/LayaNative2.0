@@ -1,0 +1,6 @@
+[submodule "ThirdParty/openssl"]
+	path = ThirdParty/openssl
+	url = https://github.com/openssl/openssl.git
+[submodule "ThirdParty/msgpack-c"]
+	path = ThirdParty/msgpack-c
+	url = https://github.com/msgpack/msgpack-c.git

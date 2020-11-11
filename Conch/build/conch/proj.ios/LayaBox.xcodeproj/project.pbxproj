@@ -1,0 +1,1005 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		240BB73721352E5600D1CABA /* UIFloatPanel.mm in Sources */ = {isa = PBXBuildFile; fileRef = 240BB73621352E5500D1CABA /* UIFloatPanel.mm */; };
+		241D446D2321FB2600E57E0D /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 241D44642321FB2600E57E0D /* WebKit.framework */; };
+		2439790F2136CF37009EF8B7 /* ScanViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2439790D2136CF36009EF8B7 /* ScanViewController.mm */; };
+		243979122136D059009EF8B7 /* NavViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 243979102136D059009EF8B7 /* NavViewController.mm */; };
+		2450ACA92089D1D80058027E /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2460A9D1C8DB4B50032CD8D /* JavaScriptCore.framework */; };
+		5E8E47841D8F9F0A00662E69 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2460A9B1C8DB4A80032CD8D /* AudioToolbox.framework */; };
+		5E914F001EA1F9780023BD7F /* libbz2.1.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E914EFF1EA1F9780023BD7F /* libbz2.1.0.tbd */; };
+		5EAE9BDA1D6C088700BDC3F5 /* IAPManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EAE9BD91D6C088700BDC3F5 /* IAPManager.m */; };
+		5EAEEAA41D8E619100F2A257 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5EAEEAA31D8E619100F2A257 /* CoreMotion.framework */; };
+		A24420661C8EC96500BB430C /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2460A871C8DB4160032CD8D /* CoreTelephony.framework */; };
+		A24420671C8EC97F00BB430C /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2460A991C8DB4930032CD8D /* AVFoundation.framework */; };
+		A245DC152192E16D00745202 /* ca in Resources */ = {isa = PBXBuildFile; fileRef = A245DC102192E16D00745202 /* ca */; };
+		A2460A211C8DAF710032CD8D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A2460A201C8DAF710032CD8D /* main.m */; };
+		A2460A241C8DAF710032CD8D /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = A2460A231C8DAF710032CD8D /* AppDelegate.mm */; };
+		A2460A271C8DAF710032CD8D /* ViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = A2460A261C8DAF710032CD8D /* ViewController.mm */; };
+		A2460A2A1C8DAF710032CD8D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A2460A281C8DAF710032CD8D /* Main.storyboard */; };
+		A2460A2C1C8DAF710032CD8D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A2460A2B1C8DAF710032CD8D /* Assets.xcassets */; };
+		A2460A2F1C8DAF710032CD8D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A2460A2D1C8DAF710032CD8D /* LaunchScreen.storyboard */; };
+		A2460A3A1C8DAF710032CD8D /* LayaBoxTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A2460A391C8DAF710032CD8D /* LayaBoxTests.m */; };
+		A2460A451C8DAF710032CD8D /* LayaBoxUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = A2460A441C8DAF710032CD8D /* LayaBoxUITests.m */; };
+		A2460A8E1C8DB4440032CD8D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2460A8D1C8DB4440032CD8D /* CoreGraphics.framework */; };
+		A2460A901C8DB4520032CD8D /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2460A8F1C8DB4520032CD8D /* SystemConfiguration.framework */; };
+		A2460AA01C8DB4BE0032CD8D /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2460A9F1C8DB4BE0032CD8D /* OpenAL.framework */; };
+		A2460AA21C8DB4C80032CD8D /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2460AA11C8DB4C70032CD8D /* OpenGLES.framework */; };
+		A2460AA61C8DB4DA0032CD8D /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2460AA51C8DB4DA0032CD8D /* GLKit.framework */; };
+		A2460AA91C8DBAD00032CD8D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2460AA31C8DB4D20032CD8D /* UIKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		A25D2CB51D2251BF00E21255 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2460A951C8DB47C0032CD8D /* AdSupport.framework */; };
+		A28105481F729C4E0094C3CC /* font in Resources */ = {isa = PBXBuildFile; fileRef = A28105471F729C4E0094C3CC /* font */; };
+		A28DB2A81D2E726B00BAED5C /* libconchRuntime.bundle in Resources */ = {isa = PBXBuildFile; fileRef = A28DB2A71D2E726B00BAED5C /* libconchRuntime.bundle */; };
+		A2B15D2B2105B33A00B08F86 /* JSBridge.mm in Sources */ = {isa = PBXBuildFile; fileRef = A2B15D292105B33A00B08F86 /* JSBridge.mm */; };
+		A2B15D2C2105B33A00B08F86 /* LaunchView.m in Sources */ = {isa = PBXBuildFile; fileRef = A2B15D2A2105B33A00B08F86 /* LaunchView.m */; };
+		A2D11A141D0C366F004C229D /* app.json in Resources */ = {isa = PBXBuildFile; fileRef = A2D11A0D1D0C366F004C229D /* app.json */; };
+		A2D11A151D0C366F004C229D /* cache in Resources */ = {isa = PBXBuildFile; fileRef = A2D11A0E1D0C366F004C229D /* cache */; };
+		A2D11A161D0C366F004C229D /* config.ini in Resources */ = {isa = PBXBuildFile; fileRef = A2D11A0F1D0C366F004C229D /* config.ini */; };
+		A2D11A191D0C366F004C229D /* scripts in Resources */ = {isa = PBXBuildFile; fileRef = A2D11A121D0C366F004C229D /* scripts */; };
+		A2D8F39B21901B6A00E232A9 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2D8F39621901B6A00E232A9 /* CoreMedia.framework */; };
+		A2E00C681D05495500B6A6B6 /* libicucore.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = A2E00C671D05495500B6A6B6 /* libicucore.tbd */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		241D43B32306B92700E57E0D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 241D43AF2306B92700E57E0D /* webglPlus.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = A27AE57F230697ED00751152;
+			remoteInfo = webglPlus;
+		};
+		241D43D72306BD3B00E57E0D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 241D43CE2306BD3B00E57E0D /* webglPlus.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 241D43BE2306BCEC00E57E0D;
+			remoteInfo = webglPlus;
+		};
+		241D43DD2306BDA900E57E0D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 241D43D92306BDA900E57E0D /* webglPlus.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 241D43BE2306BCEC00E57E0D;
+			remoteInfo = webglPlus;
+		};
+		241D43E92306BDBF00E57E0D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 241D43E52306BDBF00E57E0D /* webglPlus.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 241D43BE2306BCEC00E57E0D;
+			remoteInfo = webglPlus;
+		};
+		A2460A361C8DAF710032CD8D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A2460A141C8DAF710032CD8D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A2460A1B1C8DAF710032CD8D;
+			remoteInfo = LayaBox;
+		};
+		A2460A411C8DAF710032CD8D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A2460A141C8DAF710032CD8D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A2460A1B1C8DAF710032CD8D;
+			remoteInfo = LayaBox;
+		};
+		A281054E1F735DB90094C3CC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A28105491F735DB80094C3CC /* common.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8A4296841B6757DB0072C3F7;
+			remoteInfo = common;
+		};
+		A28105501F735DB90094C3CC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A28105491F735DB80094C3CC /* common.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8A42968F1B6757DB0072C3F7;
+			remoteInfo = commonTests;
+		};
+		A28105561F735DBF0094C3CC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A28105521F735DBE0094C3CC /* render.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = A2D118301D0BB25E004C229D;
+			remoteInfo = render;
+		};
+		A281055C1F735DC30094C3CC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A28105581F735DC30094C3CC /* conchRuntime.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = A2EE05591C8A77B700A35FB6;
+			remoteInfo = conchRuntime;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		240BB73121352E5500D1CABA /* UIFloatPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIFloatPanel.h; path = LayaBox/UIFloatPanel.h; sourceTree = "<group>"; };
+		240BB73621352E5500D1CABA /* UIFloatPanel.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = UIFloatPanel.mm; path = LayaBox/UIFloatPanel.mm; sourceTree = "<group>"; };
+		241D43AF2306B92700E57E0D /* webglPlus.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = webglPlus.xcodeproj; path = ../../webglPlus/proj.ios/webglPlus.xcodeproj; sourceTree = "<group>"; };
+		241D43CE2306BD3B00E57E0D /* webglPlus.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = webglPlus.xcodeproj; path = ../../webglPlus/proj.ios/webglPlus.xcodeproj; sourceTree = "<group>"; };
+		241D43D92306BDA900E57E0D /* webglPlus.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = webglPlus.xcodeproj; path = ../../webglPlus/proj.ios/webglPlus.xcodeproj; sourceTree = "<group>"; };
+		241D43E52306BDBF00E57E0D /* webglPlus.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = webglPlus.xcodeproj; path = ../../webglPlus/proj.ios/webglPlus.xcodeproj; sourceTree = "<group>"; };
+		241D44642321FB2600E57E0D /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		2439790D2136CF36009EF8B7 /* ScanViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ScanViewController.mm; sourceTree = "<group>"; };
+		2439790E2136CF37009EF8B7 /* ScanViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScanViewController.h; sourceTree = "<group>"; };
+		243979102136D059009EF8B7 /* NavViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NavViewController.mm; sourceTree = "<group>"; };
+		243979112136D059009EF8B7 /* NavViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavViewController.h; sourceTree = "<group>"; };
+		5E914EFF1EA1F9780023BD7F /* libbz2.1.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libbz2.1.0.tbd; path = usr/lib/libbz2.1.0.tbd; sourceTree = SDKROOT; };
+		5EAE9BD81D6C088700BDC3F5 /* IAPManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IAPManager.h; path = iap/IAPManager.h; sourceTree = "<group>"; };
+		5EAE9BD91D6C088700BDC3F5 /* IAPManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IAPManager.m; path = iap/IAPManager.m; sourceTree = "<group>"; };
+		5EAEEAA31D8E619100F2A257 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
+		A245DC102192E16D00745202 /* ca */ = {isa = PBXFileReference; lastKnownFileType = folder; name = ca; path = resource/ca; sourceTree = "<group>"; };
+		A2460A1C1C8DAF710032CD8D /* LayaBox.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LayaBox.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A2460A201C8DAF710032CD8D /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		A2460A221C8DAF710032CD8D /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		A2460A231C8DAF710032CD8D /* AppDelegate.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = AppDelegate.mm; sourceTree = "<group>"; };
+		A2460A251C8DAF710032CD8D /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		A2460A261C8DAF710032CD8D /* ViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = ViewController.mm; sourceTree = "<group>"; };
+		A2460A291C8DAF710032CD8D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		A2460A2B1C8DAF710032CD8D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A2460A2E1C8DAF710032CD8D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		A2460A301C8DAF710032CD8D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A2460A351C8DAF710032CD8D /* LayaBoxTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LayaBoxTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A2460A391C8DAF710032CD8D /* LayaBoxTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LayaBoxTests.m; sourceTree = "<group>"; };
+		A2460A3B1C8DAF710032CD8D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A2460A401C8DAF710032CD8D /* LayaBoxUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LayaBoxUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A2460A441C8DAF710032CD8D /* LayaBoxUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LayaBoxUITests.m; sourceTree = "<group>"; };
+		A2460A461C8DAF710032CD8D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A2460A811C8DB3F10032CD8D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		A2460A831C8DB3FC0032CD8D /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+		A2460A851C8DB4090032CD8D /* libstdc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.tbd"; path = "usr/lib/libstdc++.tbd"; sourceTree = SDKROOT; };
+		A2460A871C8DB4160032CD8D /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
+		A2460A891C8DB4220032CD8D /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
+		A2460A8B1C8DB4370032CD8D /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
+		A2460A8D1C8DB4440032CD8D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		A2460A8F1C8DB4520032CD8D /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		A2460A911C8DB4620032CD8D /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
+		A2460A931C8DB4700032CD8D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		A2460A951C8DB47C0032CD8D /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
+		A2460A971C8DB4870032CD8D /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		A2460A991C8DB4930032CD8D /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		A2460A9B1C8DB4A80032CD8D /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		A2460A9D1C8DB4B50032CD8D /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		A2460A9F1C8DB4BE0032CD8D /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
+		A2460AA11C8DB4C70032CD8D /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		A2460AA31C8DB4D20032CD8D /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		A2460AA51C8DB4DA0032CD8D /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
+		A28105471F729C4E0094C3CC /* font */ = {isa = PBXFileReference; lastKnownFileType = folder; name = font; path = resource/font; sourceTree = "<group>"; };
+		A28105491F735DB80094C3CC /* common.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = common.xcodeproj; path = ../../common/proj.ios/common.xcodeproj; sourceTree = "<group>"; };
+		A28105521F735DBE0094C3CC /* render.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = render.xcodeproj; path = ../../render/proj.ios/render.xcodeproj; sourceTree = "<group>"; };
+		A28105581F735DC30094C3CC /* conchRuntime.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = conchRuntime.xcodeproj; path = ../../conchRuntime/proj.ios/conchRuntime.xcodeproj; sourceTree = "<group>"; };
+		A28DB2A71D2E726B00BAED5C /* libconchRuntime.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = libconchRuntime.bundle; path = resource/libconchRuntime.bundle; sourceTree = "<group>"; };
+		A2B15D272105B33A00B08F86 /* LaunchView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LaunchView.h; sourceTree = "<group>"; };
+		A2B15D282105B33A00B08F86 /* JSBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSBridge.h; sourceTree = "<group>"; };
+		A2B15D292105B33A00B08F86 /* JSBridge.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = JSBridge.mm; sourceTree = "<group>"; };
+		A2B15D2A2105B33A00B08F86 /* LaunchView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LaunchView.m; sourceTree = "<group>"; };
+		A2D11A0D1D0C366F004C229D /* app.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = app.json; path = resource/app.json; sourceTree = "<group>"; };
+		A2D11A0E1D0C366F004C229D /* cache */ = {isa = PBXFileReference; lastKnownFileType = folder; name = cache; path = resource/cache; sourceTree = "<group>"; };
+		A2D11A0F1D0C366F004C229D /* config.ini */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = config.ini; path = resource/config.ini; sourceTree = "<group>"; };
+		A2D11A121D0C366F004C229D /* scripts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = scripts; path = resource/scripts; sourceTree = "<group>"; };
+		A2D8F39621901B6A00E232A9 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		A2E00C671D05495500B6A6B6 /* libicucore.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libicucore.tbd; path = usr/lib/libicucore.tbd; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A2460A191C8DAF710032CD8D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				241D446D2321FB2600E57E0D /* WebKit.framework in Frameworks */,
+				A2D8F39B21901B6A00E232A9 /* CoreMedia.framework in Frameworks */,
+				2450ACA92089D1D80058027E /* JavaScriptCore.framework in Frameworks */,
+				5E914F001EA1F9780023BD7F /* libbz2.1.0.tbd in Frameworks */,
+				5E8E47841D8F9F0A00662E69 /* AudioToolbox.framework in Frameworks */,
+				5EAEEAA41D8E619100F2A257 /* CoreMotion.framework in Frameworks */,
+				A25D2CB51D2251BF00E21255 /* AdSupport.framework in Frameworks */,
+				A2E00C681D05495500B6A6B6 /* libicucore.tbd in Frameworks */,
+				A24420671C8EC97F00BB430C /* AVFoundation.framework in Frameworks */,
+				A24420661C8EC96500BB430C /* CoreTelephony.framework in Frameworks */,
+				A2460AA91C8DBAD00032CD8D /* UIKit.framework in Frameworks */,
+				A2460AA61C8DB4DA0032CD8D /* GLKit.framework in Frameworks */,
+				A2460AA21C8DB4C80032CD8D /* OpenGLES.framework in Frameworks */,
+				A2460AA01C8DB4BE0032CD8D /* OpenAL.framework in Frameworks */,
+				A2460A901C8DB4520032CD8D /* SystemConfiguration.framework in Frameworks */,
+				A2460A8E1C8DB4440032CD8D /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A2460A321C8DAF710032CD8D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A2460A3D1C8DAF710032CD8D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		241D43B02306B92700E57E0D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				241D43B42306B92700E57E0D /* libwebglPlus.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		241D43CF2306BD3B00E57E0D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				241D43D82306BD3B00E57E0D /* libwebglPlus.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		241D43DA2306BDA900E57E0D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				241D43DE2306BDA900E57E0D /* libwebglPlus.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		241D43E62306BDBF00E57E0D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				241D43EA2306BDBF00E57E0D /* libwebglPlus.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5E914EFE1EA1F9780023BD7F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				241D44642321FB2600E57E0D /* WebKit.framework */,
+				A2D8F39621901B6A00E232A9 /* CoreMedia.framework */,
+				5E914EFF1EA1F9780023BD7F /* libbz2.1.0.tbd */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		5EEF1D341D51ECA500876454 /* iap */ = {
+			isa = PBXGroup;
+			children = (
+				5EAE9BD81D6C088700BDC3F5 /* IAPManager.h */,
+				5EAE9BD91D6C088700BDC3F5 /* IAPManager.m */,
+			);
+			name = iap;
+			sourceTree = "<group>";
+		};
+		A2460A131C8DAF710032CD8D = {
+			isa = PBXGroup;
+			children = (
+				241D43AF2306B92700E57E0D /* webglPlus.xcodeproj */,
+				241D43CE2306BD3B00E57E0D /* webglPlus.xcodeproj */,
+				241D43D92306BDA900E57E0D /* webglPlus.xcodeproj */,
+				241D43E52306BDBF00E57E0D /* webglPlus.xcodeproj */,
+				240BB73121352E5500D1CABA /* UIFloatPanel.h */,
+				240BB73621352E5500D1CABA /* UIFloatPanel.mm */,
+				A28105581F735DC30094C3CC /* conchRuntime.xcodeproj */,
+				A28105521F735DBE0094C3CC /* render.xcodeproj */,
+				A28105491F735DB80094C3CC /* common.xcodeproj */,
+				5EAEEAA31D8E619100F2A257 /* CoreMotion.framework */,
+				A2E00C671D05495500B6A6B6 /* libicucore.tbd */,
+				A2460AA51C8DB4DA0032CD8D /* GLKit.framework */,
+				A2460AA31C8DB4D20032CD8D /* UIKit.framework */,
+				A2460AA11C8DB4C70032CD8D /* OpenGLES.framework */,
+				A2460A9F1C8DB4BE0032CD8D /* OpenAL.framework */,
+				A2460A9D1C8DB4B50032CD8D /* JavaScriptCore.framework */,
+				A2460A9B1C8DB4A80032CD8D /* AudioToolbox.framework */,
+				A2460A991C8DB4930032CD8D /* AVFoundation.framework */,
+				A2460A971C8DB4870032CD8D /* StoreKit.framework */,
+				A2460A951C8DB47C0032CD8D /* AdSupport.framework */,
+				A2460A931C8DB4700032CD8D /* Security.framework */,
+				A2460A911C8DB4620032CD8D /* libiconv.tbd */,
+				A2460A8F1C8DB4520032CD8D /* SystemConfiguration.framework */,
+				A2460A8D1C8DB4440032CD8D /* CoreGraphics.framework */,
+				A2460A8B1C8DB4370032CD8D /* libsqlite3.tbd */,
+				A2460A891C8DB4220032CD8D /* libsqlite3.0.tbd */,
+				A2460A871C8DB4160032CD8D /* CoreTelephony.framework */,
+				A2460A851C8DB4090032CD8D /* libstdc++.tbd */,
+				A2460A831C8DB3FC0032CD8D /* libz.tbd */,
+				A2460A811C8DB3F10032CD8D /* Foundation.framework */,
+				A2460A621C8DB1B70032CD8D /* resource */,
+				A2460A1E1C8DAF710032CD8D /* LayaBox */,
+				A2460A381C8DAF710032CD8D /* LayaBoxTests */,
+				A2460A431C8DAF710032CD8D /* LayaBoxUITests */,
+				A2460A1D1C8DAF710032CD8D /* Products */,
+				5E914EFE1EA1F9780023BD7F /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		A2460A1D1C8DAF710032CD8D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A2460A1C1C8DAF710032CD8D /* LayaBox.app */,
+				A2460A351C8DAF710032CD8D /* LayaBoxTests.xctest */,
+				A2460A401C8DAF710032CD8D /* LayaBoxUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A2460A1E1C8DAF710032CD8D /* LayaBox */ = {
+			isa = PBXGroup;
+			children = (
+				243979112136D059009EF8B7 /* NavViewController.h */,
+				243979102136D059009EF8B7 /* NavViewController.mm */,
+				2439790E2136CF37009EF8B7 /* ScanViewController.h */,
+				2439790D2136CF36009EF8B7 /* ScanViewController.mm */,
+				A2B15D282105B33A00B08F86 /* JSBridge.h */,
+				A2B15D292105B33A00B08F86 /* JSBridge.mm */,
+				A2B15D272105B33A00B08F86 /* LaunchView.h */,
+				A2B15D2A2105B33A00B08F86 /* LaunchView.m */,
+				5EEF1D341D51ECA500876454 /* iap */,
+				A2460A221C8DAF710032CD8D /* AppDelegate.h */,
+				A2460A231C8DAF710032CD8D /* AppDelegate.mm */,
+				A2460A251C8DAF710032CD8D /* ViewController.h */,
+				A2460A261C8DAF710032CD8D /* ViewController.mm */,
+				A2460A281C8DAF710032CD8D /* Main.storyboard */,
+				A2460A2B1C8DAF710032CD8D /* Assets.xcassets */,
+				A2460A2D1C8DAF710032CD8D /* LaunchScreen.storyboard */,
+				A2460A301C8DAF710032CD8D /* Info.plist */,
+				A2460A1F1C8DAF710032CD8D /* Supporting Files */,
+			);
+			path = LayaBox;
+			sourceTree = "<group>";
+		};
+		A2460A1F1C8DAF710032CD8D /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				A2460A201C8DAF710032CD8D /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		A2460A381C8DAF710032CD8D /* LayaBoxTests */ = {
+			isa = PBXGroup;
+			children = (
+				A2460A391C8DAF710032CD8D /* LayaBoxTests.m */,
+				A2460A3B1C8DAF710032CD8D /* Info.plist */,
+			);
+			path = LayaBoxTests;
+			sourceTree = "<group>";
+		};
+		A2460A431C8DAF710032CD8D /* LayaBoxUITests */ = {
+			isa = PBXGroup;
+			children = (
+				A2460A441C8DAF710032CD8D /* LayaBoxUITests.m */,
+				A2460A461C8DAF710032CD8D /* Info.plist */,
+			);
+			path = LayaBoxUITests;
+			sourceTree = "<group>";
+		};
+		A2460A621C8DB1B70032CD8D /* resource */ = {
+			isa = PBXGroup;
+			children = (
+				A245DC102192E16D00745202 /* ca */,
+				A28105471F729C4E0094C3CC /* font */,
+				A28DB2A71D2E726B00BAED5C /* libconchRuntime.bundle */,
+				A2D11A0D1D0C366F004C229D /* app.json */,
+				A2D11A0E1D0C366F004C229D /* cache */,
+				A2D11A0F1D0C366F004C229D /* config.ini */,
+				A2D11A121D0C366F004C229D /* scripts */,
+			);
+			name = resource;
+			sourceTree = "<group>";
+		};
+		A281054A1F735DB80094C3CC /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A281054F1F735DB90094C3CC /* libcommon.a */,
+				A28105511F735DB90094C3CC /* commonTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A28105531F735DBE0094C3CC /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A28105571F735DBF0094C3CC /* librender.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A28105591F735DC30094C3CC /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A281055D1F735DC30094C3CC /* libconchRuntime.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A2460A1B1C8DAF710032CD8D /* LayaBox */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A2460A491C8DAF710032CD8D /* Build configuration list for PBXNativeTarget "LayaBox" */;
+			buildPhases = (
+				A2460A181C8DAF710032CD8D /* Sources */,
+				A2460A191C8DAF710032CD8D /* Frameworks */,
+				A2460A1A1C8DAF710032CD8D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = LayaBox;
+			productName = LayaBox;
+			productReference = A2460A1C1C8DAF710032CD8D /* LayaBox.app */;
+			productType = "com.apple.product-type.application";
+		};
+		A2460A341C8DAF710032CD8D /* LayaBoxTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A2460A4C1C8DAF710032CD8D /* Build configuration list for PBXNativeTarget "LayaBoxTests" */;
+			buildPhases = (
+				A2460A311C8DAF710032CD8D /* Sources */,
+				A2460A321C8DAF710032CD8D /* Frameworks */,
+				A2460A331C8DAF710032CD8D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A2460A371C8DAF710032CD8D /* PBXTargetDependency */,
+			);
+			name = LayaBoxTests;
+			productName = LayaBoxTests;
+			productReference = A2460A351C8DAF710032CD8D /* LayaBoxTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		A2460A3F1C8DAF710032CD8D /* LayaBoxUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A2460A4F1C8DAF710032CD8D /* Build configuration list for PBXNativeTarget "LayaBoxUITests" */;
+			buildPhases = (
+				A2460A3C1C8DAF710032CD8D /* Sources */,
+				A2460A3D1C8DAF710032CD8D /* Frameworks */,
+				A2460A3E1C8DAF710032CD8D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A2460A421C8DAF710032CD8D /* PBXTargetDependency */,
+			);
+			name = LayaBoxUITests;
+			productName = LayaBoxUITests;
+			productReference = A2460A401C8DAF710032CD8D /* LayaBoxUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A2460A141C8DAF710032CD8D /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0720;
+				ORGANIZATIONNAME = LayaBox;
+				TargetAttributes = {
+					A2460A1B1C8DAF710032CD8D = {
+						CreatedOnToolsVersion = 7.2.1;
+						DevelopmentTeam = MH4ZKZTS68;
+					};
+					A2460A341C8DAF710032CD8D = {
+						CreatedOnToolsVersion = 7.2.1;
+						TestTargetID = A2460A1B1C8DAF710032CD8D;
+					};
+					A2460A3F1C8DAF710032CD8D = {
+						CreatedOnToolsVersion = 7.2.1;
+						TestTargetID = A2460A1B1C8DAF710032CD8D;
+					};
+				};
+			};
+			buildConfigurationList = A2460A171C8DAF710032CD8D /* Build configuration list for PBXProject "LayaBox" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				English,
+				en,
+				Base,
+			);
+			mainGroup = A2460A131C8DAF710032CD8D;
+			productRefGroup = A2460A1D1C8DAF710032CD8D /* Products */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = A281054A1F735DB80094C3CC /* Products */;
+					ProjectRef = A28105491F735DB80094C3CC /* common.xcodeproj */;
+				},
+				{
+					ProductGroup = A28105591F735DC30094C3CC /* Products */;
+					ProjectRef = A28105581F735DC30094C3CC /* conchRuntime.xcodeproj */;
+				},
+				{
+					ProductGroup = A28105531F735DBE0094C3CC /* Products */;
+					ProjectRef = A28105521F735DBE0094C3CC /* render.xcodeproj */;
+				},
+				{
+					ProductGroup = 241D43DA2306BDA900E57E0D /* Products */;
+					ProjectRef = 241D43D92306BDA900E57E0D /* webglPlus.xcodeproj */;
+				},
+				{
+					ProductGroup = 241D43B02306B92700E57E0D /* Products */;
+					ProjectRef = 241D43AF2306B92700E57E0D /* webglPlus.xcodeproj */;
+				},
+				{
+					ProductGroup = 241D43E62306BDBF00E57E0D /* Products */;
+					ProjectRef = 241D43E52306BDBF00E57E0D /* webglPlus.xcodeproj */;
+				},
+				{
+					ProductGroup = 241D43CF2306BD3B00E57E0D /* Products */;
+					ProjectRef = 241D43CE2306BD3B00E57E0D /* webglPlus.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				A2460A1B1C8DAF710032CD8D /* LayaBox */,
+				A2460A341C8DAF710032CD8D /* LayaBoxTests */,
+				A2460A3F1C8DAF710032CD8D /* LayaBoxUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		241D43B42306B92700E57E0D /* libwebglPlus.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libwebglPlus.a;
+			remoteRef = 241D43B32306B92700E57E0D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		241D43D82306BD3B00E57E0D /* libwebglPlus.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libwebglPlus.a;
+			remoteRef = 241D43D72306BD3B00E57E0D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		241D43DE2306BDA900E57E0D /* libwebglPlus.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libwebglPlus.a;
+			remoteRef = 241D43DD2306BDA900E57E0D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		241D43EA2306BDBF00E57E0D /* libwebglPlus.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libwebglPlus.a;
+			remoteRef = 241D43E92306BDBF00E57E0D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		A281054F1F735DB90094C3CC /* libcommon.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libcommon.a;
+			remoteRef = A281054E1F735DB90094C3CC /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		A28105511F735DB90094C3CC /* commonTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = commonTests.xctest;
+			remoteRef = A28105501F735DB90094C3CC /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		A28105571F735DBF0094C3CC /* librender.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = librender.a;
+			remoteRef = A28105561F735DBF0094C3CC /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		A281055D1F735DC30094C3CC /* libconchRuntime.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libconchRuntime.a;
+			remoteRef = A281055C1F735DC30094C3CC /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A2460A1A1C8DAF710032CD8D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A245DC152192E16D00745202 /* ca in Resources */,
+				A2D11A151D0C366F004C229D /* cache in Resources */,
+				A2460A2F1C8DAF710032CD8D /* LaunchScreen.storyboard in Resources */,
+				A28105481F729C4E0094C3CC /* font in Resources */,
+				A28DB2A81D2E726B00BAED5C /* libconchRuntime.bundle in Resources */,
+				A2D11A191D0C366F004C229D /* scripts in Resources */,
+				A2D11A141D0C366F004C229D /* app.json in Resources */,
+				A2460A2C1C8DAF710032CD8D /* Assets.xcassets in Resources */,
+				A2D11A161D0C366F004C229D /* config.ini in Resources */,
+				A2460A2A1C8DAF710032CD8D /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A2460A331C8DAF710032CD8D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A2460A3E1C8DAF710032CD8D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A2460A181C8DAF710032CD8D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A2460A271C8DAF710032CD8D /* ViewController.mm in Sources */,
+				A2B15D2C2105B33A00B08F86 /* LaunchView.m in Sources */,
+				243979122136D059009EF8B7 /* NavViewController.mm in Sources */,
+				2439790F2136CF37009EF8B7 /* ScanViewController.mm in Sources */,
+				5EAE9BDA1D6C088700BDC3F5 /* IAPManager.m in Sources */,
+				A2460A241C8DAF710032CD8D /* AppDelegate.mm in Sources */,
+				A2B15D2B2105B33A00B08F86 /* JSBridge.mm in Sources */,
+				A2460A211C8DAF710032CD8D /* main.m in Sources */,
+				240BB73721352E5600D1CABA /* UIFloatPanel.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A2460A311C8DAF710032CD8D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A2460A3A1C8DAF710032CD8D /* LayaBoxTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A2460A3C1C8DAF710032CD8D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A2460A451C8DAF710032CD8D /* LayaBoxUITests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A2460A371C8DAF710032CD8D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A2460A1B1C8DAF710032CD8D /* LayaBox */;
+			targetProxy = A2460A361C8DAF710032CD8D /* PBXContainerItemProxy */;
+		};
+		A2460A421C8DAF710032CD8D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A2460A1B1C8DAF710032CD8D /* LayaBox */;
+			targetProxy = A2460A411C8DAF710032CD8D /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		A2460A281C8DAF710032CD8D /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A2460A291C8DAF710032CD8D /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		A2460A2D1C8DAF710032CD8D /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A2460A2E1C8DAF710032CD8D /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		A2460A471C8DAF710032CD8D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A2460A481C8DAF710032CD8D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		A2460A4A1C8DAF710032CD8D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 17;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = MH4ZKZTS68;
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = LayaBox/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					../../../../ThirdParty/zlib/lib/ios,
+					../../../../ThirdParty/JSC/libs/,
+					../../../libs/ios/,
+					../../../../ThirdParty/zip/lib/ios,
+					../../../../ThirdParty/png/lib/ios,
+					../../../../ThirdParty/websockets/lib/ios,
+					../../../../ThirdParty/openssl/lib/ios,
+					../../../../ThirdParty/ogg/lib/ios,
+					../../../../ThirdParty/jpeg/lib/ios,
+					../../../../ThirdParty/freetype/lib/ios,
+					../../../../ThirdParty/curl/lib/ios,
+					../../../../ThirdParty/bullet/lib/ios,
+				);
+				MARKETING_VERSION = "release-2.9.0";
+				OTHER_CFLAGS = "-I../../../include/conchRuntime";
+				OTHER_LDFLAGS = (
+					"-lcurl",
+					"-lfreetype",
+					"-ljpeg",
+					"-lpng",
+					"-lwebsockets",
+					"-lzip",
+					"-lcommon",
+					"-lwebglPlus",
+					"-lrender",
+					"-lconchRuntime",
+					"-lvorbis",
+					"-logg",
+					"-lvorbisfile",
+					"-lz",
+					"-lcrypto",
+					"-lssl",
+					"-lBulletDynamics",
+					"-lBulletCollision",
+					"-lLinearMath",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.layabox.conch6;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				VALID_ARCHS = "arm64 armv7";
+			};
+			name = Debug;
+		};
+		A2460A4B1C8DAF710032CD8D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 17;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = MH4ZKZTS68;
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				INFOPLIST_FILE = LayaBox/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					../../../../ThirdParty/zlib/lib/ios,
+					../../../../ThirdParty/JSC/libs/,
+					../../../libs/ios/,
+					../../../../ThirdParty/zip/lib/ios,
+					../../../../ThirdParty/png/lib/ios,
+					../../../../ThirdParty/websockets/lib/ios,
+					../../../../ThirdParty/openssl/lib/ios,
+					../../../../ThirdParty/ogg/lib/ios,
+					../../../../ThirdParty/jpeg/lib/ios,
+					../../../../ThirdParty/freetype/lib/ios,
+					../../../../ThirdParty/curl/lib/ios,
+					../../../../ThirdParty/bullet/lib/ios,
+				);
+				MARKETING_VERSION = "release-2.9.0";
+				OTHER_CFLAGS = "-I../../../include/conchRuntime";
+				OTHER_LDFLAGS = (
+					"-lcurl",
+					"-lfreetype",
+					"-ljpeg",
+					"-lpng",
+					"-lwebsockets",
+					"-lzip",
+					"-lcommon",
+					"-lwebglPlus",
+					"-lrender",
+					"-lconchRuntime",
+					"-lvorbis",
+					"-logg",
+					"-lvorbisfile",
+					"-lz",
+					"-lcrypto",
+					"-lssl",
+					"-lBulletDynamics",
+					"-lBulletCollision",
+					"-lLinearMath",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.layabox.conch6;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				VALID_ARCHS = "arm64 armv7";
+			};
+			name = Release;
+		};
+		A2460A4D1C8DAF710032CD8D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = LayaBoxTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = comd.laya.LayaBoxTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LayaBox.app/LayaBox";
+			};
+			name = Debug;
+		};
+		A2460A4E1C8DAF710032CD8D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = LayaBoxTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = comd.laya.LayaBoxTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LayaBox.app/LayaBox";
+			};
+			name = Release;
+		};
+		A2460A501C8DAF710032CD8D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = LayaBoxUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = comd.laya.LayaBoxUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = LayaBox;
+				USES_XCTRUNNER = YES;
+			};
+			name = Debug;
+		};
+		A2460A511C8DAF710032CD8D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = LayaBoxUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = comd.laya.LayaBoxUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = LayaBox;
+				USES_XCTRUNNER = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A2460A171C8DAF710032CD8D /* Build configuration list for PBXProject "LayaBox" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A2460A471C8DAF710032CD8D /* Debug */,
+				A2460A481C8DAF710032CD8D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A2460A491C8DAF710032CD8D /* Build configuration list for PBXNativeTarget "LayaBox" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A2460A4A1C8DAF710032CD8D /* Debug */,
+				A2460A4B1C8DAF710032CD8D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A2460A4C1C8DAF710032CD8D /* Build configuration list for PBXNativeTarget "LayaBoxTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A2460A4D1C8DAF710032CD8D /* Debug */,
+				A2460A4E1C8DAF710032CD8D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A2460A4F1C8DAF710032CD8D /* Build configuration list for PBXNativeTarget "LayaBoxUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A2460A501C8DAF710032CD8D /* Debug */,
+				A2460A511C8DAF710032CD8D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A2460A141C8DAF710032CD8D /* Project object */;
+}

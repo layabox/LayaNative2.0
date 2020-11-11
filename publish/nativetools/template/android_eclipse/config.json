@@ -1,0 +1,38 @@
+{
+    "template": {
+        "name": "LayaBox",
+		"replace":[
+			".project"
+		],
+		"rename":[
+		],
+		"display":"res/values/strings.xml"
+	},
+	"package": {
+		"name": "com.layabox.conch6",
+		"replace": [
+			"AndroidManifest.xml",
+			"src/demo/SplashDialog.java",
+			"src/layaair/game/Market/GameEngine.java"
+		]
+	},
+	"url": {
+		"src": "mPlugin.game_plugin_set_option\\s*\\(\\s*\"gameUrl\".*\\)\\s*;",
+		"des":"mPlugin.game_plugin_set_option(\"gameUrl\", \"${url}\");",
+		"replace": [
+			"src/demo/MainActivity.java"
+		]
+	},
+    "localize":{
+        "src":"mPlugin.game_plugin_set_option\\(\"localize\".*",
+		"des":"mPlugin.game_plugin_set_option(\"localize\",\"true\");",
+        "replace":[
+            "src/demo/MainActivity.java"
+        ]
+    },
+	"res": {
+		"path": "assets/cache"
+	},
+	"platform":"android_eclipse",
+	"version":"2.0.4"
+}

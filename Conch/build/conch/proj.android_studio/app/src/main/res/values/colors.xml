@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="editText">#AAAAAA</color>
+    <color name="blue">#008dff</color>
+    <color name="gray">#bbbbbb</color>
+    <color name="back_tv_color">#FF000000</color>
+    <color name="plush_tv_color">#FF000000</color>
+    <color name="cancel_tv_color">#FF000000</color>
+</resources>

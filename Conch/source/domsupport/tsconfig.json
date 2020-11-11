@@ -1,0 +1,38 @@
+{
+    "compilerOptions": {
+        "module": "system",
+        "noLib": true,
+        "target": "es6",
+        "noImplicitAny": false,
+        "rootDir": ".",
+        "removeComments": true,
+        "sourceMap": false,
+        "outFile": "../../../Redist/scripts/apploader.js"
+    },
+    "files": [
+        "RuntimeExt.ts",
+        "Base64.ts",
+        "Debugger.ts",
+        "Crypto.ts",
+        "Console.ts",
+        "Event.ts",
+        "Bluetooth.ts",
+        "Gamepad.ts",
+        "Storage.ts",
+        "Input.ts",
+        "Navigator.ts",
+        "Node.ts",
+        "Timer.ts",
+        "Location.ts",
+        "LayaDomSupport.ts",
+        "XMLHttpRequest.ts",
+        "CanvasCtx.ts",
+        "LayaGL.ts",
+        "HTMLElements.ts",
+        "Document.ts",
+        "WebSocket.ts",
+        "DOMParser.ts",
+        "Global.ts",
+        "apploader.ts"
+    ]
+}

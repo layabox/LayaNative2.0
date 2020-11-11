@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:../../webglPlus/proj.ios/webglPlus.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:../../common/proj.ios/common.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:../../render/proj.ios/render.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:../../conchRuntime/proj.ios/conchRuntime.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "container:LayaBox.xcodeproj">
+   </FileRef>
+</Workspace>

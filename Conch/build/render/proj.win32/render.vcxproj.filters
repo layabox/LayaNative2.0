@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Image">
+      <UniqueIdentifier>{9a2858a7-a557-49c1-8671-06824f11e995}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Performance">
+      <UniqueIdentifier>{00f7859f-567f-4244-a018-121087aeeb76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Manager">
+      <UniqueIdentifier>{039bd7f3-b97f-439e-96b8-4ee2e0f0fdd2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RenderEx">
+      <UniqueIdentifier>{010e7fca-487a-4ac1-b2b8-af921af0b761}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LayaGL">
+      <UniqueIdentifier>{5c9e981e-127e-43e4-80b8-5291040a8f53}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\source\render\Image\JCImageManager.cpp">
+      <Filter>Image</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\render\Performance\JCPerfHUD.cpp">
+      <Filter>Performance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\render\Image\JCImage.cpp">
+      <Filter>Image</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\render\LayaGL\JCIDGenerator.cpp">
+      <Filter>LayaGL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\render\LayaGL\JCLayaGL.cpp">
+      <Filter>LayaGL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\render\LayaGL\JCLayaGLDispatch.cpp">
+      <Filter>LayaGL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\render\RenderEx\JCGlobalValue.cpp">
+      <Filter>RenderEx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\render\RenderEx\JCRegister.cpp">
+      <Filter>RenderEx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\render\Performance\JCVBOManager.cpp">
+      <Filter>Performance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\render\Image\JCVideo.cpp">
+      <Filter>Image</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\render\RenderEx\JCGpuProgram.cpp">
+      <Filter>RenderEx</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\source\render\Image\JCImageManager.h">
+      <Filter>Image</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\render\Performance\JCPerfHUD.h">
+      <Filter>Performance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\render\Image\JCImage.h">
+      <Filter>Image</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\render\Manager\JCOrderResManager.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\render\JCCmdStruct.h" />
+    <ClInclude Include="..\..\..\source\render\LayaGL\JCIDGenerator.h">
+      <Filter>LayaGL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\render\LayaGL\JCLayaGL.h">
+      <Filter>LayaGL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\render\LayaGL\JCLayaGLDispatch.h">
+      <Filter>LayaGL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\render\RenderEx\JCGlobalValue.h">
+      <Filter>RenderEx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\render\RenderEx\JCRegister.h">
+      <Filter>RenderEx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\render\Performance\JCVBOManager.h">
+      <Filter>Performance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\render\Image\JCVideo.h">
+      <Filter>Image</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\render\RenderEx\JCGpuProgram.h">
+      <Filter>RenderEx</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

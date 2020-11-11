@@ -1,0 +1,37 @@
+{
+    "template": {
+        "name": "WKWebview",
+		"replace":[
+			"WKWebview.xcodeproj/project.pbxproj",
+			"WKWebviewTests/WKWebviewTests.m",
+			"WKWebviewUITests/WKWebviewUITests.m"
+		],
+		"rename":[
+			"WKWebviewTests/WKWebviewTests.m",
+			"WKWebviewUITests/WKWebviewUITests.m",
+			"WKWebview.xcodeproj",
+			"WKWebviewTests",
+			"WKWebviewUITests",
+			"WKWebview"
+		],
+		"display":"WKWebview/Info.plist"
+	},
+	"package": {
+		"name": "com.laya.WKWebview",
+		"replace": [
+			"WKWebview.xcodeproj/project.pbxproj"
+		]
+	},
+	"url": {
+		"src": "url\\=.*",
+		"des": "url=${url}",
+		"replace": [
+			"resource/config.ini"
+		]
+	},
+	"res": {
+		"path": "resource/cache"
+	},
+	"platform":"wkwebview",
+	"version":"2.0.4"
+}

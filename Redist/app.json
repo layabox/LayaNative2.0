@@ -1,0 +1,8 @@
+{
+    "name":"layaApp",
+    "version":"1.0.0",
+    "devUpdateUrl":"",
+    "updateUrl":"http://localhost:8899/layaAppUpdate/layaApp/v2.1/",
+    "updateDelay":0,
+    "mainjs":"index.js"
+}

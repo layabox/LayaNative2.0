@@ -1,0 +1,45 @@
+{
+    "template": {
+        "name": "LayaBox",
+		"replace":[
+			"LayaBox/LayaBox.xcodeproj/project.pbxproj",
+			"LayaBox/LayaBoxTests/LayaBoxTests.m",
+			"LayaBox/LayaBoxUITests/LayaBoxUITests.m"
+		],
+		"rename":[
+			"LayaBox/LayaBoxTests/LayaBoxTests.m",
+			"LayaBox/LayaBoxUITests/LayaBoxUITests.m",
+			"LayaBox/LayaBox.xcodeproj",
+			"LayaBox/LayaBoxTests",
+			"LayaBox/LayaBoxUITests",
+			"LayaBox/LayaBox",
+			"LayaBox"
+		],
+		"display":"LayaBox/LayaBox/Info.plist"
+	},
+	"package": {
+		"name": "com.layabox.conch6",
+		"replace": [
+			"LayaBox/LayaBox.xcodeproj/project.pbxproj"
+		]
+	},
+	"url": {
+		"src": "loadApp\\s*\\(.*\\);",
+		"des": "loadApp(conch.presetUrl||\"${url}\");",
+		"replace": [
+			"LayaBox/resource/scripts/index.js"
+		]
+	},
+	"localize":{
+        "src":"var\\s+_inline\\s*=\\s*!\\s*conchConfig.localizable\\s*;",
+		"des":"var _inline = false;",
+        "replace":[
+            "LayaBox/resource/scripts/index.js"
+        ]
+    },
+	"res": {
+		"path": "LayaBox/resource/cache"
+	},
+	"platform":"ios",
+	"version":"2.0.4"
+}

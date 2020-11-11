@@ -1,0 +1,4 @@
+
+#define WM_CMD_BASE (WM_USER+3333)
+#define MAX_CMD_NUM 2048
+#define WM_CMD_MAX (WM_CMD_BASE+MAX_CMD_NUM)
