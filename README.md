@@ -23,4 +23,4 @@ LayaNative is a complete set of development solutions for the development, testi
 1. On Mac or Linux, Install android studio and configure the Android SDK related environment variables 
 2. cd Conch/build and then run ./buildAll-andoid.sh
 3. Open Conch/build/conc/proj.android_studio with android_studio
-4. Build and then run proj.android_studio-app
+4. Build and then run proj.android_studio
