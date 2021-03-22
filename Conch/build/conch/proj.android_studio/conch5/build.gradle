@@ -9,8 +9,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 28
-        versionCode 17
-        versionName "release-2.9.0"
+        versionCode 19
+        versionName "release-2.11.0"
     }
     sourceSets.main{
         jniLibs.srcDir 'libs'

@@ -824,13 +824,12 @@ namespace laya
         {
         case GL_UNPACK_ALIGNMENT:
         case GL_PACK_ALIGNMENT:
-            return;
+            ::glPixelStorei(pname, param);
             break;
         case 0x9240://UNPACK_FLIP_Y_WEBGL
             m_bFlipY = (param != 0);
             break;
         }
-        ::glPixelStorei(pname, param);
 #ifdef DEBUG_WEBGL
         LOGI("pixelStorei name=%d,param=%d", pname, param);
         getError();
@@ -948,7 +947,7 @@ namespace laya
     void JCLayaGL::_texImage2D(GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const void* pixels)
     {
 		if (format != GL_RGBA) {
-			::glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		//	::glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		}
         if (pixels == NULL)
         {
@@ -974,7 +973,7 @@ namespace laya
 			
         }
 		if (format != GL_RGBA) {
-			::glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+		//	::glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
 		}
     }
 	void JCLayaGL::flipY(GLenum format, GLsizei width, GLsizei height, void* pixels)
@@ -1026,9 +1025,9 @@ namespace laya
 		}
 		if (format != GL_RGBA) 
         {
-			::glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+			//::glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 			::glTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type, pixels);
-			::glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+			//::glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
 		}
 		else 
         {

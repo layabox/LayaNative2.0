@@ -955,7 +955,7 @@ public class ExportJavaFunction
 		m_Handler.post(new _Runnable(nCmd, nParam1, nParam2));
 	}
 	//------------------------------------------------------------------------------
-	public static String getWifiMac()
+	/*public static String getWifiMac()
 	{
 		ExportJavaFunction exp = ExportJavaFunction.GetInstance();
 		if(exp==null )
@@ -967,7 +967,7 @@ public class ExportJavaFunction
 			return (wifi==null)?"":wifi;
 		}
 		return "";
-	}
+	}*/
 	//------------------------------------------------------------------------------
 	public static String getAndroidModel()
 	{
@@ -1103,7 +1103,7 @@ public class ExportJavaFunction
 			int temp[]=pDevID.GetResolutionArray();
 			obj.put("dpi", temp[2]);
 			obj.put("resolution",temp[1]+"*"+temp[0]);
-			obj.put("guid",pDevID.GetWifiMac());
+			//obj.put("guid",pDevID.GetWifiMac());
 			obj.put("imei", imeiArr);
 			obj.put("imsi", imsiArr);
 			obj.put("os", "android");

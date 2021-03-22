@@ -154,11 +154,15 @@ namespace laya
         pointer_t  AllConvexResultCallback_get_m_hitPointWorld(pointer_t ptr);
         pointer_t  AllConvexResultCallback_get_m_hitFractions(pointer_t ptr);
         pointer_t  AllConvexResultCallback_get_m_collisionObjects(pointer_t ptr);
+
+        int btCollisionShape_getShapeType(pointer_t ptr);
         pointer_t  btCollisionShape_getLocalScaling(pointer_t ptr);
         void  btCollisionShape_setLocalScaling(pointer_t ptr, pointer_t scaling);
         void  btCollisionShape_calculateLocalInertia(pointer_t ptr, btScalar mass, pointer_t inertia);
         void  btCollisionShape_destroy(pointer_t ptr);
         pointer_t  btBoxShape_create(pointer_t boxHalfExtents);
+        void  btBoxShape_getAabb(pointer_t ptr, pointer_t t, pointer_t aabbMin, pointer_t aabbMax);
+        pointer_t  btBoxShape_getHalfExtentsWithMargin(pointer_t ptr, pointer_t t, pointer_t aabbMin, pointer_t aabbMax);
         pointer_t  btCapsuleShape_create(btScalar radius, btScalar height);
         pointer_t  btCapsuleShapeX_create(btScalar radius, btScalar height);
         pointer_t  btCapsuleShapeZ_create(btScalar radius, btScalar height);
@@ -220,6 +224,8 @@ namespace laya
         void  btRigidBody_setGravity(pointer_t ptr, pointer_t acceleration);
         void  btKinematicCharacterController_setUp(pointer_t ptr, pointer_t up);
         void  btKinematicCharacterController_setStepHeight(pointer_t ptr, btScalar h);
+        void  btKinematicCharacterController_setMaxPenetrationDepth(pointer_t ptr, btScalar d);
+        btScalar btKinematicCharacterController_getMaxPenetrationDepth(pointer_t ptr);
         void  btCollisionObject_setInterpolationWorldTransform(pointer_t ptr, pointer_t worldTrans);
         void  btCollisionObject_setWorldTransform(pointer_t ptr, pointer_t worldTrans);
         pointer_t  btRigidBody_getTotalForce(pointer_t ptr);

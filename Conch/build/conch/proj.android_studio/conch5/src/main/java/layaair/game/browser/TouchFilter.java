@@ -1,5 +1,7 @@
 package layaair.game.browser;
 
+import android.app.Activity;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 
@@ -40,7 +42,13 @@ public class TouchFilter
 			m_vTouches[i].m_nLastMoveY = 0;
 			m_vTouches[i].m_nTouchState = TouchPoint.PTSTATE_NOTOUCH;
 		}
-		setMoveRangeMM( 0.8f ); 
+		setMoveRangeMM( getScreenDPI() * 2 );
+
+	}
+	public int getScreenDPI() {
+		ExportJavaFunction exp = ExportJavaFunction.GetInstance();
+		DisplayMetrics metrics = ((Activity)exp.m_pEngine.mCtx).getApplicationContext().getResources().getDisplayMetrics();
+		return (int)(metrics.density * 160f);
 	}
 
 	//外部设置移动的偏差毫米为单位
@@ -49,6 +57,7 @@ public class TouchFilter
 		//毫米转英寸
 		float fInch = (float) (p_fMM/10.0f*0.3937008);
 		m_nMovRange = Math.round( fInch );
+		Log.i("LayaBox", "TouchFilter getScreenDPI() " + getScreenDPI()  + " TouchFilter m_nMovRange " + m_nMovRange);
 	}
     
     TouchPoint GetTouchPt(int p_nID)

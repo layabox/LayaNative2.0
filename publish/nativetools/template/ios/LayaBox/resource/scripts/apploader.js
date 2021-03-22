@@ -2835,6 +2835,7 @@ class GLCommandEncoder {
     }
     getExtension(name) {
         var extention = this._layagl._nativeObj.getStringEx(0x1F03);
+        let version = this._layagl._nativeObj.getStringEx(0x1F02);
         let extentions = extention.split(' ');
         function supports(extention) {
             for (let ext of extentions) {
@@ -2860,7 +2861,7 @@ class GLCommandEncoder {
             (extention.indexOf('GL_EXT_shader_texture_lod') != -1 || extention.indexOf('GL_ARB_shader_texture_lod') != -1)) {
             return {};
         }
-        else if (name === 'OES_element_index_uint' && extention.indexOf('GL_OES_element_index_uint') != -1) {
+        else if (name === 'OES_element_index_uint' && (extention.indexOf('GL_OES_element_index_uint') != -1)) {
             return {};
         }
         else if (name === 'EXT_sRGB' && extention.indexOf('GL_EXT_sRGB') != -1) {
@@ -2915,13 +2916,16 @@ class GLCommandEncoder {
                 TEXTURE_MAX_ANISOTROPY_EXT: 34046,
             };
         }
-        else if (name.indexOf('ANGLE_instanced_arrays') != -1 && (conchConfig.glCaps & GL_CAPS.INSTANCEING)) {
+        else if (name.indexOf('ANGLE_instanced_arrays') != -1 && ((extention.indexOf('_instanced_arrays') != -1) || version.indexOf("OpenGL ES 3.") != -1)) {
             return new ANGLEInstancedArrays(this);
         }
-        else if (name.indexOf('OES_vertex_array_object') != -1 && extention.indexOf('GL_OES_vertex_array_object') != -1) {
+        else if (name.indexOf('OES_vertex_array_object') != -1 && (extention.indexOf('GL_OES_vertex_array_object') != -1)) {
             return new OESVertexArrayObject(this);
         }
-        else if (name.indexOf('OES_texture_half_float') != -1 && extention.indexOf('GL_OES_texture_half_float') != -1) {
+        else if (name.indexOf('OES_texture_float') != -1 && extention.indexOf('GL_OES_texture_float') != -1) {
+            return {};
+        }
+        else if (name.indexOf('OES_texture_half_float') != -1 && (extention.indexOf('GL_OES_texture_half_float') != -1)) {
             return { HALF_FLOAT_OES: 36193 };
         }
         else if (name.indexOf('OES_texture_half_float_linear') != -1 && extention.indexOf('GL_OES_texture_half_float_linear') != -1) {

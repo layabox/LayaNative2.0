@@ -1303,7 +1303,7 @@ class GLCommandEncoder
     getExtension(name:string):any
     {
         var extention:string = this._layagl._nativeObj.getStringEx(0x1F03);/*GL_EXTENSIONS*/
-        
+        let version:string = this._layagl._nativeObj.getStringEx(0x1F02);
         let extentions:string[] = extention.split(' ');
         function supports(extention:string)
         {
@@ -1337,7 +1337,7 @@ class GLCommandEncoder
         {
             return  {};
         }
-        else if (name === 'OES_element_index_uint' && extention.indexOf('GL_OES_element_index_uint') != -1)
+        else if (name === 'OES_element_index_uint' && (extention.indexOf('GL_OES_element_index_uint') != -1))
         {
             return  {};
         }
@@ -1400,15 +1400,19 @@ class GLCommandEncoder
                         TEXTURE_MAX_ANISOTROPY_EXT : 34046,
                     };
         }
-        else if (name.indexOf('ANGLE_instanced_arrays') != -1 && (conchConfig.glCaps & GL_CAPS.INSTANCEING))
+        else if (name.indexOf('ANGLE_instanced_arrays') != -1 && ((extention.indexOf('_instanced_arrays') != -1) || version.indexOf("OpenGL ES 3.") != -1))
         {
             return new ANGLEInstancedArrays(this);
         }
-        else if (name.indexOf('OES_vertex_array_object') != -1 &&  extention.indexOf('GL_OES_vertex_array_object') != -1)
+        else if (name.indexOf('OES_vertex_array_object') != -1 &&  (extention.indexOf('GL_OES_vertex_array_object') != -1))
         {
             return new OESVertexArrayObject(this);
         }
-        else if (name.indexOf('OES_texture_half_float') != -1 &&  extention.indexOf('GL_OES_texture_half_float') != -1)
+        else if (name.indexOf('OES_texture_float') != -1 &&  extention.indexOf('GL_OES_texture_float') != -1)
+        {
+            return {};
+        }
+        else if (name.indexOf('OES_texture_half_float') != -1 &&  (extention.indexOf('GL_OES_texture_half_float') != -1))
         {
             return {HALF_FLOAT_OES: 36193};
         }

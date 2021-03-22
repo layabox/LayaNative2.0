@@ -646,6 +646,13 @@ pointer_t WASM_EXP AllConvexResultCallback_get_m_collisionObjects(pointer_t ptr)
 }
 
 //btCollisionShape
+
+int WASM_EXP btCollisionShape_getShapeType(pointer_t ptr)
+{
+	btCollisionShape *shape = (btCollisionShape *)ptr;
+	return shape->getShapeType();
+}
+
 pointer_t WASM_EXP btCollisionShape_getLocalScaling(pointer_t ptr)
 {
 	btCollisionShape *shape = (btCollisionShape *)ptr;
@@ -676,7 +683,18 @@ pointer_t WASM_EXP btBoxShape_create(pointer_t boxHalfExtents)
 	return (pointer_t) new btBoxShape(*(btVector3 *)boxHalfExtents);
 }
 
+void WASM_EXP btBoxShape_getAabb(pointer_t ptr, pointer_t t, pointer_t aabbMin, pointer_t aabbMax)
+{
+	btBoxShape *shape = (btBoxShape *)ptr;
+	shape->getAabb(*(btTransform *)t, *(btVector3 *)aabbMin, *(btVector3 *)aabbMax);
+}
 
+pointer_t WASM_EXP btBoxShape_getHalfExtentsWithMargin(pointer_t ptr, pointer_t t, pointer_t aabbMin, pointer_t aabbMax)
+{
+	btBoxShape *shape = (btBoxShape *)ptr;
+	tempbtVector3 = shape->getHalfExtentsWithMargin();
+	return (pointer_t)&tempbtVector3;
+}
 
 //btCapsuleShape
 pointer_t WASM_EXP btCapsuleShape_create(btScalar radius, btScalar height)
@@ -1254,6 +1272,18 @@ void WASM_EXP btKinematicCharacterController_setStepHeight(pointer_t ptr, btScal
 {
 	btKinematicCharacterController *character = (btKinematicCharacterController *)ptr;
 	character->setStepHeight(h);
+}
+
+void WASM_EXP btKinematicCharacterController_setMaxPenetrationDepth(pointer_t ptr, btScalar d)
+{
+	btKinematicCharacterController *character = (btKinematicCharacterController *)ptr;
+	character->setMaxPenetrationDepth(d);
+}
+
+btScalar WASM_EXP btKinematicCharacterController_getMaxPenetrationDepth(pointer_t ptr)
+{
+	btKinematicCharacterController *character = (btKinematicCharacterController *)ptr;
+	return character->getMaxPenetrationDepth();
 }
 
 void WASM_EXP btKinematicCharacterController_destroy(pointer_t ptr)

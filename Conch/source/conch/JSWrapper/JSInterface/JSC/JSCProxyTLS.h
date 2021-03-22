@@ -104,20 +104,27 @@ namespace laya
                 JSStringRef jsLinePropertyName = JSStringCreateWithUTF8CString("line");
                 JSStringRef jsColumnPropertyName = JSStringCreateWithUTF8CString("column");
                 JSStringRef jsUrlPropertyName = JSStringCreateWithUTF8CString("sourceURL");
+                JSStringRef jsStackPropertyName = JSStringCreateWithUTF8CString("stack");
                 JSObjectRef exObject = JSValueToObject( pContext, exception, NULL );
                 JSValueRef line = JSObjectGetProperty( pContext, exObject, jsLinePropertyName, NULL );
                 JSValueRef column = JSObjectGetProperty( pContext, exObject, jsColumnPropertyName, NULL );
                 JSValueRef url = JSObjectGetProperty( pContext, exObject, jsUrlPropertyName, NULL );
+                JSValueRef stack = JSObjectGetProperty( pContext, exObject, jsStackPropertyName, NULL );
                 char *pEx = __ToCppString(exception,pContext);
                 char *pLine = __ToCppString(line,pContext);
                 char *pColumn = __ToCppString(column,pContext);
                 char *pUrl = __ToCppString(url,pContext);
-                
+                if (stack != NULL && JSValueGetType(pContext, stack) == kJSTypeString)
+                {
+                    pStack = __ToCppString(stack,pContext);
+                }
                 //通知全局错误处理脚本
                 
                 std::string kBuf = "if(conch.onerror){conch.onerror('";
                 kBuf += UrlEncode(pEx);
-                kBuf += "','undefined','";
+                kBuf += "','";
+                kBuf += UrlEncode(pStack.c_str());
+                kBuf += "','";
                 kBuf += UrlEncode(pLine);
                 kBuf += "','";
                 kBuf += UrlEncode(pColumn);
@@ -142,6 +149,7 @@ namespace laya
                 JSStringRelease(jsLinePropertyName);
                 JSStringRelease(jsColumnPropertyName);
                 JSStringRelease(jsUrlPropertyName);
+                JSStringRelease(jsStackPropertyName);
             }
         }
         

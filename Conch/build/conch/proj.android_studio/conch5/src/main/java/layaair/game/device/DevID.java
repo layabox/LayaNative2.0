@@ -30,11 +30,11 @@ public class DevID
 		String devsn = GetDevSerial();
 		if( devsn!=null && devsn.length()>0)
 			return devsn;
-		String wifimac = GetWifiMac();
+		/*String wifimac = GetWifiMac();
 		if( wifimac !=null && wifimac.length()>0 )
 		{
 			return wifimac.replace(":", "");
-		}
+		}*/
 		String androidid = GetAndroidID();
 		if( androidid!=null && androidid.length()>0 )
 			return androidid;
@@ -139,13 +139,13 @@ public class DevID
         } else return "NA";
         return res;
     }
-	public String GetWifiMac()
+	/*public String GetWifiMac()
 	{
 		String mac= getMac();
 		return mac;
 		//WifiManager wm = (WifiManager) m_Context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 		//return wm.getConnectionInfo().getMacAddress();
-	}
+	}*/
 
 	private static String parseByte(byte b) {
 		String s = "00" + Integer.toHexString(b)+":";

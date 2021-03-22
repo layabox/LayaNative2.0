@@ -26,12 +26,12 @@ static ViewController* g_pIOSMainViewController = nil;
     [super viewDidLoad];
     //保持屏幕常亮，可以通过脚本设置
     [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
-    self->m_pGLContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3];
+    /*self->m_pGLContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3];
     if (self->m_pGLContext)
     {
         NSLog(@"iOS OpenGL ES 3.0 context created");
     }
-    else
+    else*/
     {
         self->m_pGLContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
         if (self->m_pGLContext)
