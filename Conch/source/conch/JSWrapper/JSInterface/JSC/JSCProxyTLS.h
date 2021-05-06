@@ -114,16 +114,17 @@ namespace laya
                 char *pLine = __ToCppString(line,pContext);
                 char *pColumn = __ToCppString(column,pContext);
                 char *pUrl = __ToCppString(url,pContext);
+                std::string strStack;
                 if (stack != NULL && JSValueGetType(pContext, stack) == kJSTypeString)
                 {
-                    pStack = __ToCppString(stack,pContext);
+                    strStack = __ToCppString(stack,pContext);
                 }
                 //通知全局错误处理脚本
                 
                 std::string kBuf = "if(conch.onerror){conch.onerror('";
                 kBuf += UrlEncode(pEx);
                 kBuf += "','";
-                kBuf += UrlEncode(pStack.c_str());
+                kBuf += UrlEncode(strStack.c_str());
                 kBuf += "','";
                 kBuf += UrlEncode(pLine);
                 kBuf += "','";

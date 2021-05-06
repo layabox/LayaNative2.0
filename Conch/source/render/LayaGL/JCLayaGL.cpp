@@ -211,6 +211,14 @@ namespace laya
         getError();
 #endif
     }
+	void JCLayaGL::clearBufferfv(GLenum buffer, GLint drawbuffer, const GLfloat* value)
+	{
+		::glClearBufferfv(buffer, drawbuffer, value);
+#ifdef DEBUG_WEBGL
+		LOGI("clearBufferfv buffer=%d drawbuffer=%d value %f %f %f %f", buffer, value[0], value[1], value[2], value[3]);
+		getError();
+#endif
+	}
     void JCLayaGL::clearColor(GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha)
     {
         ::glClearColor(red, green, blue, alpha);
@@ -856,6 +864,27 @@ namespace laya
         getError();
 #endif
     }
+	void JCLayaGL::renderbufferStorageMultisample(GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height)
+	{
+
+		if (internalformat == GL_DEPTH_STENCIL)
+		{
+			internalformat = GL_DEPTH24_STENCIL8;
+		}
+		::glRenderbufferStorageMultisample(target, samples, internalformat, width, height);
+#ifdef DEBUG_WEBGL
+		LOGI("renderbufferStorageMultisample target=%d, internalformat=%d, width=%d, height=%d", target, internalformat, width, height);
+		getError();
+#endif
+	}
+	void JCLayaGL::blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1, GLbitfield mask, GLenum filter)
+	{
+		::glBlitFramebuffer(srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1, mask, filter);
+#ifdef DEBUG_WEBGL
+		LOGI("blitFramebuffer srcX0=%d,  srcY0=%d  srcX1=%d  srcY1=%d  dstX0=%d  dstY0=%d  dstX1=%d  dstY1=%d  mask=%d  filter=%d", srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1, mask, filter);
+		getError();
+#endif
+	}
     void JCLayaGL::sampleCoverage(GLclampf value, GLboolean invert)
     {
         ::glSampleCoverage(value,invert);

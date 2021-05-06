@@ -321,14 +321,13 @@ namespace laya
         m_sGUID = CToObjectCGetGUID();
         return m_sGUID.c_str();
 #elif ANDROID
-        /*CToJavaBridge::JavaRet kRet;
+        CToJavaBridge::JavaRet kRet;
         if (CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "getWifiMac", kRet))
         {
             m_sGUID = CToJavaBridge::GetInstance()->getJavaString(kRet.pJNI, kRet.strRet);
         }
         LOGI("getGuid::get_Value=%s", m_sGUID.c_str());
-        return m_sGUID.c_str();*/
-		return "android";
+        return m_sGUID.c_str();
 #elif WIN32
         return "window";
 #endif
@@ -336,11 +335,11 @@ namespace laya
     const char* JSConchConfig::getRuntimeVersion()
     {
 #ifdef __APPLE__
-        return "ios-conch6-release-2.11.0";
+        return "ios-conch6-release-2.12.0";
 #elif ANDROID
-        return "android-conch6-release-2.11.0";
+        return "android-conch6-release-2.12.0";
 #elif WIN32
-        return "window-conch6-release-2.11.0";
+        return "window-conch6-release-2.12.0";
 #endif
     }
     const char* JSConchConfig::getAppVersion()

@@ -193,6 +193,9 @@ namespace laya
         LAYA_VERTEXATTRIBDIVISOR,
         LAYA_DRAWARRAYSINSTANCED,
         LAYA_DRAWELEMENTSINSTANCED,
+		LAYA_TEXIMAGE2DCANVAS,
+		LAYA_TEXSTORAGE2D,
+		LAYA_RENDERBUFFERSTORAGEMUILTISAMPLE,
     };
     class JCLayaGLDispatch
     {
@@ -356,6 +359,9 @@ namespace laya
         static void _layaGL_drawElementsInstanced(JCCommandEncoderBuffer& layaGLCmd);
         static void _layaGL_texImage2D_canvas(JCCommandEncoderBuffer& layaGLCmd);
         static void _layaGL_texStorage2D(JCCommandEncoderBuffer& layaGLCmd);
+		static void _layaGL_renderbufferStorageMultisample(JCCommandEncoderBuffer& layaGLCmd);
+		static void _layaGL_clearBufferfv(JCCommandEncoderBuffer& layaGLCmd);
+		static void _layaGL_blitFramebuffer(JCCommandEncoderBuffer& layaGLCmd);
         //------------------------------------------------------------------------------
         //-------------------------webglÀ©Õ¹º¯Êý-----------------------------------------
         //------------------------------------------------------------------------------

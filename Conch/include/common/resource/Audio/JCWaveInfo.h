@@ -99,7 +99,7 @@ public:
 
 private:
 
-	unsigned char getC( unsigned char* p_sBuffer );
+	unsigned char getC( unsigned char* p_sBuffer, int p_nBufferSize);
 	void read( void* pRet, int p_nSize, unsigned char* p_sBuffer );
 
 public:

@@ -181,9 +181,9 @@ bool JCWaveInfo::LoadData( unsigned char* p_sBuffer,int p_nBufferSize )
 	m_pData = new U8[m_nRealDataSize];
 	for( unsigned int i =0; i< m_kDataBlock.dwDataSize; i++ )
 	{
-		U8 n1 = (U8) getC( p_sBuffer );
+		U8 n1 = (U8) getC( p_sBuffer, p_nBufferSize);
 		m_nCurPos ++;
-		U8 n2 = (U8) getC( p_sBuffer );
+		U8 n2 = (U8) getC( p_sBuffer, p_nBufferSize);
 		m_nCurPos ++;
 
 		m_pData[i*2+0] = n1;
@@ -198,8 +198,11 @@ void JCWaveInfo::read( void* pRet, int p_nSize,unsigned char* p_sBuffer )
 	memcpy( pRet,(void*)(p),p_nSize );
 }
 //------------------------------------------------------------------------------
-unsigned char JCWaveInfo::getC( unsigned char* p_sBuffer )
+unsigned char JCWaveInfo::getC( unsigned char* p_sBuffer, int p_nBufferSize)
 {
+	if (m_nCurPos >= p_nBufferSize) {
+		return 0;
+	}
 	return p_sBuffer[m_nCurPos];
 }
 //------------------------------------------------------------------------------

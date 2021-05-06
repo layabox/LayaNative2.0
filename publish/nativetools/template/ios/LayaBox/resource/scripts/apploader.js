@@ -2063,6 +2063,9 @@ var FUNCTION_ID;
     FUNCTION_ID[FUNCTION_ID["DRAWELEMENTSINSTANCED"] = 274] = "DRAWELEMENTSINSTANCED";
     FUNCTION_ID[FUNCTION_ID["TEXIMAGE2DCANVAS"] = 275] = "TEXIMAGE2DCANVAS";
     FUNCTION_ID[FUNCTION_ID["TEXSTORAGE2D"] = 276] = "TEXSTORAGE2D";
+    FUNCTION_ID[FUNCTION_ID["RENDERBUFFERSTORAGEMUILTISAMPLE"] = 277] = "RENDERBUFFERSTORAGEMUILTISAMPLE";
+    FUNCTION_ID[FUNCTION_ID["CLEARBUFFERFV"] = 278] = "CLEARBUFFERFV";
+    FUNCTION_ID[FUNCTION_ID["BLITFRAMEBUFFER"] = 279] = "BLITFRAMEBUFFER";
 })(FUNCTION_ID || (FUNCTION_ID = {}));
 var UNIFORM_TYPE;
 (function (UNIFORM_TYPE) {
@@ -2813,7 +2816,9 @@ class GLCommandEncoder {
         if (supports("GL_OES_depth_texture") || supports("GL_ARB_depth_texture") || supports("GL_ANGLE_depth_texture"))
             result.push("WEBGL_depth_texture");
         if (version.indexOf("OpenGL ES 3.") != -1) {
-            result.push("WEBGL_compressed_texture_etc");
+            if (conchConfig.getOS() == "Conch-android") {
+                result.push("WEBGL_compressed_texture_etc");
+            }
         }
         if (supports("ANGLE_instanced_arrays"))
             result.push("ANGLE_instanced_arrays");
@@ -2829,6 +2834,8 @@ class GLCommandEncoder {
             result.push("WEBGL_compressed_texture_s3tc");
         if (supports("GL_EXT_texture_compression_s3tc_srgb"))
             result.push("WEBGL_compressed_texture_s3tc_srgb");
+        if (supports("GL_OES_texture_compression_astc"))
+            result.push("WEBGL_compressed_texture_astc");
         result.push("WEBGL_debug_renderer_info");
         result.push("WEBGL_lose_context");
         return result;
@@ -2937,6 +2944,52 @@ class GLCommandEncoder {
         else if (name.indexOf('WEBGL_depth_texture') != -1 && ((supports("GL_OES_depth_texture") || supports("GL_ARB_depth_texture") || supports("GL_ANGLE_depth_texture")))) {
             return { UNSIGNED_INT_24_8_WEBGL: 34042 };
         }
+        else if (name.indexOf('WEBGL_compressed_texture_astc') != -1 && (extention.indexOf('GL_OES_texture_compression_astc') != -1 || extention.indexOf('GL_KHR_texture_compression_astc') != -1 || (conchConfig.getOS() == "Conch-android" && version.indexOf("OpenGL ES 3.") != -1 && version.indexOf("OpenGL ES 3.0") == -1))) {
+            return {
+                COMPRESSED_RGBA_ASTC_4x4_KHR: 0x93B0,
+                COMPRESSED_RGBA_ASTC_5x4_KHR: 0x93B1,
+                COMPRESSED_RGBA_ASTC_5x5_KHR: 0x93B2,
+                COMPRESSED_RGBA_ASTC_6x5_KHR: 0x93B3,
+                COMPRESSED_RGBA_ASTC_6x6_KHR: 0x93B4,
+                COMPRESSED_RGBA_ASTC_8x5_KHR: 0x93B5,
+                COMPRESSED_RGBA_ASTC_8x6_KHR: 0x93B6,
+                COMPRESSED_RGBA_ASTC_8x8_KHR: 0x93B7,
+                COMPRESSED_RGBA_ASTC_10x5_KHR: 0x93B8,
+                COMPRESSED_RGBA_ASTC_10x6_KHR: 0x93B9,
+                COMPRESSED_RGBA_ASTC_10x8_KHR: 0x93BA,
+                COMPRESSED_RGBA_ASTC_10x10_KHR: 0x93BB,
+                COMPRESSED_RGBA_ASTC_12x10_KHR: 0x93BC,
+                COMPRESSED_RGBA_ASTC_12x12_KHR: 0x93BD,
+                COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR: 0x93D0,
+                COMPRESSED_SRGB8_ALPHA8_ASTC_5x4_KHR: 0x93D1,
+                COMPRESSED_SRGB8_ALPHA8_ASTC_5x5_KHR: 0x93D2,
+                COMPRESSED_SRGB8_ALPHA8_ASTC_6x5_KHR: 0x93D3,
+                COMPRESSED_SRGB8_ALPHA8_ASTC_6x6_KHR: 0x93D4,
+                COMPRESSED_SRGB8_ALPHA8_ASTC_8x5_KHR: 0x93D5,
+                COMPRESSED_SRGB8_ALPHA8_ASTC_8x6_KHR: 0x93D6,
+                COMPRESSED_SRGB8_ALPHA8_ASTC_8x8_KHR: 0x93D7,
+                COMPRESSED_SRGB8_ALPHA8_ASTC_10x5_KHR: 0x93D8,
+                COMPRESSED_SRGB8_ALPHA8_ASTC_10x6_KHR: 0x93D9,
+                COMPRESSED_SRGB8_ALPHA8_ASTC_10x8_KHR: 0x93DA,
+                COMPRESSED_SRGB8_ALPHA8_ASTC_10x10_KHR: 0x93DB,
+                COMPRESSED_SRGB8_ALPHA8_ASTC_12x10_KHR: 0x93DC,
+                COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR: 0x93DD,
+            };
+        }
+        else if (name.indexOf('WEBGL_compressed_texture_etc') != -1 && conchConfig.getOS() == "Conch-android" && version.indexOf("OpenGL ES 3.") != -1) {
+            return {
+                COMPRESSED_R11_EAC: 0x9270,
+                COMPRESSED_SIGNED_R11_EAC: 0x9271,
+                COMPRESSED_RG11_EAC: 0x9272,
+                COMPRESSED_SIGNED_RG11_EAC: 0x9273,
+                COMPRESSED_RGB8_ETC2: 0x9274,
+                COMPRESSED_SRGB8_ETC2: 0x9275,
+                COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2: 0x9276,
+                COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2: 0x9277,
+                COMPRESSED_RGBA8_ETC2_EAC: 0x9278,
+                COMPRESSED_SRGB8_ALPHA8_ETC2_EAC: 0x9279
+            };
+        }
         else {
             console.log("getExtension " + name + " 尚未支持");
         }
@@ -2973,6 +3026,13 @@ class GLCommandEncoder {
     }
     bindRenderbuffer(target, renderbuffer) {
         this.add_iii(FUNCTION_ID.BINDRENDERBUFFER, target, renderbuffer ? renderbuffer.id : 0);
+    }
+    clearBufferfv(buffer, drawbuffer, values, srcOffset) {
+        let offset = srcOffset ? srcOffset : 0;
+        this.add_iiiiiii(FUNCTION_ID.CLEARBUFFERFV, buffer, drawbuffer, values[0 + offset], values[1 + offset], values[2 + offset], values[3 + offset]);
+    }
+    blitFramebuffer(srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1, mask, filter) {
+        this.add_iiiiiiiiiii(FUNCTION_ID.BLITFRAMEBUFFER, srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1, mask, filter);
     }
     bindTexture(target, texture) {
         this.add_iii(FUNCTION_ID.BINDTEXTURE, target, texture ? texture.id : 0);
@@ -3543,6 +3603,9 @@ class GLCommandEncoder {
     }
     renderbufferStorage(target, internalformat, width, height) {
         this.add_iiiii(FUNCTION_ID.RENDERBUFFERSTORAGE, target, internalformat, width, height);
+    }
+    renderbufferStorageMultisample(target, samples, internalformat, width, height) {
+        this.add_iiiiii(FUNCTION_ID.RENDERBUFFERSTORAGEMUILTISAMPLE, target, samples, internalformat, width, height);
     }
     sampleCoverage(value, invert) {
         this.add_ifi(FUNCTION_ID.SAMPLECOVERAGE, value, invert);
@@ -4776,6 +4839,12 @@ class LayaGLContext {
         this._currentCmdEncoder.bindRenderbuffer(target, renderbuffer);
         this.setBind(target, renderbuffer);
     }
+    clearBufferfv(buffer, drawbuffer, values, srcOffset) {
+        this._currentCmdEncoder.clearBufferfv(buffer, drawbuffer, values, srcOffset);
+    }
+    blitFramebuffer(srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1, mask, filter) {
+        this._currentCmdEncoder.blitFramebuffer(srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1, mask, filter);
+    }
     bindTexture(target, texture) {
         this._currentCmdEncoder.bindTexture(target, texture);
         this.setBind(target, texture);
@@ -5037,6 +5106,9 @@ class LayaGLContext {
     }
     renderbufferStorage(target, internalformat, width, height) {
         this._currentCmdEncoder.renderbufferStorage(target, internalformat, width, height);
+    }
+    renderbufferStorageMultisample(target, samples, internalformat, width, height) {
+        this._currentCmdEncoder.renderbufferStorageMultisample(target, samples, internalformat, width, height);
     }
     sampleCoverage(value, invert) {
         this._currentCmdEncoder.sampleCoverage(value, invert);

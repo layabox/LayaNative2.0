@@ -801,7 +801,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 19;
+				CURRENT_PROJECT_VERSION = 20;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = MH4ZKZTS68;
 				ENABLE_BITCODE = NO;
@@ -823,7 +823,7 @@
 					../../../../ThirdParty/curl/lib/ios,
 					../../../../ThirdParty/bullet/lib/ios,
 				);
-				MARKETING_VERSION = "release-2.11.0";
+				MARKETING_VERSION = "release-2.12.0";
 				OTHER_CFLAGS = "-I../../../include/conchRuntime";
 				OTHER_LDFLAGS = (
 					"-lcurl",
@@ -859,7 +859,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 19;
+				CURRENT_PROJECT_VERSION = 20;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = MH4ZKZTS68;
 				ENABLE_BITCODE = NO;
@@ -882,7 +882,7 @@
 					../../../../ThirdParty/curl/lib/ios,
 					../../../../ThirdParty/bullet/lib/ios,
 				);
-				MARKETING_VERSION = "release-2.11.0";
+				MARKETING_VERSION = "release-2.12.0";
 				OTHER_CFLAGS = "-I../../../include/conchRuntime";
 				OTHER_LDFLAGS = (
 					"-lcurl",

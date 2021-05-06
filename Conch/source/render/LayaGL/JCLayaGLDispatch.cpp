@@ -302,6 +302,9 @@ namespace laya
             &JCLayaGLDispatch::_layaGL_drawElementsInstanced,
             &JCLayaGLDispatch::_layaGL_texImage2D_canvas,
             &JCLayaGLDispatch::_layaGL_texStorage2D,
+			&JCLayaGLDispatch::_layaGL_renderbufferStorageMultisample,
+			&JCLayaGLDispatch::_layaGL_clearBufferfv,
+			&JCLayaGLDispatch::_layaGL_blitFramebuffer,
         };
         static const int nFuncs = sizeof(g_svProcFunctions) / sizeof(g_svProcFunctions[0]);
         char* pCmdBuffer = pRenderCmd.getReadPtr();
@@ -451,6 +454,21 @@ namespace laya
     {
         ms_pLayaGL->clear(*layaGLCmd.popp<int>());
     }
+	void JCLayaGLDispatch::_layaGL_clearBufferfv(JCCommandEncoderBuffer& layaGLCmd)
+	{
+		CMD_iiiiii* cmd = layaGLCmd.popp<CMD_iiiiii>();
+		GLfloat value[4];
+		value[0] = cmd->k;
+		value[1] = cmd->l;
+		value[2] = cmd->m;
+		value[3] = cmd->n;
+		ms_pLayaGL->clearBufferfv(cmd->i, cmd->j, value);
+	}
+	void JCLayaGLDispatch::_layaGL_blitFramebuffer(JCCommandEncoderBuffer& layaGLCmd)
+	{
+		CMD_iiiiiiiiii* cmd = layaGLCmd.popp<CMD_iiiiiiiiii>();
+		ms_pLayaGL->blitFramebuffer(cmd->a, cmd->b, cmd->c, cmd->d, cmd->e, cmd->f, cmd->g, cmd->h, cmd->i, cmd->j);
+	}
     void JCLayaGLDispatch::_layaGL_clearColor(JCCommandEncoderBuffer& layaGLCmd)
     {
         CMD_ffff* cmd = layaGLCmd.popp<CMD_ffff>();
@@ -1166,6 +1184,11 @@ namespace laya
         int x = cmd->a, y = cmd->b, w = cmd->c, h = cmd->d, format = cmd->e, type = cmd->f, callbackObjID = cmd->g, funcID = cmd->h;
         ms_pLayaGL->readPixelsAsync(x, y, w, h, format, type, callbackObjID, funcID);
     }
+	void JCLayaGLDispatch::_layaGL_renderbufferStorageMultisample(JCCommandEncoderBuffer& layaGLCmd)
+	{
+		CMD_iiiii* cmd = layaGLCmd.popp<CMD_iiiii>();
+		ms_pLayaGL->renderbufferStorageMultisample(cmd->i, cmd->j, cmd->k, cmd->l, cmd->m);
+	}
     //------------------------------------------------------------------------------
     //-------------------------webgl扩展函数-----------------------------------------
     //------------------------------------------------------------------------------

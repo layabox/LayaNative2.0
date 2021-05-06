@@ -192,6 +192,9 @@ namespace laya
         virtual void drawElementsInstanced(GLenum mode, GLsizei count, GLenum type, GLintptr indices, GLsizei primcount);
 		virtual void texImage2DCanvas(GLsizei width, GLsizei height, int canvas);
         virtual void texStorage2D(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height);
+		virtual void renderbufferStorageMultisample(GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height);
+		virtual void clearBufferfv(GLenum buffer, GLint drawbuffer, const GLfloat* value);
+		virtual void blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1, GLbitfield mask, GLenum filter);
         //------------------------------------------------------------------------------
         //------------------------------------------------------------------------------
         virtual void useCommandEncoder(int nCmdSetID);
