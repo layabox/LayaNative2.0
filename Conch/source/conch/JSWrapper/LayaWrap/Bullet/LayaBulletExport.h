@@ -13,7 +13,7 @@
 typedef intptr_t pointer_t;
 namespace laya
 {
-    inline void layaMotionStateGetWorldTransform(pointer_t rigidBodyID, pointer_t worldTrans)
+    inline void layaMotionStateGetWorldTransform(int32_t rigidBodyID, pointer_t worldTrans)
     {
         JCScriptRuntime* pScriptRuntime = JCScriptRuntime::s_JSRT;
         if (pScriptRuntime)
@@ -21,7 +21,7 @@ namespace laya
             pScriptRuntime->m_bJSBulletGetWorldTransformHandle.Call(rigidBodyID, worldTrans);
         }
     }
-    inline void layaMotionStateSetWorldTransform(pointer_t rigidBodyID, const pointer_t worldTrans)
+    inline void layaMotionStateSetWorldTransform(int32_t rigidBodyID, const pointer_t worldTrans)
     {
         JCScriptRuntime* pScriptRuntime = JCScriptRuntime::s_JSRT;
         if (pScriptRuntime)
@@ -34,7 +34,7 @@ namespace laya
     class LayaMotionState : public btMotionState
     {
     public:
-        pointer_t rigidBodyID;
+		int32_t rigidBodyID;
         virtual void getWorldTransform(btTransform &centerOfMassWorldTrans)
         {
             layaMotionStateGetWorldTransform(rigidBodyID, (pointer_t)&centerOfMassWorldTrans);
@@ -52,7 +52,7 @@ namespace laya
 
         static JsObjClassInfo JSCLSINFO;
 
-        static JSLayaConchBullet* GetInstance();
+        static JSLayaConchBullet* getInstance();
 
         static void exportJS();
 

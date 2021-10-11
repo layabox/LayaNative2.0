@@ -12,7 +12,7 @@
 #include "../JSInterface/JSInterface.h"
 #include <RenderEx/JCGlobalValue.h>
 #include <RenderEx/JCGpuProgram.h>
-#include <Manager/JCArrayBufferManager.h>
+#include <manager/JCArrayBufferManager.h>
 
 /** 
  * @brief 

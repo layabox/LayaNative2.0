@@ -22,6 +22,7 @@
 #include "JCThreadCmdMgr.h"
 #include "JCSystemConfig.h"
 #include <LayaGL/JCLayaGL.h>
+#include <webglplus/JCWebGLPlus.h>
 #ifdef JS_V8
     #include "JSWrapper/v8debug/debug-agent.h"
 #endif
@@ -69,8 +70,11 @@ namespace laya
 #ifdef __APPLE__
         pthread_key_create(&JCWorkerThread::s_tls_curThread, NULL);
         pthread_key_create(&s_tls_curDataThread, NULL);
-        pthread_key_create(&JSClassMgr::s_tls_curThread, NULL);
+        
+#ifdef JS_JSC
         pthread_key_create(&__TlsData::s_tls_curThread, NULL);
+        pthread_key_create(&JSClassMgr::s_tls_curThread, NULL);
+#endif
 #elif _WIN32
         HMODULE libHandle = LoadLibrary("libGLESv2.dll");
 #elif ANDROID
@@ -130,7 +134,7 @@ namespace laya
         }
         m_nJSDebugMode = nJSDebugMode;
         m_nJSDebugPort = nJSDebugPort;
-#ifdef JS_V8
+#ifdef JS_V8_DEBUGGER
         m_pDbgAgent = NULL;
         if (m_nJSDebugMode != JS_DEBUG_MODE_OFF)
         {
@@ -155,7 +159,7 @@ namespace laya
             delete m_pScrpitRuntime;
             m_pScrpitRuntime = NULL;
         }
-#ifdef JS_V8
+#ifdef JS_V8_DEBUGGER
         if (m_pDbgAgent) 
         {
             m_pDbgAgent->Shutdown();

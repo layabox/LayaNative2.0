@@ -47,9 +47,9 @@ namespace laya
                 m_pszType = 0;
             }
         }
-        uint64_t GetSize()
+        uint32_t GetSize()
         {
-            return m_i64Size;
+            return static_cast<uint32_t>(m_i64Size);
         }
         void close()
         {

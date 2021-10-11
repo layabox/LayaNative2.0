@@ -47,34 +47,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		241D43B32306B92700E57E0D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 241D43AF2306B92700E57E0D /* webglPlus.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = A27AE57F230697ED00751152;
-			remoteInfo = webglPlus;
-		};
-		241D43D72306BD3B00E57E0D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 241D43CE2306BD3B00E57E0D /* webglPlus.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 241D43BE2306BCEC00E57E0D;
-			remoteInfo = webglPlus;
-		};
-		241D43DD2306BDA900E57E0D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 241D43D92306BDA900E57E0D /* webglPlus.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 241D43BE2306BCEC00E57E0D;
-			remoteInfo = webglPlus;
-		};
-		241D43E92306BDBF00E57E0D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 241D43E52306BDBF00E57E0D /* webglPlus.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 241D43BE2306BCEC00E57E0D;
-			remoteInfo = webglPlus;
-		};
 		A2460A361C8DAF710032CD8D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = A2460A141C8DAF710032CD8D /* Project object */;
@@ -122,10 +94,6 @@
 /* Begin PBXFileReference section */
 		240BB73121352E5500D1CABA /* UIFloatPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIFloatPanel.h; path = LayaBox/UIFloatPanel.h; sourceTree = "<group>"; };
 		240BB73621352E5500D1CABA /* UIFloatPanel.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = UIFloatPanel.mm; path = LayaBox/UIFloatPanel.mm; sourceTree = "<group>"; };
-		241D43AF2306B92700E57E0D /* webglPlus.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = webglPlus.xcodeproj; path = ../../webglPlus/proj.ios/webglPlus.xcodeproj; sourceTree = "<group>"; };
-		241D43CE2306BD3B00E57E0D /* webglPlus.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = webglPlus.xcodeproj; path = ../../webglPlus/proj.ios/webglPlus.xcodeproj; sourceTree = "<group>"; };
-		241D43D92306BDA900E57E0D /* webglPlus.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = webglPlus.xcodeproj; path = ../../webglPlus/proj.ios/webglPlus.xcodeproj; sourceTree = "<group>"; };
-		241D43E52306BDBF00E57E0D /* webglPlus.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = webglPlus.xcodeproj; path = ../../webglPlus/proj.ios/webglPlus.xcodeproj; sourceTree = "<group>"; };
 		241D44642321FB2600E57E0D /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		2439790D2136CF36009EF8B7 /* ScanViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ScanViewController.mm; sourceTree = "<group>"; };
 		2439790E2136CF37009EF8B7 /* ScanViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScanViewController.h; sourceTree = "<group>"; };
@@ -154,7 +122,6 @@
 		A2460A461C8DAF710032CD8D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A2460A811C8DB3F10032CD8D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		A2460A831C8DB3FC0032CD8D /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
-		A2460A851C8DB4090032CD8D /* libstdc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.tbd"; path = "usr/lib/libstdc++.tbd"; sourceTree = SDKROOT; };
 		A2460A871C8DB4160032CD8D /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		A2460A891C8DB4220032CD8D /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
 		A2460A8B1C8DB4370032CD8D /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
@@ -229,38 +196,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		241D43B02306B92700E57E0D /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				241D43B42306B92700E57E0D /* libwebglPlus.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		241D43CF2306BD3B00E57E0D /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				241D43D82306BD3B00E57E0D /* libwebglPlus.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		241D43DA2306BDA900E57E0D /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				241D43DE2306BDA900E57E0D /* libwebglPlus.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		241D43E62306BDBF00E57E0D /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				241D43EA2306BDBF00E57E0D /* libwebglPlus.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		5E914EFE1EA1F9780023BD7F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -283,10 +218,6 @@
 		A2460A131C8DAF710032CD8D = {
 			isa = PBXGroup;
 			children = (
-				241D43AF2306B92700E57E0D /* webglPlus.xcodeproj */,
-				241D43CE2306BD3B00E57E0D /* webglPlus.xcodeproj */,
-				241D43D92306BDA900E57E0D /* webglPlus.xcodeproj */,
-				241D43E52306BDBF00E57E0D /* webglPlus.xcodeproj */,
 				240BB73121352E5500D1CABA /* UIFloatPanel.h */,
 				240BB73621352E5500D1CABA /* UIFloatPanel.mm */,
 				A28105581F735DC30094C3CC /* conchRuntime.xcodeproj */,
@@ -310,7 +241,6 @@
 				A2460A8B1C8DB4370032CD8D /* libsqlite3.tbd */,
 				A2460A891C8DB4220032CD8D /* libsqlite3.0.tbd */,
 				A2460A871C8DB4160032CD8D /* CoreTelephony.framework */,
-				A2460A851C8DB4090032CD8D /* libstdc++.tbd */,
 				A2460A831C8DB3FC0032CD8D /* libz.tbd */,
 				A2460A811C8DB3F10032CD8D /* Foundation.framework */,
 				A2460A621C8DB1B70032CD8D /* resource */,
@@ -526,22 +456,6 @@
 					ProductGroup = A28105531F735DBE0094C3CC /* Products */;
 					ProjectRef = A28105521F735DBE0094C3CC /* render.xcodeproj */;
 				},
-				{
-					ProductGroup = 241D43DA2306BDA900E57E0D /* Products */;
-					ProjectRef = 241D43D92306BDA900E57E0D /* webglPlus.xcodeproj */;
-				},
-				{
-					ProductGroup = 241D43B02306B92700E57E0D /* Products */;
-					ProjectRef = 241D43AF2306B92700E57E0D /* webglPlus.xcodeproj */;
-				},
-				{
-					ProductGroup = 241D43E62306BDBF00E57E0D /* Products */;
-					ProjectRef = 241D43E52306BDBF00E57E0D /* webglPlus.xcodeproj */;
-				},
-				{
-					ProductGroup = 241D43CF2306BD3B00E57E0D /* Products */;
-					ProjectRef = 241D43CE2306BD3B00E57E0D /* webglPlus.xcodeproj */;
-				},
 			);
 			projectRoot = "";
 			targets = (
@@ -553,34 +467,6 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		241D43B42306B92700E57E0D /* libwebglPlus.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libwebglPlus.a;
-			remoteRef = 241D43B32306B92700E57E0D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		241D43D82306BD3B00E57E0D /* libwebglPlus.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libwebglPlus.a;
-			remoteRef = 241D43D72306BD3B00E57E0D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		241D43DE2306BDA900E57E0D /* libwebglPlus.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libwebglPlus.a;
-			remoteRef = 241D43DD2306BDA900E57E0D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		241D43EA2306BDBF00E57E0D /* libwebglPlus.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libwebglPlus.a;
-			remoteRef = 241D43E92306BDBF00E57E0D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		A281054F1F735DB90094C3CC /* libcommon.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -849,7 +735,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.layabox.conch6;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				VALID_ARCHS = "arm64 armv7";
+				VALID_ARCHS = "arm64 armv7 x86_64";
 			};
 			name = Debug;
 		};
@@ -908,7 +794,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.layabox.conch6;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				VALID_ARCHS = "arm64 armv7";
+				VALID_ARCHS = "arm64 armv7 x86_64";
 			};
 			name = Release;
 		};

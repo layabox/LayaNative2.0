@@ -1,12 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Conch6", "Conch6\Conch6.vcxproj", "{54D0666B-DAC5-40CF-A3CB-2513A6C46CA2}"
 	ProjectSection(ProjectDependencies) = postProject
 		{ABB51704-6CEB-42B4-9B14-9723FBBC08B2} = {ABB51704-6CEB-42B4-9B14-9723FBBC08B2}
-		{F7E47B5C-1DDF-487D-88A6-4358E8D2BD2A} = {F7E47B5C-1DDF-487D-88A6-4358E8D2BD2A}
 		{546B8E71-0960-4DF7-AE94-D03FD3AFE2CE} = {546B8E71-0960-4DF7-AE94-D03FD3AFE2CE}
 	EndProjectSection
 EndProject
@@ -16,8 +15,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "render", "..\..\render\proj
 	ProjectSection(ProjectDependencies) = postProject
 		{ABB51704-6CEB-42B4-9B14-9723FBBC08B2} = {ABB51704-6CEB-42B4-9B14-9723FBBC08B2}
 	EndProjectSection
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "webglPlus", "..\..\webglPlus\proj.win32\webglPlus.vcxproj", "{F7E47B5C-1DDF-487D-88A6-4358E8D2BD2A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,12 +44,6 @@ Global
 		{546B8E71-0960-4DF7-AE94-D03FD3AFE2CE}.Release|x64.ActiveCfg = Release|Win32
 		{546B8E71-0960-4DF7-AE94-D03FD3AFE2CE}.Release|x86.ActiveCfg = Release|Win32
 		{546B8E71-0960-4DF7-AE94-D03FD3AFE2CE}.Release|x86.Build.0 = Release|Win32
-		{F7E47B5C-1DDF-487D-88A6-4358E8D2BD2A}.Debug|x64.ActiveCfg = Debug|Win32
-		{F7E47B5C-1DDF-487D-88A6-4358E8D2BD2A}.Debug|x86.ActiveCfg = Debug|Win32
-		{F7E47B5C-1DDF-487D-88A6-4358E8D2BD2A}.Debug|x86.Build.0 = Debug|Win32
-		{F7E47B5C-1DDF-487D-88A6-4358E8D2BD2A}.Release|x64.ActiveCfg = Release|Win32
-		{F7E47B5C-1DDF-487D-88A6-4358E8D2BD2A}.Release|x86.ActiveCfg = Release|Win32
-		{F7E47B5C-1DDF-487D-88A6-4358E8D2BD2A}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -38,8 +38,9 @@ namespace laya {
 	}
 	char* JsCharToC(Local<Value> p_vl) {
 		int len = 0;
-		Local<String> str = p_vl->ToString();
-		len = str->Utf8Length();
+		auto isolate = v8::Isolate::GetCurrent();
+		Local<String> str = p_vl->ToString(isolate->GetCurrentContext()).ToLocalChecked();
+		len = str->Utf8Length(isolate);
 		if (len <= 0)
 			return "";
 		JsStrBuff& curdata = JsStrBuff::getAData();
@@ -62,7 +63,7 @@ namespace laya {
 				tocharBuf = new char[len+1];
 			}
 		}
-		str->WriteUtf8(tocharBuf);
+		str->WriteUtf8(isolate, tocharBuf);
 		return tocharBuf;
 	}
 }
@@ -161,9 +162,9 @@ namespace laya{
 
     void __JSRun::ReportException(v8::Isolate* isolate, v8::TryCatch* try_catch) {
         v8::HandleScope handle_scope(isolate);
-        v8::String::Utf8Value exception(try_catch->Exception());
+        v8::String::Utf8Value exception(isolate, try_catch->Exception());
         const char* exception_string = ToCString(exception);
-        v8::Handle<v8::Message> message = try_catch->Message();
+        v8::Local<v8::Message> message = try_catch->Message();
         static char errInfo[2048];
         int curpos = 0;
         if (message.IsEmpty()) {
@@ -181,10 +182,10 @@ namespace laya{
         }
         else {
             auto ctx = isolate->GetCurrentContext();
-            v8::String::Utf8Value fnstr (message->GetScriptResourceName());
+            v8::String::Utf8Value fnstr (isolate, message->GetScriptResourceName());
             const char* filename_string = ToCString(fnstr);
             v8::MaybeLocal<String> source_line_maybe = message->GetSourceLine(ctx);
-            v8::String::Utf8Value srclinestr(source_line_maybe.ToLocalChecked());
+            v8::String::Utf8Value srclinestr(isolate, source_line_maybe.ToLocalChecked());
             const char* sourceline_string = ToCString(srclinestr);
             int linenum = message->GetLineNumber(ctx).FromJust();
             int start = message->GetStartColumn(ctx).FromMaybe(0);
@@ -227,8 +228,10 @@ namespace laya{
                 }
             }
             curpos += snprintf(errInfo + curpos,sizeof(errInfo)-curpos, "\n");
-            v8::String::Utf8Value stack_trace(try_catch->StackTrace());
-            if (stack_trace.length() > 0) {
+			v8::Local<v8::Value> stack_trace_string;
+			if (try_catch->StackTrace(ctx).ToLocal(&stack_trace_string) && stack_trace_string->IsString() && v8::Local<v8::String>::Cast(stack_trace_string)->Length() > 0) 
+			{
+				v8::String::Utf8Value stack_trace(isolate, stack_trace_string);
                 const char* stack_trace_string = ToCString(stack_trace);
                 if (curpos < sizeof(errInfo)) {
                     curpos += snprintf(errInfo + curpos,sizeof(errInfo)-curpos, "%s", stack_trace_string);
@@ -254,11 +257,11 @@ namespace laya{
 
         }
 
-        if (gbAlertException)
-            JSAlert(errInfo);
-        else {
-            LOGE("==JSERROR:\n%s", errInfo);
-        }
+		if (gbAlertException)
+		{
+			JSAlert(errInfo);
+		}
+		LOGE("==JSERROR:\n%s", errInfo);
     }
 }
 #endif

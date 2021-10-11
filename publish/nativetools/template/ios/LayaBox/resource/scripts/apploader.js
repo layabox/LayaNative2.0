@@ -733,7 +733,12 @@ class _Cookie {
     toLocalString(type) {
         switch (type) {
             case "in":
-                return this.key + "=" + encodeURIComponent(this.value) + "; expires=" + this.expires.toGMTString() + "; domain=" + encodeURIComponent(this.domain);
+                if (this.expires) {
+                    return this.key + "=" + encodeURIComponent(this.value) + "; expires=" + this.expires.toGMTString() + "; domain=" + encodeURIComponent(this.domain);
+                }
+                else {
+                    return this.key + "=" + encodeURIComponent(this.value) + "; domain=" + encodeURIComponent(this.domain);
+                }
             case "out":
                 return this.key + "=" + this.value;
             default:
@@ -2926,7 +2931,7 @@ class GLCommandEncoder {
         else if (name.indexOf('ANGLE_instanced_arrays') != -1 && ((extention.indexOf('_instanced_arrays') != -1) || version.indexOf("OpenGL ES 3.") != -1)) {
             return new ANGLEInstancedArrays(this);
         }
-        else if (name.indexOf('OES_vertex_array_object') != -1 && (extention.indexOf('GL_OES_vertex_array_object') != -1)) {
+        else if (name.indexOf('OES_vertex_array_object') != -1 && ((extention.indexOf('GL_OES_vertex_array_object') != -1) || version.indexOf("OpenGL ES 3.") != -1)) {
             return new OESVertexArrayObject(this);
         }
         else if (name.indexOf('OES_texture_float') != -1 && extention.indexOf('GL_OES_texture_float') != -1) {

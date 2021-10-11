@@ -1,4 +1,4 @@
--libraryjars 'C:\Users\fulong\AppData\Local\Android\Sdk\platforms\android-22\android.jar'
+-libraryjars 'C:\Users\lvfulong\AppData\Local\Android\Sdk\platforms\android-22\android.jar'
 
 -dontusemixedcaseclassnames
 -keepattributes *Annotation*

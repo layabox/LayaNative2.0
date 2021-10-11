@@ -10,12 +10,20 @@ LOCAL_CFLAGS := \
   -DANDROID \
   -DIN_LIBRARY \
   -D_GLIBCXX_PERMIT_BACKWARD_HASH \
+  -DANDROID_ARM_NEON=TRUE \
+  -DANDROID_STL=c++_shared \
+  -DANDROID_TOOLCHAIN=clang \
   -frtti
 
-LOCAL_CFLAGS += -std=c++11
+LOCAL_CPPFLAGS += -std=c++11
 
 ifeq ($(APP_PERFTEST),1)
 LOCAL_CFLAGS += -DPERFTEST 
+endif
+
+ifeq ($(TARGET_ARCH),arm64)
+   LOCAL_CFLAGS += -DV8_COMPRESS_POINTERS
+   LOCAL_CPPFLAGS+= -DV8_COMPRESS_POINTERS
 endif
 
 LOCAL_CXXFLAGS := -O3
@@ -27,6 +35,7 @@ LOCAL_SRC_FILES := \
         ../../../../source/common/downloadMgr/JCCurlWrap.cpp \
         ../../../../source/common/downloadMgr/JCHttpHeader.cpp \
         ../../../../source/common/downloadMgr/JCDownloadMgr.cpp \
+		../../../../source/common/manager/JCArrayBufferManager.cpp \
         ../../../../source/common/event/JCEmitter.cpp \
         ../../../../source/common/event/JCEventBase.cpp \
         ../../../../source/common/fileSystem/JCFileSystem.cpp \
@@ -52,6 +61,11 @@ LOCAL_SRC_FILES := \
         ../../../../source/common/util/JCZlib.cpp \
         ../../../../source/common/util/Log.cpp \
         ../../../../source/common/util/JCFlog.cpp \
+		../../../../source/common/math/JCBoundingBox.cpp \
+		../../../../source/common/math/JCBoundingFrustum.cpp \
+		../../../../source/common/math/JCBoundingSphere.cpp \
+		../../../../source/common/math/JCPlane.cpp \
+		../../../../source/common/webglplus/JCWebGLPlus.cpp \
         ../../../../source/common/resource/Audio/JCAudioWavplayer.cpp \
         ../../../../source/common/resource/Audio/JCOggParser.cpp \
         ../../../../source/common/resource/Audio/JCWaveInfo.cpp \

@@ -27,6 +27,11 @@
     <ClCompile Include="..\..\..\source\common\imageLib\JCImageRW.cpp" />
     <ClCompile Include="..\..\..\source\common\imageLib\JCJpegImg.cpp" />
     <ClCompile Include="..\..\..\source\common\imageLib\JCPngImg.cpp" />
+    <ClCompile Include="..\..\..\source\common\manager\JCArrayBufferManager.cpp" />
+    <ClCompile Include="..\..\..\source\common\math\JCBoundingBox.cpp" />
+    <ClCompile Include="..\..\..\source\common\math\JCBoundingFrustum.cpp" />
+    <ClCompile Include="..\..\..\source\common\math\JCBoundingSphere.cpp" />
+    <ClCompile Include="..\..\..\source\common\math\JCPlane.cpp" />
     <ClCompile Include="..\..\..\source\common\math\Matrix32.cpp" />
     <ClCompile Include="..\..\..\source\common\misc\JCGetClockExact.cpp" />
     <ClCompile Include="..\..\..\source\common\misc\JCLayaThreadPool.cpp" />
@@ -51,6 +56,7 @@
     <ClCompile Include="..\..\..\source\common\util\JCLayaUrl.cpp" />
     <ClCompile Include="..\..\..\source\common\util\JCZlib.cpp" />
     <ClCompile Include="..\..\..\source\common\util\Log.cpp" />
+    <ClCompile Include="..\..\..\source\common\webglplus\JCWebGLPlus.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\source\common\buffer\JCBuffer.h" />
@@ -70,7 +76,13 @@
     <ClInclude Include="..\..\..\source\common\imageLib\JCGifImg.h" />
     <ClInclude Include="..\..\..\source\common\imageLib\JCImageRW.h" />
     <ClInclude Include="..\..\..\source\common\JCIGLRender.h" />
+    <ClInclude Include="..\..\..\source\common\manager\JCArrayBufferManager.h" />
+    <ClInclude Include="..\..\..\source\common\math\JCBoundingBox.h" />
+    <ClInclude Include="..\..\..\source\common\math\JCBoundingFrustum.h" />
+    <ClInclude Include="..\..\..\source\common\math\JCBoundingSphere.h" />
+    <ClInclude Include="..\..\..\source\common\math\JCPlane.h" />
     <ClInclude Include="..\..\..\source\common\math\Matrix32.h" />
+    <ClInclude Include="..\..\..\source\common\math\Vector3.h" />
     <ClInclude Include="..\..\..\source\common\misc\JCGetClockExact.h" />
     <ClInclude Include="..\..\..\source\common\misc\JCCondition.h" />
     <ClInclude Include="..\..\..\source\common\misc\JCLayaThreadPool.h" />
@@ -108,6 +120,7 @@
     <ClInclude Include="..\..\..\source\common\util\rapidxml\rapidxml_print.hpp" />
     <ClInclude Include="..\..\..\source\common\util\rapidxml\rapidxml_utils.hpp" />
     <ClInclude Include="..\..\..\source\common\util\RefObject.h" />
+    <ClInclude Include="..\..\..\source\common\webglplus\JCWebGLPlus.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{ABB51704-6CEB-42B4-9B14-9723FBBC08B2}</ProjectGuid>

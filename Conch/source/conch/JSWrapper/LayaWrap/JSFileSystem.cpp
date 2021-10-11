@@ -1,4 +1,4 @@
-﻿/**
+/**
 @file			JSFileSystem.cpp
 @brief			
 @author			James
@@ -10,7 +10,7 @@
 #include "../JSInterface/JSInterface.h"
 #include <util/Log.h>
 #include <fileSystem/JCFileSystem.h>
-
+#include <ctime>
 
 namespace laya
 {
@@ -100,12 +100,13 @@ namespace laya
 #ifdef JS_V8
 			//st.type;
 			v8::Isolate* pIso = v8::Isolate::GetCurrent();
+			v8::Local<v8::Context> context = pIso->GetCurrentContext();
 			//v8::HandleScope scope(pIso); 不用了，还得想办法escape
 			v8::Local<v8::Object> retobj = v8::Object::New(pIso);
-			retobj->Set(Js_Str(pIso, "isDirectory"), v8::Boolean::New(pIso, isDir));
-			retobj->Set(Js_Str(pIso, "isFile"), v8::Boolean::New(pIso, isFile));
-			retobj->Set(Js_Str(pIso, "size"), v8::Number::New(pIso, sz));
-			retobj->Set(Js_Str(pIso, "mtime"), v8::Date::New(pIso, (double)(wtime*1000)));
+			retobj->Set(context, Js_Str(pIso, "isDirectory"), v8::Boolean::New(pIso, isDir));
+			retobj->Set(context, Js_Str(pIso, "isFile"), v8::Boolean::New(pIso, isFile));
+			retobj->Set(context, Js_Str(pIso, "size"), v8::Number::New(pIso, sz));
+			retobj->Set(context, Js_Str(pIso, "mtime"), v8::Date::New(context, (double)(wtime*1000)).ToLocalChecked());
 			return retobj;
 #elif JS_JSC
             JSContextRef ctx = laya::__TlsData::GetInstance()->GetCurContext();
@@ -113,7 +114,7 @@ namespace laya
 			JSObjectSetProperty(ctx, retobj, JSStringCreateWithUTF8CString("isDirectory"), JSValueMakeBoolean(ctx, isDir), kJSPropertyAttributeNone, nullptr);
 			JSObjectSetProperty(ctx, retobj, JSStringCreateWithUTF8CString("isFile"), JSValueMakeBoolean(ctx,isFile), kJSPropertyAttributeNone, nullptr);
 			JSObjectSetProperty(ctx, retobj, JSStringCreateWithUTF8CString("size"), JSValueMakeNumber(ctx,sz), kJSPropertyAttributeNone, nullptr);
-			JSObjectSetProperty(ctx, retobj, JSStringCreateWithUTF8CString("mtime"), laya::__TransferToJs<long>::ToJsDate(wtime*1000), kJSPropertyAttributeNone, nullptr);
+			JSObjectSetProperty(ctx, retobj, JSStringCreateWithUTF8CString("mtime"), laya::__TransferToJs<uint64_t>::ToJsDate(wtime*1000), kJSPropertyAttributeNone, nullptr);
 			return retobj;
 #endif
 		}

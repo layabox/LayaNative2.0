@@ -14,13 +14,15 @@
 #include <util/JCCommonMethod.h>
 #include <util/Log.h>
 #include <sstream>
+#include <string>
+#include <cassert>
 
 namespace laya{
     extern void JSAlert(const char* p_sBuffer);
     class __JsThrow    {
     public:
         static void Throw( const char *p_pszInfo ) {
-			v8::Isolate::GetCurrent()->ThrowException(v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), (0==p_pszInfo)?"unknown error":p_pszInfo));
+			v8::Isolate::GetCurrent()->ThrowException(v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), (0==p_pszInfo)?"unknown error":p_pszInfo).ToLocalChecked());
         }
     };
     extern bool gbAlertException;
@@ -33,35 +35,44 @@ namespace laya{
 
         static void ReportException(v8::Isolate* isolate, v8::TryCatch* try_catch);
 
-        static bool Run( const char *p_pszScript ) {
+        static bool Run( const char *p_pszScript )
+		{
 			v8::Isolate* isolate = v8::Isolate::GetCurrent();
 			v8::HandleScope handle_scope(isolate);
 			v8::TryCatch try_catch(isolate);
+			std::string strScript(p_pszScript);
 
-			v8::Handle<v8::String> source = v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), p_pszScript);
+			//v8::Local<v8::String> file_name = v8::String::NewFromUtf8(isolate, "unnamed").ToLocalChecked();
+			//v8::ScriptOrigin origin(file_name);
 
-			v8::Handle<v8::Script> script = v8::Script::Compile(source);
-			if( script.IsEmpty() ){
+			v8::MaybeLocal<v8::String> source = v8::String::NewFromUtf8(isolate, strScript.c_str());
+			if (source.IsEmpty())
+			{
+				LOGI("source.IsEmpty()");
+				return false;
+			}
+			v8::Local<v8::Script> script;
+			if (!v8::Script::Compile(isolate->GetCurrentContext(), source.ToLocalChecked()/*, &origin*/).ToLocal(&script))
+			{
 				//打印编译错误信息
-				printf("---Compile script error---\n");
+				LOGI("---Compile script error---");
 				ReportException(isolate, &try_catch);
 				return false;
 			}
-
-			v8::Handle<v8::Value> res = script->Run();
-
-			if( !res.IsEmpty() && !res->IsUndefined() )
+			v8::Local<v8::Value> result;
+			if (!script->Run(isolate->GetCurrentContext()).ToLocal(&result))
 			{
-				v8::String::Utf8Value ascii(res);
-				printf("run result: [%s]\n", *ascii);
-			}
-
-			if( try_catch.HasCaught()){
+				assert(try_catch.HasCaught());
 				printf("---run script error---\n");
+				// Print errors that happened during execution.
 				ReportException(isolate, &try_catch);
+				return false;
 			}
-            
-            return true;
+			else
+			{
+				assert(!try_catch.HasCaught());
+				return true;
+			}
         }
     };
 }

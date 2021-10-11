@@ -27,9 +27,7 @@ namespace laya
 
         ~JSConsole();
 
-        static JSConsole* GetInstance();
-
-        static void DelInstance();
+        static JSConsole* getInstance();
 
     public:
 

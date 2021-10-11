@@ -10,7 +10,7 @@
 #define __JSWebGLPlus_H__
 
 #include "../JSInterface/JSInterface.h"
-#include <JCWebGLPlus.h>
+#include <webglplus/JCWebGLPlus.h>
 
 /** 
  * @brief 
@@ -39,14 +39,14 @@ namespace laya
 
         bool syncArrayBufferDataToRuntime(int nID, bool bSyncToRender, JSValueAsParam pArrayBuffer);
 
-        void evaluateClipDatasRealTime(JSValueAsParam nodes, float playCurTime, JSValueAsParam realTimeCurrentFrameIndexs, bool addtive, bool frontPlay);
+        /*(void evaluateClipDatasRealTime(JSValueAsParam nodes, float playCurTime, JSValueAsParam realTimeCurrentFrameIndexs, bool addtive, bool frontPlay);
 
         bool updateAnimationNodeWorldMatix(JSValueAsParam locPosition, JSValueAsParam locRotation, JSValueAsParam locScaling, JSValueAsParam parentIndices, JSValueAsParam outWorldMatrix);
 
         bool computeSubSkinnedData(JSValueAsParam worldMatrixs, JSValueAsParam worldMatrixIndex, JSValueAsParam inverseBindPosesBuffer, JSValueAsParam boneIndices, JSValueAsParam bindPoseInices, JSValueAsParam data);
 
         int culling(JSValueAsParam boundFrustumBuffer, JSValueAsParam cullingBuffer, JSValueAsParam cullingBufferIndices, int cullingCount, JSValueAsParam cullingBufferResult);
-
+		*/
     public:
 
         static JSWebGLPlus*         s_pWebGLPlus;

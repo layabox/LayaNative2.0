@@ -200,7 +200,12 @@ class _Cookie{
     toLocalString(type:string):string{
         switch (type) {
             case "in":
-                return this.key+"="+encodeURIComponent(this.value)+"; expires="+this.expires.toGMTString()+"; domain="+encodeURIComponent(this.domain);
+                if (this.expires) {
+                    return this.key+"="+encodeURIComponent(this.value)+"; expires="+this.expires.toGMTString()+"; domain="+encodeURIComponent(this.domain);
+                }
+                else {
+                    return this.key+"="+encodeURIComponent(this.value) + "; domain="+encodeURIComponent(this.domain);
+                }
             case "out":
                 return this.key+"="+this.value;
             default:

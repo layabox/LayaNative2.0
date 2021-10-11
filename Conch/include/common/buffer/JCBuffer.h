@@ -15,7 +15,7 @@ namespace laya
 	/** 
 	 * @brief 内存快速的buffer操作
 	*/
-	class  JCMemClass
+	class  JCCommandEncoderBuffer
 	{
 	public:
 
@@ -23,11 +23,11 @@ namespace laya
          *  @param[in] 初始化size的大小
          *  @param[in] 当大小不够的时候，每次增加的大小
         */
-        JCMemClass( unsigned int nSize,unsigned int nAdjustSize);
+        JCCommandEncoderBuffer( unsigned int nSize,unsigned int nAdjustSize);
 
         /** @brief 析构函数
         */
-		~JCMemClass();
+		~JCCommandEncoderBuffer();
 
         /** @brief 设置每次扩充buffer的size
          *  @param[in] 扩充的size

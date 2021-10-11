@@ -21,7 +21,8 @@ namespace laya
     {
         public:
             static T ToCpp( JSValueRef p_vl ){
-                assert(false && "type not supported!");
+                assert(true);
+                return T();
             }
             static bool is( JSValueRef p_vl ){
                 return __CheckClassType::IsTypeOf<T>(p_vl);
@@ -44,13 +45,13 @@ namespace laya
     };
 
     
-    template <> class __TransferToCpp<int>
+    template <> class __TransferToCpp<int32_t>
     {
         public:
-        static int ToCpp( JSValueRef p_vl ){
+        static int32_t ToCpp( JSValueRef p_vl ){
             JSContextRef pCtx = __TlsData::GetInstance()->GetCurContext();
             if(0!=p_vl)
-                return (int)JSValueToNumber(pCtx,p_vl,0);
+                return (int32_t)JSValueToNumber(pCtx,p_vl,0);
             else return 0;
         }
         static bool is( JSValueRef p_vl ){
@@ -58,14 +59,29 @@ namespace laya
             return JSValueIsNumber(pCtx, p_vl);
         }
     };
-    
-    template <> class __TransferToCpp<short>
+    template <>
+    class __TransferToCpp<uint32_t>
     {
     public:
-        static int ToCpp( JSValueRef p_vl ){
+        static uint32_t ToCpp( JSValueRef p_vl )
+        {
             JSContextRef pCtx = __TlsData::GetInstance()->GetCurContext();
             if(0!=p_vl)
-                return (short)JSValueToNumber(pCtx,p_vl,0);
+                return (uint32_t)JSValueToNumber(pCtx,p_vl,0);
+            else return 0;
+        }
+        static bool is( JSValueRef p_vl ){
+            JSContextRef pCtx = __TlsData::GetInstance()->GetCurContext();
+            return JSValueIsNumber(pCtx, p_vl);
+        }
+    };
+    template <> class __TransferToCpp<int16_t>
+    {
+    public:
+        static int16_t ToCpp( JSValueRef p_vl ){
+            JSContextRef pCtx = __TlsData::GetInstance()->GetCurContext();
+            if(0!=p_vl)
+                return (int16_t)JSValueToNumber(pCtx,p_vl,0);
             else return 0;
         }
         static bool is( JSValueRef p_vl ){
@@ -74,14 +90,28 @@ namespace laya
         }
     };
     
+    template <> class __TransferToCpp<intptr_t>
+    {
+    public:
+        static intptr_t ToCpp( JSValueRef p_vl ){
+            JSContextRef pCtx = __TlsData::GetInstance()->GetCurContext();
+            if(0!=p_vl)
+                return (intptr_t)JSValueToNumber(pCtx,p_vl,0);
+            else return 0;
+        }
+        static bool is( JSValueRef p_vl ){
+            JSContextRef pCtx = __TlsData::GetInstance()->GetCurContext();
+            return JSValueIsNumber(pCtx, p_vl);
+        }
+};
     
-    template <> class __TransferToCpp<unsigned int>
+    template <> class __TransferToCpp<uint16_t>
     {
         public:
-        static unsigned int ToCpp( JSValueRef p_vl ){
+        static uint16_t ToCpp( JSValueRef p_vl ){
             JSContextRef pCtx=__TlsData::GetInstance()->GetCurContext();
             if(0!=p_vl)
-                return (unsigned int)JSValueToNumber(pCtx,p_vl,0);
+                return (uint16_t)JSValueToNumber(pCtx,p_vl,0);
             else
                 return 0;
         }
@@ -91,7 +121,7 @@ namespace laya
         }
     };
     
-    template <> class __TransferToCpp<long>
+    /*template <> class __TransferToCpp<long>
     {
         public:
         static long ToCpp( JSValueRef p_vl ){
@@ -121,7 +151,7 @@ namespace laya
             JSContextRef pCtx = __TlsData::GetInstance()->GetCurContext();
             return JSValueIsNumber(pCtx, p_vl);
         }
-    };
+    };*/
     
     template <> class __TransferToCpp<bool>
     {
@@ -171,13 +201,16 @@ namespace laya
         }
     };
     
-    template <> class __TransferToCpp<long long>
+    template <> class __TransferToCpp<int64_t>
     {
         public:
-        static long long ToCpp( JSValueRef p_vl ){
+        static int64_t ToCpp( JSValueRef p_vl ){
             JSContextRef pCtx=__TlsData::GetInstance()->GetCurContext();
             if(0!=p_vl)
-                return (long long)JSValueToNumber(pCtx,p_vl,0);
+            {
+                double value = JSValueToNumber(pCtx,p_vl,0);
+                return *reinterpret_cast<int64_t*>(&value);
+            }
             else
                 return 0;
         }
@@ -187,12 +220,16 @@ namespace laya
         }
     };
     
-    template <> class __TransferToCpp<unsigned long long>
+    template <> class __TransferToCpp<uint64_t>
     {
         public:
-        static unsigned long long ToCpp( JSValueRef p_vl ){
+        static uint64_t ToCpp( JSValueRef p_vl ){
             JSContextRef pCtx=__TlsData::GetInstance()->GetCurContext();
-            if(0!=p_vl)return (unsigned long long)JSValueToNumber(pCtx,p_vl,0);
+            if(0!=p_vl)
+            {
+                double value = JSValueToNumber(pCtx,p_vl,0);
+                return *reinterpret_cast<uint64_t*>(&value);
+            }
             else return 0;
         }
         static bool is( JSValueRef p_vl ){
@@ -246,11 +283,24 @@ namespace laya
     __DeclareStringTransferToCpp(unsigned char *);
     __DeclareStringTransferToCpp(const unsigned char *);
     
-
-    template <typename T> class __TransferToJs
+    template <typename T>
+    class __TransferToJs
     {
-        public:
-        static JSValueRef ToJs( T *p_vl ){
+    public:
+        static JSValueRef ToJs(T p_vl)
+        {
+            assert(true);
+            JSContextRef pCtx=__TlsData::GetInstance()->GetCurContext();
+            return JSValueMakeUndefined(pCtx);
+        }
+    };
+
+    template <typename T>
+    class __TransferToJs<T*>
+    {
+    public:
+        static JSValueRef ToJs(T* p_vl)
+        {
             return JSCClass<T>::getInstance()->transferObjPtrToJS(p_vl);
         }
     };
@@ -272,11 +322,11 @@ namespace laya
     template <> class __TransferToJs<bool>
     {public:static JSValueRef ToJs( bool p_vl ){return JSValueMakeBoolean(__TlsData::GetInstance()->GetCurContext(),p_vl);}};
     
-    template <> class __TransferToJs<int>
-    {public:static JSValueRef ToJs( int p_vl ){return JSValueMakeNumber(__TlsData::GetInstance()->GetCurContext(),(double)p_vl);}};
+    template <> class __TransferToJs<int32_t>
+    {public:static JSValueRef ToJs(int32_t p_vl ){return JSValueMakeNumber(__TlsData::GetInstance()->GetCurContext(),(double)p_vl);}};
     
-    template <> class __TransferToJs<unsigned int>
-    {public:static JSValueRef ToJs( unsigned int p_vl ){return JSValueMakeNumber(__TlsData::GetInstance()->GetCurContext(),(double)p_vl);}};
+    template <> class __TransferToJs<uint32_t>
+    {public:static JSValueRef ToJs(uint32_t p_vl ){return JSValueMakeNumber(__TlsData::GetInstance()->GetCurContext(),(double)p_vl);}};
     
     template <> class __TransferToJs<float>
     {public:static JSValueRef ToJs( float p_vl ){return JSValueMakeNumber(__TlsData::GetInstance()->GetCurContext(),(double)p_vl);}};
@@ -284,19 +334,32 @@ namespace laya
     template <> class __TransferToJs<double>
     {public:static JSValueRef ToJs( double p_vl ){return JSValueMakeNumber(__TlsData::GetInstance()->GetCurContext(),p_vl);}};
     
-    template <> class __TransferToJs<long long>
+    template <> class __TransferToJs<int64_t>
     {
     public:
-        static JSValueRef ToJs( long long p_vl ){return JSValueMakeNumber(__TlsData::GetInstance()->GetCurContext(),(double)p_vl);}
+        static JSValueRef ToJs(int64_t p_vl )
+        {
+            double value = *reinterpret_cast<int64_t*>(&p_vl);
+            return JSValueMakeNumber(__TlsData::GetInstance()->GetCurContext(), value);
+            
+        }
         
-        static JSValueRef ToJsDate( long long p_vl )
+        static JSValueRef ToJsDate(int64_t p_vl )
         {
             JSValueRef n = ToJs(p_vl);
             return JSObjectMakeDate(__TlsData::GetInstance()->GetCurContext(), 1, &n, 0);
         }
     };
-
-	template <> class __TransferToJs<long>
+    template <> class __TransferToJs<intptr_t>
+    {
+    public:
+        static JSValueRef ToJs(intptr_t p_vl )
+        {
+            double value = *reinterpret_cast<int64_t*>(&p_vl);
+            return JSValueMakeNumber(__TlsData::GetInstance()->GetCurContext(), value);
+        }
+    };
+	/*template <> class __TransferToJs<long>
     {
     public:
         static JSValueRef ToJs( long p_vl ){return JSValueMakeNumber(__TlsData::GetInstance()->GetCurContext(),(double)p_vl);}
@@ -306,14 +369,18 @@ namespace laya
             JSValueRef n = ToJs(p_vl);
             return JSObjectMakeDate(__TlsData::GetInstance()->GetCurContext(), 1, &n, 0);
         }
-    };
+    };*/
     
-    template <> class __TransferToJs<unsigned long long>
+    template <> class __TransferToJs<uint64_t>
     {
     public:
-        static JSValueRef ToJs( unsigned long long p_vl ){return JSValueMakeNumber(__TlsData::GetInstance()->GetCurContext(),(double)p_vl);}
+        static JSValueRef ToJs(uint64_t p_vl )
+        {
+            double value = *reinterpret_cast<uint64_t*>(&p_vl);
+            return JSValueMakeNumber(__TlsData::GetInstance()->GetCurContext(), value);
+        }
     
-        static JSValueRef ToJsDate( unsigned long long p_vl )
+        static JSValueRef ToJsDate(uint64_t p_vl )
         {
             JSValueRef n = ToJs(p_vl);
             return JSObjectMakeDate(__TlsData::GetInstance()->GetCurContext(), 1, &n, 0);
@@ -374,7 +441,7 @@ namespace laya
             JSValueRef pValArray[p_iSize];
             for(int i=0;i<p_iSize;++i)
             {
-                pValArray[i] = __TransferToJs<T>::ToJs(p_vl[i]);
+                pValArray[i] = __TransferToJs<T*>::ToJs(p_vl[i]);
             }
             
             JSObjectRef pRet = JSObjectMakeArray( __TlsData::GetInstance()->GetCurContext(), p_iSize, pValArray, 0 );

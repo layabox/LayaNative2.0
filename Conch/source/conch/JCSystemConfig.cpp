@@ -1,4 +1,5 @@
 #include "JCSystemConfig.h"
+#include <util/JCCommonMethod.h>
 
 namespace laya
 {

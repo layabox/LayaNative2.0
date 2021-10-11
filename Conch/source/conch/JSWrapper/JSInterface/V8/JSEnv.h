@@ -25,7 +25,7 @@ namespace laya
 	void JSAlert( const char* p_sBuffer );
 	void evalJS( const char* p_sSource );
 	const char* ToCString(const v8::String::Utf8Value& value);
-
+	class IsolateData;
 	class Javascript
     {
 	public:
@@ -34,6 +34,8 @@ namespace laya
 		typedef void(*voidfun)(void* data);
 
 		Javascript();
+
+		~Javascript();
 
 		void init(int nPort);
 
@@ -57,13 +59,10 @@ namespace laya
 	public:
         static v8::Persistent<v8::Context>  m_DebugMessageContext;
 		v8::Isolate*	                    m_pIsolate;
-		v8::Platform*	                    m_pPlatform;
-        v8::Isolate::Scope*                 m_pScope;
-        v8::HandleScope*                    m_pHandleScope;
-        v8::Locker*                         m_pV8Locker;
-        ArrayBufferAllocator*               m_pABAlloc;
-		_MutexType                          m_Lock;
 		int                                 m_nListenPort;
+		v8::Global<v8::Context>             m_context;
+		v8::Platform*						m_pPlatform = NULL;
+		IsolateData*						m_IsolateData;
 	};
 
 
@@ -306,6 +305,7 @@ namespace laya
         }
         void run(Javascript::voidfun func, void* pData)
         {
+			v8::HandleScope handle_scope(m_kJS.m_pIsolate);
             v8::TryCatch try_catch(m_kJS.m_pIsolate);
             runFunQueue();
             if (pData)func(pData);

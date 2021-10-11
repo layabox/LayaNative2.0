@@ -52,7 +52,6 @@ namespace laya
         }
         return ms_pInstance;
     }
-
     JSConchConfig::JSConchConfig()
     {
         m_fScreenScaleW = m_fScreenScaleH = 1;
@@ -335,11 +334,11 @@ namespace laya
     const char* JSConchConfig::getRuntimeVersion()
     {
 #ifdef __APPLE__
-        return "ios-conch6-release-2.12.0";
+        return "ios-conch6-release-2.12.2";
 #elif ANDROID
-        return "android-conch6-release-2.12.0";
+        return "android-conch6-release-2.12.2";
 #elif WIN32
-        return "window-conch6-release-2.12.0";
+        return "window-conch6-release-2.12.2";
 #endif
     }
     const char* JSConchConfig::getAppVersion()
@@ -612,69 +611,69 @@ namespace laya
     }
     void JSConchConfig::exportJS()
     {
-        JSP_GLOBAL_CLASS("conchConfig", JSConchConfig);
-		JSP_ADD_PROPERTY_RO(threadMode, JSConchConfig, getThreadMode);
-        JSP_ADD_PROPERTY_RO(glCaps, JSConchConfig, getGLCaps);
-        JSP_ADD_PROPERTY_RO(paramExt, JSConchConfig, getJsonparamExt);
-        JSP_ADD_PROPERTY(urlIgnoreCase, JSConchConfig, getUrlIgnoreCase, setUrlIgnoreCase);
-        JSP_ADD_PROPERTY(localizable, JSConchConfig, getLocalable, setLocalable);
-        JSP_ADD_PROPERTY(useAndroidSystemFont, JSConchConfig, getUseAndroidSystemFont, setUseAndroidSystemFont);
-        JSP_ADD_METHOD("getStoragePath", JSConchConfig::getLocalStoragePath);
-        JSP_ADD_METHOD("getTotalMem", JSConchConfig::getTotalMem);
-        JSP_ADD_METHOD("getUsedMem", JSConchConfig::getUsedMem);
-        JSP_ADD_METHOD("getAvalidMem", JSConchConfig::getAvalidMem);
-        JSP_ADD_METHOD("getScreenInch", JSConchConfig::getScreenInch);
-        JSP_ADD_METHOD("setTouchMoveRange", JSConchConfig::setTouchMoveRange);
-        JSP_ADD_METHOD("setScreenOrientation", JSConchConfig::setScreenOrientation);
-        JSP_ADD_METHOD("setScreenScale", JSConchConfig::setScreenScale);
-        JSP_ADD_METHOD("getScreenScaleW", JSConchConfig::getScreenScaleW);
-        JSP_ADD_METHOD("getScreenScaleH", JSConchConfig::getScreenScaleH);
-        JSP_ADD_METHOD("setUrlIgnoreCase", JSConchConfig::setUrlIgnoreCase);
-        JSP_ADD_METHOD("getUrlIgnoreCase", JSConchConfig::getUrlIgnoreCase);
-        JSP_ADD_METHOD("getNetworkType", JSConchConfig::getNetworkType);
-        JSP_ADD_METHOD("getRuntimeVersion", JSConchConfig::getRuntimeVersion);
-        JSP_ADD_METHOD("setDownloadTryNum", JSConchConfig::setDownloadTryNum);
-        JSP_ADD_METHOD("setDownloadPathReplace", JSConchConfig::setDownloadPathReplace);
-        JSP_ADD_METHOD("setDownloadTail", JSConchConfig::setDownloadTail);
-        JSP_ADD_METHOD("setDownloadNoResponseTimeout", JSConchConfig::setDownloadNoResponseTimeout);
-        JSP_ADD_METHOD("setDownloadReplaceExt", JSConchConfig::setDownloadReplaceExt);
-        JSP_ADD_METHOD("setDownloadIgnoreCRLR", JSConchConfig::setDownloadIgnoreCRLR);
-        JSP_ADD_METHOD("addChkIgnoreChksumExt", JSConchConfig::addChkIgnoreChksumExt);
-        JSP_ADD_METHOD("clearChkIgnoreChksumExt", JSConchConfig::clearChkIgnoreChksumExt);
-        JSP_ADD_METHOD("setDownloadUnmask", JSConchConfig::setDownloadUnmask);
-        JSP_ADD_METHOD("resetDownloadUnmask", JSConchConfig::resetDownloadUnmask);
-        JSP_ADD_METHOD("setDownloadVersionString", JSConchConfig::setDownloadVersionString);
-        JSP_ADD_METHOD("getOS", JSConchConfig::getOS);
-        JSP_ADD_METHOD("getAppVersion", JSConchConfig::getAppVersion);
-        JSP_ADD_METHOD("getAppLocalVersion", JSConchConfig::getAppLocalVersion);
-        JSP_ADD_METHOD("getBrowserInfo", JSConchConfig::getBrowserInfo);
-        JSP_ADD_METHOD("getGuid", JSConchConfig::getGuid);
-        JSP_ADD_METHOD("getDeviceInfo", JSConchConfig::getDeviceInfo);
-        JSP_ADD_METHOD("getIsPlug", JSConchConfig::getIsPlug);
-        JSP_ADD_METHOD("setLimitFPS", JSConchConfig::setLimitFPS);
-        JSP_ADD_METHOD("setMouseFrame", JSConchConfig::setMouseFrame);
-        JSP_ADD_METHOD("setSlowFrame", JSConchConfig::setSlowFrame);
-        JSP_ADD_METHOD("setCurlProxy", JSConchConfig::setCurlProxy);
-        JSP_ADD_METHOD("setWebsocketProxy", JSConchConfig::setWebsocketProxy);
-        JSP_ADD_METHOD("setTouchMode", JSConchConfig::setTouchMode);
-        JSP_ADD_METHOD("getTouchMode", JSConchConfig::getTouchMode);
-        JSP_ADD_METHOD("setDebugLevel", JSConchConfig::setDebugLevel);
-        JSP_ADD_METHOD("setImageReleaseSpaceTime", JSConchConfig::setImageReleaseSpaceTime);
-        JSP_ADD_METHOD("enableMemorySurvey", JSConchConfig::enableMemorySurvey);
-		JSP_ADD_METHOD("showInternalPerfBar", JSConchConfig::showInternalPerfBar);
-        JSP_ADD_METHOD("useChoreographer", JSConchConfig::useChoreographer);
+        JSP_GLOBAL_CLASS("conchConfig", JSConchConfig, this);
+		JSP_GLOBAL_ADD_PROPERTY_RO(threadMode, JSConchConfig, getThreadMode);
+        JSP_GLOBAL_ADD_PROPERTY_RO(glCaps, JSConchConfig, getGLCaps);
+        JSP_GLOBAL_ADD_PROPERTY_RO(paramExt, JSConchConfig, getJsonparamExt);
+        JSP_GLOBAL_ADD_PROPERTY(urlIgnoreCase, JSConchConfig, getUrlIgnoreCase, setUrlIgnoreCase);
+        JSP_GLOBAL_ADD_PROPERTY(localizable, JSConchConfig, getLocalable, setLocalable);
+        JSP_GLOBAL_ADD_PROPERTY(useAndroidSystemFont, JSConchConfig, getUseAndroidSystemFont, setUseAndroidSystemFont);
+		JSP_GLOBAL_ADD_METHOD("getStoragePath", JSConchConfig::getLocalStoragePath);
+		JSP_GLOBAL_ADD_METHOD("getTotalMem", JSConchConfig::getTotalMem);
+		JSP_GLOBAL_ADD_METHOD("getUsedMem", JSConchConfig::getUsedMem);
+		JSP_GLOBAL_ADD_METHOD("getAvalidMem", JSConchConfig::getAvalidMem);
+		JSP_GLOBAL_ADD_METHOD("getScreenInch", JSConchConfig::getScreenInch);
+		JSP_GLOBAL_ADD_METHOD("setTouchMoveRange", JSConchConfig::setTouchMoveRange);
+		JSP_GLOBAL_ADD_METHOD("setScreenOrientation", JSConchConfig::setScreenOrientation);
+		JSP_GLOBAL_ADD_METHOD("setScreenScale", JSConchConfig::setScreenScale);
+		JSP_GLOBAL_ADD_METHOD("getScreenScaleW", JSConchConfig::getScreenScaleW);
+		JSP_GLOBAL_ADD_METHOD("getScreenScaleH", JSConchConfig::getScreenScaleH);
+		JSP_GLOBAL_ADD_METHOD("setUrlIgnoreCase", JSConchConfig::setUrlIgnoreCase);
+		JSP_GLOBAL_ADD_METHOD("getUrlIgnoreCase", JSConchConfig::getUrlIgnoreCase);
+		JSP_GLOBAL_ADD_METHOD("getNetworkType", JSConchConfig::getNetworkType);
+		JSP_GLOBAL_ADD_METHOD("getRuntimeVersion", JSConchConfig::getRuntimeVersion);
+		JSP_GLOBAL_ADD_METHOD("setDownloadTryNum", JSConchConfig::setDownloadTryNum);
+		JSP_GLOBAL_ADD_METHOD("setDownloadPathReplace", JSConchConfig::setDownloadPathReplace);
+		JSP_GLOBAL_ADD_METHOD("setDownloadTail", JSConchConfig::setDownloadTail);
+		JSP_GLOBAL_ADD_METHOD("setDownloadNoResponseTimeout", JSConchConfig::setDownloadNoResponseTimeout);
+		JSP_GLOBAL_ADD_METHOD("setDownloadReplaceExt", JSConchConfig::setDownloadReplaceExt);
+		JSP_GLOBAL_ADD_METHOD("setDownloadIgnoreCRLR", JSConchConfig::setDownloadIgnoreCRLR);
+		JSP_GLOBAL_ADD_METHOD("addChkIgnoreChksumExt", JSConchConfig::addChkIgnoreChksumExt);
+		JSP_GLOBAL_ADD_METHOD("clearChkIgnoreChksumExt", JSConchConfig::clearChkIgnoreChksumExt);
+		JSP_GLOBAL_ADD_METHOD("setDownloadUnmask", JSConchConfig::setDownloadUnmask);
+		JSP_GLOBAL_ADD_METHOD("resetDownloadUnmask", JSConchConfig::resetDownloadUnmask);
+		JSP_GLOBAL_ADD_METHOD("setDownloadVersionString", JSConchConfig::setDownloadVersionString);
+		JSP_GLOBAL_ADD_METHOD("getOS", JSConchConfig::getOS);
+		JSP_GLOBAL_ADD_METHOD("getAppVersion", JSConchConfig::getAppVersion);
+		JSP_GLOBAL_ADD_METHOD("getAppLocalVersion", JSConchConfig::getAppLocalVersion);
+		JSP_GLOBAL_ADD_METHOD("getBrowserInfo", JSConchConfig::getBrowserInfo);
+		JSP_GLOBAL_ADD_METHOD("getGuid", JSConchConfig::getGuid);
+		JSP_GLOBAL_ADD_METHOD("getDeviceInfo", JSConchConfig::getDeviceInfo);
+		JSP_GLOBAL_ADD_METHOD("getIsPlug", JSConchConfig::getIsPlug);
+		JSP_GLOBAL_ADD_METHOD("setLimitFPS", JSConchConfig::setLimitFPS);
+		JSP_GLOBAL_ADD_METHOD("setMouseFrame", JSConchConfig::setMouseFrame);
+		JSP_GLOBAL_ADD_METHOD("setSlowFrame", JSConchConfig::setSlowFrame);
+		JSP_GLOBAL_ADD_METHOD("setCurlProxy", JSConchConfig::setCurlProxy);
+		JSP_GLOBAL_ADD_METHOD("setWebsocketProxy", JSConchConfig::setWebsocketProxy);
+		JSP_GLOBAL_ADD_METHOD("setTouchMode", JSConchConfig::setTouchMode);
+		JSP_GLOBAL_ADD_METHOD("getTouchMode", JSConchConfig::getTouchMode);
+		JSP_GLOBAL_ADD_METHOD("setDebugLevel", JSConchConfig::setDebugLevel);
+		JSP_GLOBAL_ADD_METHOD("setImageReleaseSpaceTime", JSConchConfig::setImageReleaseSpaceTime);
+		JSP_GLOBAL_ADD_METHOD("enableMemorySurvey", JSConchConfig::enableMemorySurvey);
+		JSP_GLOBAL_ADD_METHOD("showInternalPerfBar", JSConchConfig::showInternalPerfBar);
+		JSP_GLOBAL_ADD_METHOD("useChoreographer", JSConchConfig::useChoreographer);
 #ifdef ANDROID
         //目前只有android实现了这个函数，所以ios等就不往外导了，这样判断方便。
-        JSP_ADD_METHOD("setResolution", JSConchConfig::setResolution);
+		JSP_GLOBAL_ADD_METHOD("setResolution", JSConchConfig::setResolution);
 #endif
-        JSP_ADD_METHOD("test_sleep", JSConchConfig::testSleep);
-        JSP_ADD_METHOD("setDownloadConnTimeout", JSConchConfig::setDownloadConnTimeout);
-        JSP_ADD_METHOD("setDownloadOptTimeout", JSConchConfig::setDownloadOptTimeout);
-        JSP_ADD_METHOD("printAllMemorySurvey", JSConchConfig::printAllMemorySurvey);
-        JSP_ADD_METHOD("enableEncodeURI", JSConchConfig::enableEncodeURI);
-        JSP_ADD_PROPERTY(JSDebugMode, JSConchConfig, getJSDebugMode, setJSDebugMode);
-        JSP_ADD_PROPERTY(JSDebugPort, JSConchConfig, getJSDebugPort, setJSDebugPort);
-        JSP_ADD_METHOD("setSoundGarbageCollectionTime", JSConchConfig::setSoundGarbageCollectionTime);
+		JSP_GLOBAL_ADD_METHOD("test_sleep", JSConchConfig::testSleep);
+		JSP_GLOBAL_ADD_METHOD("setDownloadConnTimeout", JSConchConfig::setDownloadConnTimeout);
+		JSP_GLOBAL_ADD_METHOD("setDownloadOptTimeout", JSConchConfig::setDownloadOptTimeout);
+		JSP_GLOBAL_ADD_METHOD("printAllMemorySurvey", JSConchConfig::printAllMemorySurvey);
+		JSP_GLOBAL_ADD_METHOD("enableEncodeURI", JSConchConfig::enableEncodeURI);
+        JSP_GLOBAL_ADD_PROPERTY(JSDebugMode, JSConchConfig, getJSDebugMode, setJSDebugMode);
+        JSP_GLOBAL_ADD_PROPERTY(JSDebugPort, JSConchConfig, getJSDebugPort, setJSDebugPort);
+		JSP_GLOBAL_ADD_METHOD("setSoundGarbageCollectionTime", JSConchConfig::setSoundGarbageCollectionTime);
         JSP_INSTALL_GLOBAL_CLASS("conchConfig", JSConchConfig, this);
     }
 }

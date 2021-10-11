@@ -15,7 +15,7 @@
 #include <fontMgr/JCFreeTypeRender.h>
 #include "util/JCLayaUrl.h"
 #include <mutex>
-#include <Manager/JCArrayBufferManager.h>
+#include <manager/JCArrayBufferManager.h>
 #include <Manager/JCOrderResManager.h>
 #include <RenderEx/JCRegister.h>
 #ifdef ANDROID

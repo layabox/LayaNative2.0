@@ -11,7 +11,7 @@
 
 #include <vector>
 #include "../JSInterface/JSInterface.h"
-#include <JSObjBase.h>
+#include "../JSInterface/JSObjBase.h"
 #include <fontMgr/JCFontInfo.h>
 #include <fontMgr/JCFontManager.h>
 #include <fontMgr/JCFreeTypeRender.h>

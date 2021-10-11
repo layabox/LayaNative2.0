@@ -10,7 +10,7 @@
 
 namespace laya
 {
-	JCMemClass::JCMemClass( unsigned int nSize, unsigned int nAdjustSize)
+	JCCommandEncoderBuffer::JCCommandEncoderBuffer( unsigned int nSize, unsigned int nAdjustSize)
 	{
         m_bNeedDelBuffer = true;
         m_pBuffer=NULL;
@@ -24,7 +24,7 @@ namespace laya
             expand(nSize);
         }
 	}
-	JCMemClass::~JCMemClass()
+	JCCommandEncoderBuffer::~JCCommandEncoderBuffer()
 	{
         if ( m_bNeedDelBuffer && m_pBuffer )
         {
@@ -32,15 +32,15 @@ namespace laya
             m_pBuffer = 0;
         }
 	}
-	void JCMemClass::setBufferExpandStep(int nAdjustSize)
+	void JCCommandEncoderBuffer::setBufferExpandStep(int nAdjustSize)
 	{
         m_nAdjustSize = nAdjustSize;
 	}
-    void JCMemClass::setAlign(bool bAlign)
+    void JCCommandEncoderBuffer::setAlign(bool bAlign)
     {
         m_bAlign = bAlign;
     }
-    void JCMemClass::setBufferSize(int nBufferSize)
+    void JCCommandEncoderBuffer::setBufferSize(int nBufferSize)
     {
         if (nBufferSize < 0)
         {
@@ -51,7 +51,7 @@ namespace laya
             expand(nBufferSize - m_nBufSize);
         }
     }
-	void JCMemClass::expand(int nExpandSize)
+	void JCCommandEncoderBuffer::expand(int nExpandSize)
 	{
 		if (nExpandSize<1 ) return;
 		unsigned long nSize= nExpandSize+m_nBufSize+m_nAdjustSize;	//需要按4对齐么

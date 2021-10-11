@@ -140,13 +140,13 @@ namespace laya
         }
         JSTextBitmapInfo* pBitmapInfo = new JSTextBitmapInfo();
         pBitmapInfo->setInfo(m_kBitmapData.m_nWidth, m_kBitmapData.m_nHeight, m_kBitmapData.m_pImageData);
-        return JSP_TO_JS(JSTextBitmapInfo, pBitmapInfo);
+        return JSP_TO_JS(JSTextBitmapInfo*, pBitmapInfo);
     }
     JsValue JSTextMemoryCanvas::measureChar(int unicode)
     {
         int width = 0;
         int height = 0;
-#ifdef __APPLE__
+#ifdef JS_JSC
         
         JSContextRef ctx = laya::__TlsData::GetInstance()->GetCurContext();
         JSObjectRef obj = JSObjectMake(ctx, nullptr, nullptr);
@@ -168,12 +168,12 @@ namespace laya
         if (m_pCurrentFontInfo == NULL)
         {
             LOGW("JSMemoryCanvas::measureText 没有设置FontInfo");
-            obj->Set(context, String::NewFromUtf8(iso, "width"), Number::New(iso, 0));
+            obj->Set(context, String::NewFromUtf8(iso, "width").ToLocalChecked(), Number::New(iso, 0));
             //obj->Set(context, String::NewFromUtf8(iso, "height"), Number::New(iso, 0));
             return obj;
         }
         m_pFreeTypeRender->measureChar(unicode, m_pCurrentFontInfo, width, height);
-        obj->Set(context, String::NewFromUtf8(iso, "width"), Number::New(iso, width));
+        obj->Set(context, String::NewFromUtf8(iso, "width").ToLocalChecked(), Number::New(iso, width));
         //obj->Set(context, String::NewFromUtf8(iso, "height"), Number::New(iso, height));
 #endif
         return obj;
@@ -185,18 +185,18 @@ namespace laya
     }
 	void JSTextMemoryCanvas::exportJS() 
     {
-        JSP_GLOBAL_CLASS("_conchTextCanvas", JSTextMemoryCanvas);
-        JSP_ADD_PROPERTY(font, JSTextMemoryCanvas, getFontInfo, setFontInfo);
-        JSP_ADD_METHOD("setFontInfo", JSTextMemoryCanvas::setFontInfo);
-        //JSP_ADD_METHOD("measureText", JSTextMemoryCanvas::measureText);
-        JSP_ADD_METHOD("measureChar", JSTextMemoryCanvas::measureChar);
-        JSP_ADD_METHOD("initFreeTypeDefaultFontFromFile", JSTextMemoryCanvas::initFreeTypeDefaultFontFromFile);
-        JSP_ADD_METHOD("initFreeTypeDefaultFontFromBuffer", JSTextMemoryCanvas::initFreeTypeDefaultFontFromBuffer);
-        JSP_ADD_METHOD("setFontFaceFromUrl", JSTextMemoryCanvas::setFontFaceFromUrl);
-        JSP_ADD_METHOD("setFontFaceFromBuffer", JSTextMemoryCanvas::setFontFaceFromBuffer);
-        JSP_ADD_METHOD("removeFont", JSTextMemoryCanvas::removeFont);
-        JSP_ADD_METHOD("_getTextBitmapData", JSTextMemoryCanvas::getTextBitmapData);
-        JSP_ADD_METHOD("scale", JSTextMemoryCanvas::scale);
+        JSP_GLOBAL_CLASS("_conchTextCanvas", JSTextMemoryCanvas, this);
+        JSP_GLOBAL_ADD_PROPERTY(font, JSTextMemoryCanvas, getFontInfo, setFontInfo);
+		JSP_GLOBAL_ADD_METHOD("setFontInfo", JSTextMemoryCanvas::setFontInfo);
+        //JSP_GLOBAL_ADD_METHOD("measureText", JSTextMemoryCanvas::measureText);
+		JSP_GLOBAL_ADD_METHOD("measureChar", JSTextMemoryCanvas::measureChar);
+		JSP_GLOBAL_ADD_METHOD("initFreeTypeDefaultFontFromFile", JSTextMemoryCanvas::initFreeTypeDefaultFontFromFile);
+		JSP_GLOBAL_ADD_METHOD("initFreeTypeDefaultFontFromBuffer", JSTextMemoryCanvas::initFreeTypeDefaultFontFromBuffer);
+		JSP_GLOBAL_ADD_METHOD("setFontFaceFromUrl", JSTextMemoryCanvas::setFontFaceFromUrl);
+		JSP_GLOBAL_ADD_METHOD("setFontFaceFromBuffer", JSTextMemoryCanvas::setFontFaceFromBuffer);
+		JSP_GLOBAL_ADD_METHOD("removeFont", JSTextMemoryCanvas::removeFont);
+		JSP_GLOBAL_ADD_METHOD("_getTextBitmapData", JSTextMemoryCanvas::getTextBitmapData);
+		JSP_GLOBAL_ADD_METHOD("scale", JSTextMemoryCanvas::scale);
         JSP_INSTALL_GLOBAL_CLASS("_conchTextCanvas", JSTextMemoryCanvas, this);
 	}
 }

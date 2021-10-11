@@ -10,15 +10,22 @@ LOCAL_CFLAGS := \
   -DANDROID \
   -DIN_LIBRARY \
   -D_GLIBCXX_PERMIT_BACKWARD_HASH \
+  -DANDROID_ARM_NEON=TRUE \
+  -DANDROID_STL=c++_shared \
+  -DANDROID_TOOLCHAIN=clang \
   -frtti
 
-LOCAL_CFLAGS += -std=c++11
+LOCAL_CPPFLAGS += -std=c++11
 
 ifeq ($(APP_PERFTEST),1)
 LOCAL_CFLAGS += -DPERFTEST 
 endif
 
 LOCAL_CXXFLAGS := -O3
+ifeq ($(TARGET_ARCH),arm64)
+   LOCAL_CFLAGS += -DV8_COMPRESS_POINTERS
+   LOCAL_CPPFLAGS+= -DV8_COMPRESS_POINTERS
+endif
 
 LOCAL_SRC_FILES := \
         ../../../../source/render/RenderEx/JCGpuProgram.cpp \

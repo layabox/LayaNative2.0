@@ -80,6 +80,7 @@ namespace laya
         void setSetWorldTransformFunction(JSValueAsParam p_pFunction);
 
     public:
+		static JSRuntime* getInstance();
 
         JsValue readFileFromAsset(const char* file, const char* encode);
 
@@ -107,12 +108,18 @@ namespace laya
 		
 	    void exit();
 
-        bool updateArrayBufferRef(int nID, bool bSyncToRender, JSValueAsParam pArrayBuffer);
+        //bool updateArrayBufferRef(int nID, bool bSyncToRender, JSValueAsParam pArrayBuffer);
 
     public:
 
         JCScriptRuntime*        m_pScrpitRuntime;
+
         std::string m_strReturn;
+
+	private:
+
+		static JSRuntime* ms_pRuntime;
+			
     };
 }
 //------------------------------------------------------------------------------

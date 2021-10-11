@@ -13,7 +13,7 @@
 #include <string>
 #include <map>
 #include "../JSInterface/JSInterface.h"
-#include <JSObjBase.h>
+#include "../JSInterface/JSObjBase.h"
 
 namespace laya
 {

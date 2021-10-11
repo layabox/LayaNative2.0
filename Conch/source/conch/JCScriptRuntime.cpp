@@ -24,6 +24,7 @@
 #include "JSWrapper/LayaWrap/JSCallbackFuncObj.h"
 #include "JSWrapper/LayaWrap/JSLayaGL.h"
 #include <LayaGL/JCLayaGLDispatch.h>
+#include <webglplus/JCWebGLPlus.h>
 #ifdef JS_V8
     #include "JSWrapper/v8debug/debug-agent.h"
 #endif
@@ -142,11 +143,11 @@ namespace laya
         m_bRunDraw = true;
         m_dbLastUsedVsync = 0;
         m_dbCurVsync = 0;
-#ifdef ANDROID
-        m_pDbgAgent = nullptr;
-        m_pCurEditBox = NULL;
-#elif __APPLE__
-        m_pCurEditBox = NULL;
+#ifdef JS_V8
+        m_pDbgAgent = nullptr;  
+#endif
+#ifndef WIN32
+		m_pCurEditBox = NULL;
 #endif
         m_bReload = false;
     }
@@ -283,6 +284,7 @@ namespace laya
         JCPerfHUD::resetFrame();
 #ifdef JS_V8
         JSObjNode::s_pListJSObj = new JCSimpList();
+#ifdef JS_V8_DEBUGGER
         if (m_pDbgAgent) 
         {
             m_pDbgAgent->onJSStart(m_pScriptThread,(JCConch::s_pConch->m_nJSDebugMode == JS_DEBUG_MODE_WAIT) ? true : false);
@@ -292,6 +294,7 @@ namespace laya
         {
             LOGI("js debug closed");
         }
+#endif
 #endif
         JCConch::s_pConchRender->m_pImageManager->resetJSThread();
 
@@ -371,10 +374,10 @@ namespace laya
         m_pJSOnDrawFunction.Reset();
         m_bJSBulletGetWorldTransformHandle.Reset();
         m_bJSBulletSetWorldTransformHandle.Reset();
-#ifdef ANDROID
+#ifndef WIN32
         m_pCurEditBox = NULL;
 #endif
-        JSClassMgr::GetThreadInstance()->resetAllRegClass();
+        JSClassMgr::GetInstance()->resetAllRegClass();
         
 #ifdef JS_V8
         JCSimpList* pNodeLists = JSObjNode::s_pListJSObj;
@@ -391,10 +394,12 @@ namespace laya
             delete JSObjNode::s_pListJSObj;
             JSObjNode::s_pListJSObj = nullptr;
         }
+#ifdef JS_V8_DEBUGGER
         if (m_pDbgAgent)
         {
             m_pDbgAgent->onJSExit();
         }
+#endif
 #elif JS_JSC
         JSP_RESET_GLOBAL_FUNCTION;
 #endif

@@ -2,7 +2,7 @@
 #define __JsVideo_h__
 
 #include "../../JSInterface/JSInterface.h"
-#include <JSObjBase.h>
+#include "../../JSInterface/JSObjBase.h"
 
 #include <map>
 #include <set>

@@ -125,9 +125,9 @@
       <Optimization>Disabled</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_TEST_;WIN32;GL_GLEXT_PROTOTYPES;NDEBUG;_CONSOLE;JS_V8;V8_ALLOW_ACCESS_TO_RAW_HANDLE_CONSTRUCTOR;_CRT_SECURE_NO_WARNINGS;OPENVG_STATIC_LIBRARY;GLM_FORCE_DEPTH_ZERO_TO_ONE;BT_USE_DOUBLE_PRECISION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_TEST_;WIN32;GL_GLEXT_PROTOTYPES;NDEBUG;_CONSOLE;JS_V8;V8_ALLOW_ACCESS_TO_RAW_HANDLE_CONSTRUCTOR;_CRT_SECURE_NO_WARNINGS;OPENVG_STATIC_LIBRARY;GLM_FORCE_DEPTH_ZERO_TO_ONE;BT_USE_DOUBLE_PRECISION;JS_V8_DEBUGGER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>false</SDLCheck>
-      <AdditionalIncludeDirectories>..\..\..\..\..\ThirdParty\angle\include;..\..\..\..\include\common;..\..\..\..\include\webglPlus;..\..\..\..\..\ThirdParty\v8\include;..\..\..\..\include\render;..\..\..\..\..\ThirdParty\zip\include\win32;..\..\..\..\..\ThirdParty\openal\include;..\..\..\..\..\ThirdParty\ogg\include\win32;..\..\..\..\..\ThirdParty\websockets\include\win32;..\..\..\..\include\msgpack\include;..\..\..\..\..\ThirdParty\freetype\include\win32;..\..\..\..\..\ThirdParty\zlib\include\win32;..\..\..\..\..\ThirdParty\openssl\include\win32;..\..\..\..\..\ThirdParty\bullet\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\..\ThirdParty\angle\include;..\..\..\..\include\common;..\..\..\..\include\webglPlus;..\..\..\..\..\ThirdParty\v8_8.8\include;..\..\..\..\include\render;..\..\..\..\..\ThirdParty\zip\include\win32;..\..\..\..\..\ThirdParty\openal\include;..\..\..\..\..\ThirdParty\ogg\include\win32;..\..\..\..\..\ThirdParty\websockets\include\win32;..\..\..\..\include\msgpack\include;..\..\..\..\..\ThirdParty\freetype\include\win32;..\..\..\..\..\ThirdParty\zlib\include\win32;..\..\..\..\..\ThirdParty\openssl\include\win32;..\..\..\..\..\ThirdParty\bullet\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -135,8 +135,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\..\..\..\ThirdParty\angle\lib\Release;..\..\..\..\..\ThirdParty\v8\lib\win-x86-release;..\..\..\..\..\ThirdParty\openal\libs\Win32;..\..\..\..\..\ThirdParty\curl\lib\win32;..\..\..\..\..\ThirdParty\freetype\lib\win32;..\..\..\..\..\ThirdParty\jpeg\lib\win32;..\..\..\..\..\ThirdParty\ogg\lib\win32;..\..\..\..\..\ThirdParty\openssl\lib\win32;..\..\..\..\..\ThirdParty\png\lib\win32;..\..\..\..\..\ThirdParty\websockets\lib\win32;..\..\..\..\..\ThirdParty\zip\lib\win32;..\..\..\..\..\ThirdParty\zlib\lib\win32;..\..\..\..\libs\win32;..\..\..\..\..\ThirdParty\bullet\lib\win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>winmm.lib;v8.dll.lib;v8_libbase.dll.lib;v8_libplatform.dll.lib;common.lib;webglPlus.lib;render.lib;zlib.lib;libjpeg.lib;libpng.lib;libogg.lib;libvorbis.lib;libvorbisfile.lib;alut.lib;dsound.lib;OpenAL32.lib;imm32.lib;strmiids.lib;freetype.lib;websockets.lib;zip.lib;libcrypto.lib;libssl.lib;iphlpapi.lib;Bullet2FileLoader.lib;Bullet3Collision.lib;Bullet3Common.lib;Bullet3Dynamics.lib;Bullet3Geometry.lib;BulletCollision.lib;BulletDynamics.lib;BulletFileLoader.lib;BulletInverseDynamics.lib;BulletInverseDynamicsUtils.lib;BulletSoftBody.lib;BulletWorldImporter.lib;BulletXmlWorldImporter.lib;ConvexDecomposition.lib;GIMPACTUtils.lib;HACD.lib;LinearMath.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\..\..\..\ThirdParty\angle\lib\Release;..\..\..\..\..\ThirdParty\v8_8.8\lib\win-x86-release;..\..\..\..\..\ThirdParty\openal\libs\Win32;..\..\..\..\..\ThirdParty\curl\lib\win32;..\..\..\..\..\ThirdParty\freetype\lib\win32;..\..\..\..\..\ThirdParty\jpeg\lib\win32;..\..\..\..\..\ThirdParty\ogg\lib\win32;..\..\..\..\..\ThirdParty\openssl\lib\win32;..\..\..\..\..\ThirdParty\png\lib\win32;..\..\..\..\..\ThirdParty\websockets\lib\win32;..\..\..\..\..\ThirdParty\zip\lib\win32;..\..\..\..\..\ThirdParty\zlib\lib\win32;..\..\..\..\libs\win32;..\..\..\..\..\ThirdParty\bullet\lib\win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>winmm.lib;v8.dll.lib;v8_libbase.dll.lib;v8_libplatform.dll.lib;common.lib;render.lib;zlib.lib;libjpeg.lib;libpng.lib;libogg.lib;libvorbis.lib;libvorbisfile.lib;alut.lib;dsound.lib;OpenAL32.lib;imm32.lib;strmiids.lib;freetype.lib;websockets.lib;zip.lib;libcrypto.lib;libssl.lib;iphlpapi.lib;Bullet2FileLoader.lib;Bullet3Collision.lib;Bullet3Common.lib;Bullet3Dynamics.lib;Bullet3Geometry.lib;BulletCollision.lib;BulletDynamics.lib;BulletFileLoader.lib;BulletInverseDynamics.lib;BulletInverseDynamicsUtils.lib;BulletSoftBody.lib;BulletWorldImporter.lib;BulletXmlWorldImporter.lib;ConvexDecomposition.lib;GIMPACTUtils.lib;HACD.lib;LinearMath.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -171,17 +171,18 @@
     <ClInclude Include="..\..\..\..\source\conch\JCSystemConfig.h" />
     <ClInclude Include="..\..\..\..\source\conch\JCThreadCmdMgr.h" />
     <ClInclude Include="..\..\..\..\source\conch\JSWrapper\JSInterface\JSInterface.h" />
+    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\JSInterface\JSObjBase.h" />
+    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\JSInterface\V8\IsolateData.h" />
     <ClInclude Include="..\..\..\..\source\conch\JSWrapper\JSInterface\V8\JSArrayBuffer.h" />
     <ClInclude Include="..\..\..\..\source\conch\JSWrapper\JSInterface\V8\JsBinder.h" />
     <ClInclude Include="..\..\..\..\source\conch\JSWrapper\JSInterface\V8\JSCProxyTLS.h" />
     <ClInclude Include="..\..\..\..\source\conch\JSWrapper\JSInterface\V8\JSCProxyTrnasfer.h" />
     <ClInclude Include="..\..\..\..\source\conch\JSWrapper\JSInterface\V8\JSCProxyType.h" />
     <ClInclude Include="..\..\..\..\source\conch\JSWrapper\JSInterface\V8\JSEnv.h" />
-    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\Bullet\bullet_glue.h" />
-    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\Bullet\JSbtBindHelper.h" />
     <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\Bullet\LayaBulletExport.h" />
     <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\EditBox\WinEditBox.h" />
     <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSAppCache.h" />
+    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSArrayBufferRef.h" />
     <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSAudio.h" />
     <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JsBlob.h" />
     <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSCallbackFuncObj.h" />
@@ -202,6 +203,7 @@
     <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSShaderPrecisionFormat.h" />
     <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSTextBitmapInfo.h" />
     <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSTextMemoryCanvas.h" />
+    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSWebGLPlus.h" />
     <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSWebSocket.h" />
     <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSWindowEditBox.h" />
     <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSXmlAttr.h" />
@@ -235,14 +237,16 @@
     <ClCompile Include="..\..\..\..\source\conch\JCSystemConfig.cpp" />
     <ClCompile Include="..\..\..\..\source\conch\JCThreadCmdMgr.cpp" />
     <ClCompile Include="..\..\..\..\source\conch\JSWrapper\JSInterface\JSInterface.cpp" />
+    <ClCompile Include="..\..\..\..\source\conch\JSWrapper\JSInterface\JSObjBase.cpp" />
+    <ClCompile Include="..\..\..\..\source\conch\JSWrapper\JSInterface\V8\IsolateData.cpp" />
     <ClCompile Include="..\..\..\..\source\conch\JSWrapper\JSInterface\V8\JSArrayBuffer.cpp" />
     <ClCompile Include="..\..\..\..\source\conch\JSWrapper\JSInterface\V8\JsBinder.cpp" />
     <ClCompile Include="..\..\..\..\source\conch\JSWrapper\JSInterface\V8\JSEnv.cpp" />
-    <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\Bullet\bullet_glue.cpp" />
     <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\Bullet\LayaBulletExport.cpp" />
     <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\Bullet\LayaBulletExportImp.cpp" />
     <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\EditBox\WinEditBox.cpp" />
     <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSAppCache.cpp" />
+    <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSArrayBufferRef.cpp" />
     <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSAudio.cpp" />
     <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSCallbackFuncObj.cpp" />
     <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSConchConfig.cpp" />
@@ -262,6 +266,7 @@
     <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSShaderPrecisionFormat.cpp" />
     <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSTextBitmapInfo.cpp" />
     <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSTextMemoryCanvas.cpp" />
+    <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSWebGLPlus.cpp" />
     <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSWebSocket.cpp" />
     <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSWindowEditBox.cpp" />
     <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSXmlAttr.cpp" />

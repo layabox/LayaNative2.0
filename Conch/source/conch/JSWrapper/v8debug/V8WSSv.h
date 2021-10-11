@@ -1,4 +1,4 @@
-
+#ifdef JS_V8_DEBUGGER
 #ifndef _V8_WEBSOCKET_SERVER_H__
 #define _V8_WEBSOCKET_SERVER_H__
 
@@ -32,5 +32,7 @@ namespace laya {
     void startWSSV(int port, DebuggerAgent* pDbgAgent);
     void stopWSSV();
 }
+
+#endif
 
 #endif

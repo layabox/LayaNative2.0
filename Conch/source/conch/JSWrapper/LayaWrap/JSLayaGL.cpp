@@ -16,14 +16,9 @@
 #include "../../JCSystemConfig.h"
 #include <LayaGL/JCLayaGLDispatch.h>
 #include <set>
-#include "JCWebGLPlus.h"
-#ifdef __APPLE__
-#include "jsc/JSArrayBufferRef.h"
-#include "jsc/JSKeyframeNodeList.h"
-#else
-#include "v8/JSArrayBufferRef.h"
-#include "v8/JSKeyframeNodeList.h"
-#endif
+#include <webglplus/JCWebGLPlus.h>
+#include "JSArrayBufferRef.h"
+//#include "JSKeyframeNodeList.h"
 
 extern int g_nInnerWidth;
 extern int g_nInnerHeight;
@@ -120,7 +115,7 @@ namespace laya
         pActiveInfo->m_sName = m_pShaderActiveInfo->name;
         pActiveInfo->m_nType = m_pShaderActiveInfo->type;
         pActiveInfo->m_nSize = m_pShaderActiveInfo->size;
-        return JSP_TO_JS(JSShaderActiveInfo, pActiveInfo);
+        return JSP_TO_JS(JSShaderActiveInfo*, pActiveInfo);
     }
     JsValue JSLayaGL::getActiveUniformEx(const char* vs, const char* ps, const char* define, int nIndex)
     {
@@ -132,7 +127,7 @@ namespace laya
         pActiveInfo->m_sName = m_pShaderActiveInfo->name;
         pActiveInfo->m_nType = m_pShaderActiveInfo->type;
         pActiveInfo->m_nSize = m_pShaderActiveInfo->size;
-        return JSP_TO_JS(JSShaderActiveInfo, pActiveInfo);
+        return JSP_TO_JS(JSShaderActiveInfo*, pActiveInfo);
     }
     JsValue JSLayaGL::getShaderPrecisionFormat(int shaderType, int precisionType)
     {
@@ -141,7 +136,7 @@ namespace laya
         pShaderPrecision->m_nPrecision = m_pShaderPrecisionFormat->precision[0];
         pShaderPrecision->m_nRangeMin = m_pShaderPrecisionFormat->range[0];
         pShaderPrecision->m_nRangeMax = m_pShaderPrecisionFormat->range[1];
-        return JSP_TO_JS(JSShaderPrecisionFormat, pShaderPrecision);
+        return JSP_TO_JS(JSShaderPrecisionFormat*, pShaderPrecision);
     }
 
 	JsValue JSLayaGL::getUniformEx(const char* locationName)
@@ -715,6 +710,7 @@ namespace laya
             }
 
             m_nParameterResultByteArray.resize(bytes);
+			
             ::glReadPixels(x, y, width, height, format, type, (void*)m_nParameterResultByteArray.data());
 		}
 		else
@@ -875,42 +871,42 @@ namespace laya
 	}
     void JSLayaGL::exportJS()
     {
-        JSP_GLOBAL_CLASS("layagl", JSLayaGL);
-        JSP_ADD_METHOD("setFrameAndSyncCountArrayBufferID", JSLayaGL::setFrameAndSyncCountArrayBufferID);
-        JSP_ADD_METHOD("setSyncArrayBufferID", JSLayaGL::setSyncArrayBufferID);
-        JSP_ADD_METHOD("setRootCommandEncoder", JSLayaGL::setRootCommandEncoder);
-        JSP_ADD_METHOD("getProgramParameterEx", JSLayaGL::getProgramParameterEx);
-        JSP_ADD_METHOD("getStringEx", JSLayaGL::getStringEx);
-        JSP_ADD_METHOD("getActiveAttribEx", JSLayaGL::getActiveAttribEx);
-        JSP_ADD_METHOD("getActiveUniformEx", JSLayaGL::getActiveUniformEx);
-        JSP_ADD_METHOD("getAttribLocationEx", JSLayaGL::getAttribLocationEx);
-        JSP_ADD_METHOD("getShaderInfoLogEx", JSLayaGL::getShaderInfoLogEx);
-        JSP_ADD_METHOD("getProgramInfoLogEx", JSLayaGL::getProgramInfoLogEx);
-        JSP_ADD_METHOD("getShaderPrecisionFormat", JSLayaGL::getShaderPrecisionFormat);
-		JSP_ADD_METHOD("getUniformEx", JSLayaGL::getUniformEx);
-        JSP_ADD_METHOD("getParameter", JSLayaGL::getParameter);
-		JSP_ADD_METHOD("getBooleanv", JSLayaGL::getBooleanv);
-		JSP_ADD_METHOD("getIntegerv", JSLayaGL::getIntegerv);
-		JSP_ADD_METHOD("getIntegerArrayv", JSLayaGL::getIntegerArrayv);
-		JSP_ADD_METHOD("getFloatv", JSLayaGL::getFloatv);
-		JSP_ADD_METHOD("getFloatArrayv", JSLayaGL::getFloatArrayv);
+        JSP_GLOBAL_CLASS("layagl", JSLayaGL, this);
+		JSP_GLOBAL_ADD_METHOD("setFrameAndSyncCountArrayBufferID", JSLayaGL::setFrameAndSyncCountArrayBufferID);
+		JSP_GLOBAL_ADD_METHOD("setSyncArrayBufferID", JSLayaGL::setSyncArrayBufferID);
+		JSP_GLOBAL_ADD_METHOD("setRootCommandEncoder", JSLayaGL::setRootCommandEncoder);
+		JSP_GLOBAL_ADD_METHOD("getProgramParameterEx", JSLayaGL::getProgramParameterEx);
+		JSP_GLOBAL_ADD_METHOD("getStringEx", JSLayaGL::getStringEx);
+		JSP_GLOBAL_ADD_METHOD("getActiveAttribEx", JSLayaGL::getActiveAttribEx);
+		JSP_GLOBAL_ADD_METHOD("getActiveUniformEx", JSLayaGL::getActiveUniformEx);
+		JSP_GLOBAL_ADD_METHOD("getAttribLocationEx", JSLayaGL::getAttribLocationEx);
+		JSP_GLOBAL_ADD_METHOD("getShaderInfoLogEx", JSLayaGL::getShaderInfoLogEx);
+		JSP_GLOBAL_ADD_METHOD("getProgramInfoLogEx", JSLayaGL::getProgramInfoLogEx);
+		JSP_GLOBAL_ADD_METHOD("getShaderPrecisionFormat", JSLayaGL::getShaderPrecisionFormat);
+		JSP_GLOBAL_ADD_METHOD("getUniformEx", JSLayaGL::getUniformEx);
+		JSP_GLOBAL_ADD_METHOD("getParameter", JSLayaGL::getParameter);
+		JSP_GLOBAL_ADD_METHOD("getBooleanv", JSLayaGL::getBooleanv);
+		JSP_GLOBAL_ADD_METHOD("getIntegerv", JSLayaGL::getIntegerv);
+		JSP_GLOBAL_ADD_METHOD("getIntegerArrayv", JSLayaGL::getIntegerArrayv);
+		JSP_GLOBAL_ADD_METHOD("getFloatv", JSLayaGL::getFloatv);
+		JSP_GLOBAL_ADD_METHOD("getFloatArrayv", JSLayaGL::getFloatArrayv);
         //JSP_ADD_METHOD("getBufferParameter", JSLayaGL::getBufferParameter);
-		JSP_ADD_METHOD("getFramebufferAttachmentParameter", JSLayaGL::getFramebufferAttachmentParameter);
+		JSP_GLOBAL_ADD_METHOD("getFramebufferAttachmentParameter", JSLayaGL::getFramebufferAttachmentParameter);
 		//JSP_ADD_METHOD("getRenderbufferParameter", JSLayaGL::getRenderbufferParameter);
 		//JSP_ADD_METHOD("getTexParameter", JSLayaGL::getTexParameter);
-		JSP_ADD_METHOD("getShaderParameter", JSLayaGL::getShaderParameter);
-        JSP_ADD_METHOD("getThreadMode", JSLayaGL::getThreadMode);
-        JSP_ADD_METHOD("checkFramebufferStatusEx", JSLayaGL::checkFramebufferStatusEx);
-        JSP_ADD_METHOD("getBufferParameterEx", JSLayaGL::getBufferParameterEx);
-        JSP_ADD_METHOD("getRenderbufferParameterEx", JSLayaGL::getRenderbufferParameterEx);
-        JSP_ADD_METHOD("getTexParameterEx", JSLayaGL::getTexParameterEx);
-		JSP_ADD_METHOD("isEnabled", JSLayaGL::isEnabled);
-		JSP_ADD_METHOD("getVertexAttribEx", JSLayaGL::getVertexAttribEx);
-		JSP_ADD_METHOD("getVertexAttribExfv", JSLayaGL::getVertexAttribExfv);
-		JSP_ADD_METHOD("getVertexAttribOffset", JSLayaGL::getVertexAttribOffset);
-		JSP_ADD_METHOD("flushCommand", JSLayaGL::flushCommand);
-		JSP_ADD_METHOD("readPixels", JSLayaGL::readPixels);
-		JSP_ADD_METHOD("setMainContextSize", JSLayaGL::setMainContextSize);
+		JSP_GLOBAL_ADD_METHOD("getShaderParameter", JSLayaGL::getShaderParameter);
+		JSP_GLOBAL_ADD_METHOD("getThreadMode", JSLayaGL::getThreadMode);
+		JSP_GLOBAL_ADD_METHOD("checkFramebufferStatusEx", JSLayaGL::checkFramebufferStatusEx);
+		JSP_GLOBAL_ADD_METHOD("getBufferParameterEx", JSLayaGL::getBufferParameterEx);
+		JSP_GLOBAL_ADD_METHOD("getRenderbufferParameterEx", JSLayaGL::getRenderbufferParameterEx);
+		JSP_GLOBAL_ADD_METHOD("getTexParameterEx", JSLayaGL::getTexParameterEx);
+		JSP_GLOBAL_ADD_METHOD("isEnabled", JSLayaGL::isEnabled);
+		JSP_GLOBAL_ADD_METHOD("getVertexAttribEx", JSLayaGL::getVertexAttribEx);
+		JSP_GLOBAL_ADD_METHOD("getVertexAttribExfv", JSLayaGL::getVertexAttribExfv);
+		JSP_GLOBAL_ADD_METHOD("getVertexAttribOffset", JSLayaGL::getVertexAttribOffset);
+		JSP_GLOBAL_ADD_METHOD("flushCommand", JSLayaGL::flushCommand);
+		JSP_GLOBAL_ADD_METHOD("readPixels", JSLayaGL::readPixels);
+		JSP_GLOBAL_ADD_METHOD("setMainContextSize", JSLayaGL::setMainContextSize);
         JSP_INSTALL_GLOBAL_CLASS("layagl", JSLayaGL,this);
     }
 }

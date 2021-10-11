@@ -221,12 +221,6 @@
     <ClInclude Include="..\..\..\..\source\conch\JCScriptRuntime.h">
       <Filter>Source Files\App</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\Bullet\bullet_glue.h">
-      <Filter>Source Files\JSWrapper\LayaWrap\Bullet</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\Bullet\JSbtBindHelper.h">
-      <Filter>Source Files\JSWrapper\LayaWrap\Bullet</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\Bullet\JSbtBindHelper.h">
       <Filter>Source Files\JSWrapper\LayaWrap\Bullet</Filter>
     </ClInclude>
@@ -256,6 +250,18 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\source\conch\WebSocket\Uri.h">
       <Filter>Source Files\WebSocket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\JSInterface\V8\IsolateData.h">
+      <Filter>Source Files\JSWrapper\JSInterface\V8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\JSInterface\JSObjBase.h">
+      <Filter>Source Files\JSWrapper\JSInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSWebGLPlus.h">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSArrayBufferRef.h">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -418,9 +424,6 @@
     <ClCompile Include="..\..\..\..\source\conch\JCScriptRuntime.cpp">
       <Filter>Source Files\App</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\Bullet\bullet_glue.cpp">
-      <Filter>Source Files\JSWrapper\LayaWrap\Bullet</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\source\conch\Bridge\JCConchBridge.cpp">
       <Filter>Source Files\Bridge</Filter>
     </ClCompile>
@@ -459,6 +462,18 @@
     </ClCompile>
     <ClCompile Include="..\..\..\..\source\conch\WebSocket\Uri.cpp">
       <Filter>Source Files\WebSocket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\JSWrapper\JSInterface\V8\IsolateData.cpp">
+      <Filter>Source Files\JSWrapper\JSInterface\V8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\JSWrapper\JSInterface\JSObjBase.cpp">
+      <Filter>Source Files\JSWrapper\JSInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSWebGLPlus.cpp">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSArrayBufferRef.cpp">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

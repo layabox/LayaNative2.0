@@ -17,12 +17,6 @@ public class ConchJNI
 				System.load(library);
 			}
 			else {
-				if (android.os.Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR1) {//android 4.2
-					System.loadLibrary("c++_shared");
-					System.loadLibrary("v8_libbase.cr");
-					System.loadLibrary("v8.cr");
-					System.loadLibrary("v8_libplatform.cr");
-				}
 				System.loadLibrary(library);
 			}
 			ConchJNI.setLocalizable(LayaConch5.GetInstance().localizable);

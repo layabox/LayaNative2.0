@@ -11,7 +11,6 @@
 #include "util/Log.h"
 #include <util/JCMemorySurvey.h>
 #include "../../JCScriptRuntime.h"
-#include "JSTextMemoryCanvas.h"
 
 namespace laya
 {

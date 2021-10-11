@@ -49,11 +49,12 @@
 #include "JSTextBitmapInfo.h"
 #include "JSShaderPrecisionFormat.h"
 #include "JSCallbackFuncObj.h"
-#include "Bullet/bullet_glue.h"
 #include "Video/JSVideo.h"
 #include <LayaGL/JCLayaGLDispatch.h>
-#include "JCWebGLPlus.h"
+#include <webglplus/JCWebGLPlus.h>
 #include "Bullet/LayaBulletExport.h"
+#include "JSArrayBufferRef.h"
+#include "JSWebGLPlus.h"
 extern int g_nInnerWidth ;
 extern int g_nInnerHeight ;
 extern bool g_bGLCanvasSizeChanged;
@@ -90,28 +91,28 @@ void alert(const char* fmt, ...)
 namespace laya 
 {
     //下载大文件，zip用的
-    struct JSFuncWrapper :public JsObjBase
+    struct JSFuncWrapper
     {
-        enum { onprogid, oncompid };
-        static JsObjClassInfo JSCLSINFO;
         JsObjHandle funcOnProg;
         JsObjHandle funcOnComp;
         bool stop;
         JSFuncWrapper(JSValueAsParam onprog, JSValueAsParam onComp)
         {
-            createJSObj();
-            funcOnProg.set(onprogid, this, onprog);
-            funcOnComp.set(oncompid, this, onComp);
+            funcOnProg.set(onprog);
+            funcOnComp.set(onComp);
             stop = false;
         }
+		~JSFuncWrapper()
+		{
+			funcOnProg.Reset();
+			funcOnComp.Reset();
+		}
     };
-    ADDJSCLSINFO(JSFuncWrapper, JSObjNode);
 
     void downloadBig_onProg_js(JSFuncWrapper* pWrapper, unsigned int total, unsigned int now, float speed)
     {
         if (pWrapper->funcOnProg.Empty())return;
-        pWrapper->funcOnProg.Call(total, now, speed);
-        pWrapper->stop = __TransferToCpp<bool>::ToCpp(pWrapper->funcOnProg.m_pReturn);
+        pWrapper->funcOnProg.CallWithReturn(JSP_GLOBAL_OBJECT, total, now, speed, pWrapper->stop);
     }
     int downloadBig_onProg(unsigned int total, unsigned int now, float speed, JSFuncWrapper* pWrapper)
     {
@@ -121,13 +122,13 @@ namespace laya
     }
     void downloadBig_onComp_js(int curlret, int httpret, JSFuncWrapper* pWrapper)
     {
-        if (!pWrapper->IsMyJsEnv()){
+        /*if (!pWrapper->IsMyJsEnv()){
             delete pWrapper;
             return;
-        }
+        }*/
         if (!pWrapper->funcOnComp.Empty()) 
         {
-            pWrapper->funcOnComp.Call(curlret,httpret);
+            pWrapper->funcOnComp.Call(JSP_GLOBAL_OBJECT, curlret,httpret);
         }
         delete pWrapper;
     }
@@ -135,7 +136,7 @@ namespace laya
     {
         JCScriptRuntime::s_JSRT->m_pPoster->postToJS(std::bind(downloadBig_onComp_js, curlret,httpret, pWrapper));
     }
-    long _downloadBigFile(const char* p_pszUrl, const char* p_pszLocal, JSValueAsParam p_ProgCb,JSValueAsParam p_CompleteCb, int p_nTryNum, int p_nOptTimeout)
+	intptr_t _downloadBigFile(const char* p_pszUrl, const char* p_pszLocal, JSValueAsParam p_ProgCb,JSValueAsParam p_CompleteCb, int p_nTryNum, int p_nOptTimeout)
     {
         /*
         if (!canWrite(pCurProcess->getFSPermission(p_pszLocal))) {
@@ -150,15 +151,15 @@ namespace laya
             std::bind(downloadBig_onProg, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, pJSObj),
             std::bind(downloadBig_onComp, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5, std::placeholders::_6, pJSObj), 
             p_nTryNum, p_nOptTimeout);;
-        return (long)pJSObj;
+        return (intptr_t)pJSObj;
     }
     void downloadHeader_onComp_js(char* pBuff, int curlret, int httpret, JSFuncWrapper* pWrapper) 
     {
-        if (!pWrapper->IsMyJsEnv()) 
+        /*if (!pWrapper->IsMyJsEnv()) 
         {
             delete pWrapper;
             return;
-        }
+        }*/
         if (!pWrapper->funcOnComp.Empty()) 
         {
             if (pBuff) 
@@ -187,14 +188,14 @@ namespace laya
         }
         JCScriptRuntime::s_JSRT->m_pPoster->postToJS(std::bind(downloadHeader_onComp_js, pBuff, curlret, httpret, pWrapper));
     }
-    long _downloadGetHeader(const char* p_pszUrl, JSValueAsParam p_CompleteCb, int p_nTryNum, int p_nOptTimeout)
+	intptr_t _downloadGetHeader(const char* p_pszUrl, JSValueAsParam p_CompleteCb, int p_nTryNum, int p_nOptTimeout)
     {
         JCDownloadMgr* dmgr = JCDownloadMgr::getInstance();
         JSFuncWrapper* pJSObj = new JSFuncWrapper(p_CompleteCb, p_CompleteCb);//第一个没有用
         dmgr->getHeader(p_pszUrl,
             std::bind(downloadHeader_onComp, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5, std::placeholders::_6, pJSObj),
             p_nTryNum, p_nOptTimeout);
-        return (long)pJSObj;
+        return (intptr_t)pJSObj;
     }
     void setTouchEvtFunc(JSValueAsParam pObj) 
     {
@@ -425,10 +426,8 @@ namespace laya
 	void JSGlobalExportC()	
     {
 		JSP_GLOBAL_START1();
-        JSRuntime* pJSRuntime = new JSRuntime();
-        pJSRuntime->exportJS();
-        JSHistory* pJsHistory = new JSHistory();
-        pJsHistory->exportJS();
+		JSRuntime::getInstance()->exportJS();
+		JSHistory::getInstance()->exportJS();
         JSConsole::exportJS();
         JSImage::exportJS();
         XMLHttpRequest::exportJS();
@@ -442,11 +441,6 @@ namespace laya
         JSWebSocket::exportJS();
         JSZip::exportJS();
         JSNotify::exportJS();
-        if (JSLayaGL::s_pLayaGL != NULL)
-        {
-            delete JSLayaGL::s_pLayaGL;
-            JSLayaGL::s_pLayaGL = NULL;
-        }
         JSLayaGL::getInstance()->exportJS();
         JSShaderActiveInfo::exportJS();
         JSShaderPrecisionFormat::exportJS();
@@ -459,24 +453,24 @@ namespace laya
 #endif
         //JSTextCanvas
         JSTextBitmapInfo::exportJS();
-        if (JSTextMemoryCanvas::ms_pTextMemoryCanvas != NULL)
-        {
-            delete JSTextMemoryCanvas::ms_pTextMemoryCanvas;
-            JSTextMemoryCanvas::ms_pTextMemoryCanvas = NULL;
-        }
-        JSTextMemoryCanvas::getInstance()->exportJS();
-        JSCallbackFuncObj::exportJS();
 
-#ifdef __APPLE__
+        JSTextMemoryCanvas::getInstance()->exportJS();
+
+
+        JSCallbackFuncObj::exportJS();
+		
+		
+		JSArrayBufferRef::exportJS();
+		JSWebGLPlus::getInstance()->exportJS();
+#ifdef JS_JSC
         JSContextRef ctx = laya::__TlsData::GetInstance()->GetCurContext();
-        JCWebGLPlus::getInstance()->exportJS((void*)ctx, JSContextGetGlobalObject(ctx));
 #else 
         v8::Isolate* isolate = v8::Isolate::GetCurrent();
         v8::Local<v8::Context> context = isolate->GetCurrentContext(); 
         //v8::Local<v8::Object> object = v8::Object::New(isolate);
         //context->Global()->Set(v8::String::NewFromUtf8(isolate, "qq"), object);
-        v8::Local<v8::Object> object = context->Global();
-        JCWebGLPlus::getInstance()->exportJS((void*)NULL, &object);
+        //v8::Local<v8::Object> object = context->Global();
+        //JCWebGLPlus::getInstance()->exportJS((void*)NULL, &object);
 #endif
 		JSVideo::exportJS();
        
@@ -517,8 +511,6 @@ namespace laya
         JSP_ADD_GLOBAL_FUNCTION(calcmd5, calcMD5_JSAB);
         JSP_ADD_GLOBAL_FUNCTION(conchToBase64, conchToBase64);
         JSP_ADD_GLOBAL_FUNCTION(conchToBase64FlipY, conchToBase64FlipY);
-
-        ExportJS_bullet();
         JSLayaConchBullet::exportJS();
 	}
 }

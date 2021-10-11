@@ -11,7 +11,7 @@ class JSClassMgr{
 public:
     static pthread_key_t s_tls_curThread;
 	typedef void (*RESETFUNC)();
-	static JSClassMgr*   GetThreadInstance(){
+	static JSClassMgr*   GetInstance(){
          JSClassMgr* pIns =(JSClassMgr*)pthread_getspecific(s_tls_curThread);
 		if(!pIns){
             pIns = new JSClassMgr();
@@ -28,6 +28,9 @@ public:
 	}
 };
 
+#define JSP_GLOBAL_OBJECT \
+    JSContextGetGlobalObject(__TlsData::GetInstance()->GetCurContext())
+
 #define JSP_GLOBAL_START1()
 
 #define JSP_ADD_GLOBAL_FUNCTION(name, func, ...) \
@@ -42,7 +45,7 @@ public:
 #define JSP_CLASS(name, cls) \
     JSCClass<cls>* pJSCClass = JSCClass<cls>::getInstance();
 
-#define JSP_GLOBAL_CLASS(name, cls) \
+#define JSP_GLOBAL_CLASS(name, cls, inst) \
     JSCClass<cls>* pJSCClass = JSCClass<cls>::getInstance();
 
 #define JSP_ADD_FIXED_PROPERTY(name,cls,val) \
@@ -59,15 +62,23 @@ public:
 
 #define JSP_REG_CONSTRUCTOR(cls,...) \
     pJSCClass->addConstructor(laya::regConstructor<cls,##__VA_ARGS__>());
-    
+  
+#define JSP_GLOBAL_ADD_METHOD(name,fn) \
+    pJSCClass->addMethod(name,&fn);
+
+#define JSP_GLOBAL_ADD_PROPERTY_RO(name,cls,getter) \
+    pJSCClass->addProperty(#name,&cls::getter,nullptr);
+
+#define JSP_GLOBAL_ADD_PROPERTY(name,cls,getter,setter) \
+    pJSCClass->addProperty(#name,&cls::getter,&cls::setter);
 
 #define JSP_INSTALL_CLASS(name,cls) \
     pJSCClass->finish(name); \
-    JSClassMgr::GetThreadInstance()->allCls.push_back(JSCClass<cls>::reset);
+    JSClassMgr::GetInstance()->allCls.push_back(JSCClass<cls>::reset);
 
 #define JSP_INSTALL_GLOBAL_CLASS(name,cls,inst) \
     pJSCClass->finishToGlobal(name,inst); \
-    JSClassMgr::GetThreadInstance()->allCls.push_back(JSCClass<cls>::reset);
+    JSClassMgr::GetInstance()->allCls.push_back(JSCClass<cls>::reset);
 
 
 
@@ -79,9 +90,8 @@ public:
 	JSObjBaseJSC();
 	virtual ~JSObjBaseJSC();
 
-	void retainThis();
-	void releaseThis();
-	void createJSObj();
+	void makeWeak();
+	void makeStrong();
 
 	bool IsMyJsEnv() {
 		return true;
@@ -208,7 +218,6 @@ public:
 	}
 public:
 	JSObjectRef			mpJsThis;
-    bool m_bWeakThis;
 };
 
 class JsObjHandleJSC
@@ -236,12 +245,20 @@ public:
 	}
 
 	void set(int id, JSObjBaseJSC* pobj, JSValueRef v) {
-        if (m_pValue != nullptr){
-            Reset();
-        }
-        m_pValue = v;
-        JSValueProtect(__TlsData::GetInstance()->GetCurContext(), m_pValue);
+		if (m_pValue != nullptr) {
+			Reset();
+		}
+		m_pValue = v;
+		JSValueProtect(__TlsData::GetInstance()->GetCurContext(), m_pValue);
 		m_pObj = pobj;
+
+	}
+	void set(JSValueRef v) {
+		if (m_pValue != nullptr) {
+			Reset();
+		}
+		m_pValue = v;
+		JSValueProtect(__TlsData::GetInstance()->GetCurContext(), m_pValue);
 
 	}
 	template <typename _Tp>
@@ -333,18 +350,85 @@ public:
 			m_pReturn = m_pObj->callJsFunc(func,p1);
 		return true;
 	}
+	template <typename P1, typename R>
+	bool CallWithReturn(P1 p1, R& r) {
+		CALLJSPRE
+		r = __TransferToCpp<R>::ToCpp(m_pObj->callJsFunc(func, p1));
+		return true;
+	}
+    template <typename P1, typename P2>
+    bool Call(JSObjectRef valThis, P1 p1, P2 p2) {
+        if (!m_pObj)return false;
+        JSContextRef ctx = __TlsData::GetInstance()->GetCurContext();
+        JSObjectRef func = JSValueToObject(ctx, m_pValue, nullptr);
+        if (!JSObjectIsFunction(ctx,func))
+            return false;
+        
+        
+        int argc = 2;
+        JSValueRef argv[2];
+        argv[0] = __TransferToJs<P1>::ToJs(p1);
+        argv[1] = __TransferToJs<P2>::ToJs(p2);
+        
+        JSValueRef exception = nullptr;
+        JSObjectRef funcObj = JSValueToObject(ctx,func,&exception);
+        if (exception != nullptr){
+            __JSRun::OutputException(exception);
+        }
+        //JSObjectRef thisObj = JSValueToObject(ctx,valThis,&exception);
+        //if (exception != nullptr){
+        //    __JSRun::OutputException(exception);
+        //}
+        JSValueRef ret = JSObjectCallAsFunction(ctx,funcObj,valThis,argc,argv,&exception);
+        if (exception != nullptr){
+            __JSRun::OutputException(exception);
+        }
+        return true;
+    }
 	template <typename P1, typename P2>
 	bool Call(P1 p1, P2 p2) {
 		CALLJSPRE
 			m_pReturn = m_pObj->callJsFunc(func, p1, p2);
 		return true;
 	}
+    
 	template <typename P1, typename P2, typename P3>
 	bool Call(P1 p1, P2 p2, P3 p3) {
 		CALLJSPRE
 			m_pReturn = m_pObj->callJsFunc(func, p1, p2, p3);
 		return true;
 	}
+    template <typename P1, typename P2, typename P3, typename R>
+    bool CallWithReturn(JSValueRef valThis,P1 p1, P2 p2, P3 p3, R& r) {
+        if (!m_pObj)return false;
+        JSContextRef ctx = __TlsData::GetInstance()->GetCurContext();
+        JSObjectRef func = JSValueToObject(ctx, m_pValue, nullptr);
+        if (!JSObjectIsFunction(ctx,func))
+            return false;
+        
+        
+        int argc = 3;
+        JSValueRef argv[3];
+        argv[0] = __TransferToJs<P1>::ToJs(p1);
+        argv[1] = __TransferToJs<P2>::ToJs(p2);
+        argv[2] = __TransferToJs<P3>::ToJs(p3);
+        
+        JSValueRef exception = nullptr;
+        JSObjectRef funcObj = JSValueToObject(ctx,func,&exception);
+        if (exception != nullptr){
+            __JSRun::OutputException(exception);
+        }
+        JSObjectRef thisObj = JSValueToObject(ctx,valThis,&exception);
+        if (exception != nullptr){
+            __JSRun::OutputException(exception);
+        }
+        JSValueRef ret = JSObjectCallAsFunction(ctx,funcObj,thisObj,argc,argv,&exception);
+        if (exception != nullptr){
+            __JSRun::OutputException(exception);
+        }
+        r = __TransferToCpp<R>::ToCpp(ret);
+        return true;
+    }
 	template <typename P1, typename P2, typename P3, typename P4>
 	bool Call(P1 p1, P2 p2, P3 p3, P4 p4) {
 		CALLJSPRE

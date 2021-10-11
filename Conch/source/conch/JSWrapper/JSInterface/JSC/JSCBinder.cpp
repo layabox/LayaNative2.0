@@ -3,33 +3,23 @@
 
 pthread_key_t	JSClassMgr::s_tls_curThread;
 
-JSObjBaseJSC::JSObjBaseJSC() {
-    m_bWeakThis = true;
+JSObjBaseJSC::JSObjBaseJSC()
+{
 }
 
 JSObjBaseJSC::~JSObjBaseJSC() {
-    if (!m_bWeakThis){
-        JSContextRef ctx = __TlsData::GetInstance()->GetCurContext();
-        JSValueUnprotect(ctx, mpJsThis);
-    }
 }
 
-void JSObjBaseJSC::retainThis() {
-	JSContextRef ctx = __TlsData::GetInstance()->GetCurContext();
-	JSValueProtect(ctx, mpJsThis);
-}
-
-void JSObjBaseJSC::releaseThis() {
-	JSContextRef ctx = __TlsData::GetInstance()->GetCurContext();
-	JSValueUnprotect(ctx, mpJsThis);
-}
-
-
-void JSObjBaseJSC::createJSObj(){
+void JSObjBaseJSC::makeStrong()
+{
     JSContextRef ctx = __TlsData::GetInstance()->GetCurContext();
-    mpJsThis = JSObjectMake(ctx,nullptr,nullptr);
     JSValueProtect(ctx, mpJsThis);
-    m_bWeakThis = false;
+}
+
+void JSObjBaseJSC::makeWeak()
+{
+    JSContextRef ctx = __TlsData::GetInstance()->GetCurContext();
+    JSValueUnprotect(ctx, mpJsThis);
 }
 
 JSValueRef JSObjBaseJSC::callJsFunc(JSValueRef func) {

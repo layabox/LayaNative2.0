@@ -1,7 +1,7 @@
 
 PLATFORM_VERSION:=4.0
-APP_STL := gnustl_static
-APP_PLATFORM := android-18
+APP_STL := c++_shared
+APP_PLATFORM := android-21
 NDK_TOOLCHAIN_VERSION := 4.9
 APP_OPTIM := release
 

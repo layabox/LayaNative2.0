@@ -1,8 +1,8 @@
 
 PLATFORM_VERSION:=4.0
-APP_STL := gnustl_static
+APP_STL := c++_shared
 APP_MODULES := librender
-APP_PLATFORM := android-18
+APP_PLATFORM := android-21
 NDK_TOOLCHAIN_VERSION := 4.9
 #APP_STL := gnustl_static
 APP_OPTIM := release

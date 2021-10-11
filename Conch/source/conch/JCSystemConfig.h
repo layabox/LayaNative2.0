@@ -3,7 +3,6 @@
 #define _LAYA_CONFIG_H__
 
 #include <string>
-#include <JCWebGLPlus.h>
 
 namespace laya
 {
@@ -32,7 +31,7 @@ namespace laya
         static bool     s_bIsPlug;                      //因为初始化太早了，做成static
         static bool     s_bLocalizable;                 //设置是否是本地包
         bool            m_bUseAndroidSystemFont;        //是否使用android本身的字体
-        THREAD_MODE     m_nThreadMODE;                  //线程模式
+        int/*THREAD_MODE*/     m_nThreadMODE;                  //线程模式
 	};
 	extern JCSystemConfig g_kSystemConfig;
 }

@@ -102,6 +102,7 @@ namespace laya
             m_bComplete = true;
             m_pOnLoad.Call();
         }
+		makeWeak();
     }
     void JSImage::onErrorCallJSFunction( int p_nError,std::weak_ptr<int> callbackref )
     {
@@ -110,6 +111,7 @@ namespace laya
 	    if (!IsMyJsEnv())return;
         LOGW("download image file error! %s\n", m_sUrl.c_str());
         m_pOnError.Call(p_nError);
+		makeWeak();
     }
     bool JSImage::getComplete()
     {
@@ -184,7 +186,7 @@ namespace laya
         JCFileRes* pFileRes = (JCFileRes*)p_pRes;
         if (pFileRes->m_pBuffer.get())
         {
-			releaseThis();
+		
             //同步加载
             if (p_bDecodeSync)
             {
@@ -203,7 +205,6 @@ namespace laya
     void JSImage::onDownloadError(JCResStateDispatcher*, int e, std::weak_ptr<int>& callbackref)
     {
         if (!callbackref.lock())return;
-		releaseThis();
         m_nDownloadState = 0;
         onError(e,callbackref);
     }
@@ -216,7 +217,7 @@ namespace laya
         JCFileRes* pRes = JCScriptRuntime::s_JSRT->m_pFileResMgr->getRes(m_sUrl);
         pRes->setOnReadyCB(std::bind(&JSImage::onDownloadOK, this, std::placeholders::_1, false, cbref));
         pRes->setOnErrorCB(std::bind(&JSImage::onDownloadError, this, std::placeholders::_1, std::placeholders::_2, cbref));
-		retainThis();
+		makeStrong();
         return true;
     }
     int JSImage::GetWidth()

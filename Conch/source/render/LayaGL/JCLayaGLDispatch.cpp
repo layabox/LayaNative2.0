@@ -9,11 +9,11 @@
 #include "JCLayaGLDispatch.h"
 #include "../JCCmdStruct.h"
 #include <util/Log.h>
-#include <Manager/JCArrayBufferManager.h>
+#include <manager/JCArrayBufferManager.h>
 #include "../render/RenderEx/JCRegister.h"
 #include <util/JCCommonMethod.h>
 #include "../render/Performance/JCPerfHUD.h"
-#include <JCWebGLPlus.h>
+#include <webglplus/JCWebGLPlus.h>
 
 namespace laya
 {

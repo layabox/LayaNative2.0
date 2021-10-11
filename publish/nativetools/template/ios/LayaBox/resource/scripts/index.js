@@ -25,9 +25,6 @@ if (conchConfig.getOS() == "Conch-ios") {
 }
 function loadLib(url) {
     var script = document.createElement("script");
-    if (url.indexOf("laya.physics3D.js") >= 0) {
-        url = url.replace("laya.physics3D.js", "laya.physics3D.runtime.js");
-    }
     script.src = url;
     script.onerror = function () {
         if (window["onLayaInitError"]) {
@@ -35,6 +32,9 @@ function loadLib(url) {
         }
     };
     document.head.appendChild(script);
+    if (url.indexOf("laya.physics3D.js") >= 0) {
+        loadLib(url.replace("laya.physics3D.js", "laya.physics3D.runtime.js"));
+    }
 }
 window['loadLib'] = loadLib;
 const asyncs = require("async");

@@ -12,7 +12,7 @@
 #import <string>
 #import "conchRuntime.h"
 #import "../../../../source/conch/JCSystemConfig.h"
-
+#include <util/JCCommonMethod.h>
 //-------------------------------------------------------------------------------
 static conchConfig* g_pConchConfig = nil;
 //-------------------------------------------------------------------------------

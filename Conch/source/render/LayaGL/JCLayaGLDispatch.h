@@ -11,7 +11,7 @@
 
 #include <stdlib.h>
 #include "JCLayaGL.h"
-#include <buffer/JCCommandEncoderBuffer.h>
+#include <buffer/JCBuffer.h>
 
 //#define DEBUG_PARSE_STREAM 0
 

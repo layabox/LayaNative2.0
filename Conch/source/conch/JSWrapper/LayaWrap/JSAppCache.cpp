@@ -239,8 +239,9 @@ namespace laya
     {
         if (!m_funcTransUrl.Empty()) 
         {
-            m_funcTransUrl.Call(pUrl);
-            return __TransferToCpp<char*>::ToCpp(m_funcTransUrl.m_pReturn);
+			char* ret = NULL;
+            m_funcTransUrl.CallWithReturn(pUrl, ret);
+            return ret;
         }
         return nullptr;
     }
@@ -367,25 +368,26 @@ namespace laya
 #ifdef JS_V8
         //现在提供的转换不太方便转vector<string>，所以先自己写一个
         int size = (int)paths.size();
-		v8::Isolate* piso = mpJsIso;
+		v8::Isolate* piso = m_isolate;
+		v8::Local< v8::Context> context = piso->GetCurrentContext();
 		if (0 == size){
-			v8::Handle<v8::Array> array = v8::Array::New(piso, 0);
+			v8::Local<v8::Array> array = v8::Array::New(piso, 0);
 			return array;
 		}
 		else {
-			Handle<Array> array = Array::New(piso, size);
-			v8::HandleScope sc(mpJsIso);
+			v8::Local<Array> array = Array::New(piso, size);
+			v8::HandleScope sc(m_isolate);
 			for (int i = 0; i < size/2; i++) {
-				v8::Local<Object> retobj = v8::Object::New(mpJsIso);
+				v8::Local<Object> retobj = v8::Object::New(m_isolate);
 				std::string& path = paths[i * 2];
 				std::string& url = paths[i * 2 + 1];
-				retobj->Set(Js_Str(mpJsIso, "path"), Js_Str(mpJsIso,(const char*)path.c_str()));
+				retobj->Set(context, Js_Str(m_isolate, "path"), Js_Str(m_isolate,(const char*)path.c_str()));
 				if (url.length() > 0)
-					retobj->Set(Js_Str(mpJsIso, "url"), Js_Str(mpJsIso, (const char*)url.c_str()));
+					retobj->Set(context, Js_Str(m_isolate, "url"), Js_Str(m_isolate, (const char*)url.c_str()));
 				else
-					retobj->Set(Js_Str(mpJsIso, "url"), v8::Null(mpJsIso));
+					retobj->Set(context, Js_Str(m_isolate, "url"), v8::Null(m_isolate));
 				//array->Set(i, __TransferToJs<const char*>::ToJs(paths[i].c_str()));
-				array->Set(i, retobj);
+				array->Set(context, i, retobj);
 			}
 			return array;
 		}
@@ -422,7 +424,7 @@ namespace laya
         }
 #endif
 	}
-	int64_t JsAppCache::getAppSize(const char* appurl)
+	int32_t JsAppCache::getAppSize(const char* appurl)
     {
 		return 0;
 	}

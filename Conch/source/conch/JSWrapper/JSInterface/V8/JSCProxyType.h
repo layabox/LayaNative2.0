@@ -72,7 +72,7 @@ namespace laya{
     {__ValueType iType;__InferType(){iType=__VT_longlong;}};
 
     
-    class __CheckClassType
+    /*class __CheckClassType
     {
     public:
         template <typename T>
@@ -86,7 +86,7 @@ namespace laya{
 				return pdt == &T::JSCLSINFO;
 			}
         }
-    };
+    };*/
     
 }   // namespace __JSCProxy
 

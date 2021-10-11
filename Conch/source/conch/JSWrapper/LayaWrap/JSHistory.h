@@ -9,7 +9,7 @@
 #ifndef __JSHistory_H__
 #define __JSHistory_H__
 
-#include <JSObjBase.h>
+#include "../JSInterface/JSObjBase.h"
 #include "../JSInterface/JSInterface.h"
 
 namespace laya 
@@ -20,13 +20,16 @@ namespace laya
     public:
         static JsObjClassInfo JSCLSINFO;
         void exportJS();
-
+		~JSHistory();
+		static JSHistory* getInstance();
     public:
         int getLength();
         void back();
         void forward();
         void go(int step);
         void push(char* strUrl);
+	private:
+		static JSHistory* ms_pHistory;
     };
 
 }

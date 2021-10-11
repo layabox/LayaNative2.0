@@ -87,7 +87,7 @@ namespace laya
 		JsValue getAppList();
 
 		//得到某个app的缓存的大小
-		int64_t getAppSize(const char* appurl);
+		int32_t getAppSize(const char* appurl);
 
 		//删除指定app的缓存
 		bool delAppCache(const char* appurl);

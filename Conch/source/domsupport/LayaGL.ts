@@ -1412,7 +1412,7 @@ class GLCommandEncoder
         {
             return new ANGLEInstancedArrays(this);
         }
-        else if (name.indexOf('OES_vertex_array_object') != -1 &&  (extention.indexOf('GL_OES_vertex_array_object') != -1))
+        else if (name.indexOf('OES_vertex_array_object') != -1 &&  ((extention.indexOf('GL_OES_vertex_array_object') != -1)|| version.indexOf("OpenGL ES 3.") != -1))
         {
             return new OESVertexArrayObject(this);
         }

@@ -38,7 +38,7 @@ namespace laya
     {
         jsDOC = new JSXmlDocument();
         jsDOC->parse(str);
-        return JSP_TO_JS(JSXmlDocument, jsDOC);
+        return JSP_TO_JS(JSXmlDocument*, jsDOC);
     }
     const char* JSDOMParser::getSrc()
     {
@@ -106,7 +106,7 @@ namespace laya
     }
     JsValue JSDOMParser::getXml()
     {
-        return JSP_TO_JS(JSXmlDocument, jsDOC);
+        return JSP_TO_JS(JSXmlDocument*, jsDOC);
     }
     void JSDOMParser::exportJS()
     {

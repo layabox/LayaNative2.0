@@ -1,3 +1,4 @@
+#ifdef JS_V8_DEBUGGER
 #ifndef V8_SOCKET_H_
 #define V8_SOCKET_H_
 #ifdef WIN32
@@ -88,3 +89,4 @@ namespace laya {
 }
 #endif  // V8_PLATFORM_H_
 
+#endif

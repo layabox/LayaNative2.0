@@ -138,6 +138,38 @@ namespace laya
 	    m_sSrc = sSrc;
 	    //为了android
 	    m_sSrc.at(0) = m_sSrc.at(0);
+
+
+		//去掉?后面的，因为可能增加版本号
+		std::string sTemp = m_sSrc;
+		int p3 = sTemp.rfind('?');
+		//去下载文件
+		char* sT = (char*)(sTemp.c_str());
+		if (p3 != -1)
+		{
+			sT[p3] = 0;
+		}
+		char* sExtName = (char*)(getExtName(LayaStrlwr(sT)));
+		if (strcmp(sExtName, "mp3") == 0)
+		{
+			m_nType = 0;
+		}
+		else if (strcmp(sExtName, "wav") == 0)
+		{
+			m_nType = 1;
+			m_bIsOgg = false;
+		}
+		else if (strcmp(sExtName, "ogg") == 0)
+		{
+			m_nType = 1;
+			m_bIsOgg = true;
+		}
+		else
+		{
+			m_nType = -1;
+			LOGW("JSAudio::setSrc extname != mp3 && extname != wav && exname != ogg");
+			return;
+		}
 	    //这段代码是查找，是否在缓存中已经有此音乐了，直接找到播放
 	    JCWaveInfo* pWavInfo = JCAudioManager::GetInstance()->FindWaveInfo( p_sSrc );
 	    if( pWavInfo != NULL )
@@ -153,36 +185,7 @@ namespace laya
 		    }
 		    return;
 	    }
-	    //去掉?后面的，因为可能增加版本号
-	    std::string sTemp = m_sSrc;
-	    int p3 = sTemp.rfind('?');
-	    //去下载文件
-	    char* sT = (char*)(sTemp.c_str());
-	    if( p3 != -1 )
-	    {
-		    sT[p3]=0;
-	    }
-	    char* sExtName = (char*)( getExtName( LayaStrlwr( sT ) ) );
-	    if( strcmp( sExtName,"mp3") == 0 )
-	    {
-		    m_nType = 0;
-	    }
-	    else if( strcmp( sExtName,"wav") == 0 )
-	    {
-		    m_nType = 1;
-		    m_bIsOgg = false;
-	    }
-	    else if( strcmp( sExtName,"ogg") == 0 )
-	    {
-		    m_nType = 1;
-		    m_bIsOgg = true;
-	    }
-	    else
-	    {
-		    m_nType = -1;
-		    LOGW("JSAudio::setSrc extname != mp3 && extname != wav && exname != ogg");
-		    return;
-	    }
+	    
 	    if(m_nType==0)
 	    {
 		    //必须确保 如果是mp3必须每次都new JSAudio这个类，否则会出问题

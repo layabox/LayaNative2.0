@@ -171,9 +171,6 @@ namespace laya
     void XMLHttpRequest::set_onreadystatechange(JSValueAsParam pObj)
     {
         m_funcOnStateChg.set(onstatchgid, this, pObj);
-        if (m_funcOnStateChg.IsFunction()) {
-            m_funcOnStateChg.__BindThis(m_This);
-        }
     }
     void _onPostComplete_JSThread(XMLHttpRequest* pxhr, char* p_Buff, int p_nLen, bool p_bBin, std::weak_ptr<int> cbref) 
     {
@@ -194,20 +191,28 @@ namespace laya
             }
             else 
             {
-                std::string strBuff;
-                unsigned char* pBuff = (unsigned char*)p_Buff;
-                if (p_nLen >= 3 && pBuff[0] == 0xef && pBuff[1] == 0xbb && pBuff[2] == 0xbf) {
-                    strBuff.append(p_Buff + 3);
+                if (p_nLen > 0)
+                {
+                    std::string strBuff;
+                    unsigned char* pBuff = (unsigned char*)p_Buff;
+                    if (p_nLen >= 3 && pBuff[0] == 0xef && pBuff[1] == 0xbb && pBuff[2] == 0xbf) {
+                        strBuff.append(p_Buff + 3);
+                    }
+                    else strBuff = p_Buff;
+                    pxhr->m_jsfunPostComplete.Call(strBuff);
                 }
-                else strBuff = p_Buff;
-                pxhr->m_jsfunPostComplete.Call(strBuff);
+                else
+                {
+                    pxhr->m_jsfunPostComplete.Call("");
+                }
             }
-            delete p_Buff;
+            delete[] p_Buff;
         }
         else 
         {
             pxhr->m_jsfunPostError.Call(-1);
         }
+        pxhr->makeWeak();
     }
     void _onPostError_JSThread(XMLHttpRequest* pxhr, int curle, int httpresponse, std::weak_ptr<int> cbref)
     {
@@ -215,7 +220,9 @@ namespace laya
             return;
         if (!pxhr->IsMyJsEnv())
             return;
+       
         pxhr->m_jsfunPostError.Call(curle, httpresponse);
+        pxhr->makeWeak();
     }
     void _onPostError(XMLHttpRequest* xhr, IConchThreadCmdMgr* pPoster, int curle, int httpresponse, std::weak_ptr<int> cbref) 
     {
@@ -275,6 +282,8 @@ namespace laya
         }
         else 
         {
+			makeStrong();
+
             std::weak_ptr<int> cbref(m_CallbackRef);
             pdmgr->postData(p_pszUrl, p_pszString, strlen(p_pszString), 
                 std::bind(_onPostComplete, this, isBin(), m_pCmdPoster, 
@@ -305,9 +314,7 @@ namespace laya
     void XMLHttpRequest::setPostCB(JSValueAsParam p_onOK, JSValueAsParam p_onError) 
     {
         m_jsfunPostComplete.set(oncompleteid, this, p_onOK);
-        m_jsfunPostComplete.__BindThis(m_This);
         m_jsfunPostError.set(onerrid, this, p_onError);
-        m_jsfunPostError.__BindThis(m_This);
         std::weak_ptr<int> cbref(m_CallbackRef);
         m_funcPostComplete = std::bind(_onPostComplete, this, isBin(),m_pCmdPoster, 
             std::placeholders::_1, 
@@ -338,6 +345,8 @@ namespace laya
             }
             else
                 pDMgr->postData(p_pszURL, p_pData, p_nLen, m_funcPostComplete);
+
+			makeStrong();
         }
     }
     void XMLHttpRequest::getData(const char* p_sUrl) 

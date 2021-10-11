@@ -1,4 +1,4 @@
-
+#ifdef JS_V8_DEBUGGER
 #include "V8WSSv.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -279,3 +279,4 @@ namespace laya {
         }
     }
 }
+#endif

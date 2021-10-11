@@ -51,7 +51,7 @@ namespace laya
     }
     JsValue  JSXmlNode::getParentNode()
     {
-         return JSP_TO_JS(JSXmlNode, m_parentNode);
+         return JSP_TO_JS(JSXmlNode*, m_parentNode);
     }
     JsValue  JSXmlNode::getFirstChild()
     {

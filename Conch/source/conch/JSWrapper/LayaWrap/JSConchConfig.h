@@ -18,7 +18,7 @@
 
 namespace laya
 {
-    class JSConchConfig:public JsObjBase
+    class JSConchConfig: public JsObjBase, public JSObjNode
     {
     public:
 	    static JsObjClassInfo JSCLSINFO;

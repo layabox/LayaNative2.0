@@ -15,7 +15,7 @@
 #include <string>
 #include <map>
 #include "../JSInterface/JSInterface.h"
-#include <JSObjBase.h>
+#include "../JSInterface/JSObjBase.h"
 #include <fontMgr/JCFontInfo.h>
 
 namespace laya

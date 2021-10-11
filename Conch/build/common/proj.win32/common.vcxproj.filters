@@ -40,6 +40,12 @@
     <Filter Include="buffer">
       <UniqueIdentifier>{fe27facc-9a04-4383-8ef2-6b5dd97916ec}</UniqueIdentifier>
     </Filter>
+    <Filter Include="webglplus">
+      <UniqueIdentifier>{449a8406-73fe-40d8-8669-1e885aa01d12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="manager">
+      <UniqueIdentifier>{98857d07-21d7-48cb-9c84-59c77bdd6e74}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\common\util\JCJson.cpp">
@@ -161,6 +167,24 @@
     </ClCompile>
     <ClCompile Include="..\..\..\source\common\buffer\JCBuffer.cpp">
       <Filter>buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\common\math\JCBoundingBox.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\common\math\JCBoundingFrustum.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\common\math\JCBoundingSphere.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\common\math\JCPlane.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\common\webglplus\JCWebGLPlus.cpp">
+      <Filter>webglplus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\common\manager\JCArrayBufferManager.cpp">
+      <Filter>manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -324,6 +348,27 @@
     </ClInclude>
     <ClInclude Include="..\..\..\source\common\buffer\JCBuffer.h">
       <Filter>buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\math\JCBoundingBox.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\math\JCBoundingFrustum.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\math\JCBoundingSphere.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\math\JCPlane.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\math\Vector3.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\webglplus\JCWebGLPlus.h">
+      <Filter>webglplus</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\common\manager\JCArrayBufferManager.h">
+      <Filter>manager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

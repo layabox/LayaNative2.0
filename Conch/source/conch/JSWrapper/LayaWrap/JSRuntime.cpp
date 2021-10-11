@@ -12,11 +12,9 @@
 #include "../../JCConch.h"
 #include <downloadCache/JCFileSource.h>
 #ifdef __APPLE__ 
-    #include  "jsc/JSWebGLPlus.h"
     #include "../../CToObjectC.h"
 #else
-    #include "v8/JSWebGLPlus.h"
-   
+	#include <webglplus/JCWebGLPlus.h>  
 #endif
 #ifdef ANDROID 
 #include "../../CToJavaBridge.h"
@@ -32,12 +30,22 @@
 namespace laya
 {
     ADDJSCLSINFO(JSRuntime, JSObjNode);
+	JSRuntime* JSRuntime::ms_pRuntime = NULL;
+	JSRuntime* JSRuntime::getInstance()
+	{
+		if (ms_pRuntime == NULL)
+		{
+			ms_pRuntime = new JSRuntime();
+		}
+		return ms_pRuntime;
+	}
     JSRuntime::JSRuntime()
     {
         m_pScrpitRuntime = JCScriptRuntime::s_JSRT;
     }
     JSRuntime::~JSRuntime()
     {
+		ms_pRuntime = NULL;
         m_pScrpitRuntime = NULL;
     }
     void JSRuntime::setOnFrameFunction(JSValueAsParam p_pFunction)
@@ -380,49 +388,50 @@ namespace laya
 #elif WIN32
 #endif
     }
-    bool JSRuntime::updateArrayBufferRef(int nID, bool bSyncToRender, JSValueAsParam pArrayBuffer)
+    /*bool JSRuntime::updateArrayBufferRef(int nID, bool bSyncToRender, JSValueAsParam pArrayBuffer)
     {
         return JSWebGLPlus::getInstance()->updateArrayBufferRef(nID, bSyncToRender, pArrayBuffer);
-    }
+    }*/
+
     void JSRuntime::exportJS()
     {
-        JSP_GLOBAL_CLASS("conch", JSRuntime);
-        JSP_ADD_METHOD("setGetWorldTransformFunction", JSRuntime::setGetWorldTransformFunction);
-        JSP_ADD_METHOD("setSetWorldTransformFunction", JSRuntime::setSetWorldTransformFunction);
-        JSP_ADD_METHOD("setOnFrame", JSRuntime::setOnFrameFunction);
-        JSP_ADD_METHOD("setOnDraw", JSRuntime::setOnDrawFunction);
-        JSP_ADD_METHOD("setOnResize", JSRuntime::setOnResizeFunction);
-        JSP_ADD_METHOD("setOnBlur", JSRuntime::setOnBlurFunction);
-        JSP_ADD_METHOD("setOnFocus", JSRuntime::setOnFocusFunction);
-        JSP_ADD_METHOD("setHref", JSRuntime::setHref);
-        JSP_ADD_METHOD("setMouseEvtFunction", JSRuntime::setMouseEvtFunction);
-        JSP_ADD_METHOD("setKeyEvtFunction", JSRuntime::setKeyEvtFunction);
-        JSP_ADD_METHOD("setTouchEvtFunction", JSRuntime::setTouchEvtFunction);
-        JSP_ADD_METHOD("setDeviceMotionEvtFunction", JSRuntime::setDeviceMotionEvtFunction);
-        JSP_ADD_METHOD("setNetworkEvtFunction", JSRuntime::setNetworkEvtFunction);
-		JSP_ADD_METHOD("setOnBackPressedFunction", JSRuntime::setOnBackPressedFunction);
-        JSP_ADD_METHOD("setBuffer", JSRuntime::setBuffer);
-        JSP_ADD_PROPERTY_RO(presetUrl, JSRuntime,getPresetUrl);
-        JSP_ADD_METHOD("setScreenWakeLock", JSRuntime::setScreenWakeLock);
-        JSP_ADD_METHOD("setSensorAble", JSRuntime::setSensorAble);
-        JSP_ADD_METHOD("readFileFromAsset", JSRuntime::readFileFromAsset);
-        JSP_ADD_METHOD("getCachePath", JSRuntime::getCachePath);
-        JSP_ADD_METHOD("strTobufer", JSRuntime::strTobufer);
-        JSP_ADD_METHOD("callMethod", JSRuntime::callMethod);
-        JSP_ADD_METHOD("printCorpseImages", JSRuntime::printCorpseImages);
-        JSP_ADD_METHOD("setExternalLink", JSRuntime::setExternalLink);
-        JSP_ADD_METHOD("setExternalLinkEx", JSRuntime::setExternalLinkEx);
-        JSP_ADD_METHOD("closeExternalLink", JSRuntime::closeExternalLink);
-        JSP_ADD_METHOD("hideWebview", JSRuntime::hideWebview);
-        JSP_ADD_METHOD("showWebview", JSRuntime::showWebView);
-        JSP_ADD_METHOD("captureScreen", JSRuntime::captureScreen);
-        JSP_ADD_METHOD("saveAsPng", JSRuntime::saveAsPng);
-        JSP_ADD_METHOD("saveAsJpeg", JSRuntime::saveAsJpeg);
-        JSP_ADD_METHOD("convertBitmapToPng", JSRuntime::convertBitmapToPng);
-        JSP_ADD_METHOD("convertBitmapToJpeg", JSRuntime::convertBitmapToJpeg);
-        JSP_ADD_METHOD("callWebviewJS", JSRuntime::callWebviewJS);
-        JSP_ADD_METHOD("updateArrayBufferRef", JSRuntime::updateArrayBufferRef);
-		JSP_ADD_METHOD("exit", JSRuntime::exit);
+        JSP_GLOBAL_CLASS("conch", JSRuntime, this);
+		JSP_GLOBAL_ADD_METHOD("setGetWorldTransformFunction", JSRuntime::setGetWorldTransformFunction);
+		JSP_GLOBAL_ADD_METHOD("setSetWorldTransformFunction", JSRuntime::setSetWorldTransformFunction);
+		JSP_GLOBAL_ADD_METHOD("setOnFrame", JSRuntime::setOnFrameFunction);
+		JSP_GLOBAL_ADD_METHOD("setOnDraw", JSRuntime::setOnDrawFunction);
+		JSP_GLOBAL_ADD_METHOD("setOnResize", JSRuntime::setOnResizeFunction);
+		JSP_GLOBAL_ADD_METHOD("setOnBlur", JSRuntime::setOnBlurFunction);
+		JSP_GLOBAL_ADD_METHOD("setOnFocus", JSRuntime::setOnFocusFunction);
+		JSP_GLOBAL_ADD_METHOD("setHref", JSRuntime::setHref);
+		JSP_GLOBAL_ADD_METHOD("setMouseEvtFunction", JSRuntime::setMouseEvtFunction);
+		JSP_GLOBAL_ADD_METHOD("setKeyEvtFunction", JSRuntime::setKeyEvtFunction);
+		JSP_GLOBAL_ADD_METHOD("setTouchEvtFunction", JSRuntime::setTouchEvtFunction);
+		JSP_GLOBAL_ADD_METHOD("setDeviceMotionEvtFunction", JSRuntime::setDeviceMotionEvtFunction);
+		JSP_GLOBAL_ADD_METHOD("setNetworkEvtFunction", JSRuntime::setNetworkEvtFunction);
+		JSP_GLOBAL_ADD_METHOD("setOnBackPressedFunction", JSRuntime::setOnBackPressedFunction);
+		JSP_GLOBAL_ADD_METHOD("setBuffer", JSRuntime::setBuffer);
+        JSP_GLOBAL_ADD_PROPERTY_RO(presetUrl, JSRuntime,getPresetUrl);
+		JSP_GLOBAL_ADD_METHOD("setScreenWakeLock", JSRuntime::setScreenWakeLock);
+		JSP_GLOBAL_ADD_METHOD("setSensorAble", JSRuntime::setSensorAble);
+		JSP_GLOBAL_ADD_METHOD("readFileFromAsset", JSRuntime::readFileFromAsset);
+		JSP_GLOBAL_ADD_METHOD("getCachePath", JSRuntime::getCachePath);
+		JSP_GLOBAL_ADD_METHOD("strTobufer", JSRuntime::strTobufer);
+		JSP_GLOBAL_ADD_METHOD("callMethod", JSRuntime::callMethod);
+		JSP_GLOBAL_ADD_METHOD("printCorpseImages", JSRuntime::printCorpseImages);
+		JSP_GLOBAL_ADD_METHOD("setExternalLink", JSRuntime::setExternalLink);
+		JSP_GLOBAL_ADD_METHOD("setExternalLinkEx", JSRuntime::setExternalLinkEx);
+		JSP_GLOBAL_ADD_METHOD("closeExternalLink", JSRuntime::closeExternalLink);
+		JSP_GLOBAL_ADD_METHOD("hideWebview", JSRuntime::hideWebview);
+		JSP_GLOBAL_ADD_METHOD("showWebview", JSRuntime::showWebView);
+		JSP_GLOBAL_ADD_METHOD("captureScreen", JSRuntime::captureScreen);
+		JSP_GLOBAL_ADD_METHOD("saveAsPng", JSRuntime::saveAsPng);
+		JSP_GLOBAL_ADD_METHOD("saveAsJpeg", JSRuntime::saveAsJpeg);
+		JSP_GLOBAL_ADD_METHOD("convertBitmapToPng", JSRuntime::convertBitmapToPng);
+		JSP_GLOBAL_ADD_METHOD("convertBitmapToJpeg", JSRuntime::convertBitmapToJpeg);
+		JSP_GLOBAL_ADD_METHOD("callWebviewJS", JSRuntime::callWebviewJS);
+		//JSP_GLOBAL_ADD_METHOD("updateArrayBufferRef", JSRuntime::updateArrayBufferRef);
+		JSP_GLOBAL_ADD_METHOD("exit", JSRuntime::exit);
         JSP_INSTALL_GLOBAL_CLASS("conch", JSRuntime, this );
     }
 }

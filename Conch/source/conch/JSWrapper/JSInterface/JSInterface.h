@@ -9,7 +9,7 @@
 #ifndef __JSInterface_H__
 #define __JSInterface_H__
 
-#include <JSObjBase.h>
+#include "JSObjBase.h"
 #include <util/JCMemorySurvey.h>
 #ifdef JS_JSC
     #include "JSC/JSCBinder.h"
@@ -46,16 +46,15 @@ namespace laya
     {
     };
     #define JSValueAsParam  JsValue
-    typedef JsObjHandle2    JsObjHandle;
     #define JSP_THROW(str) 	__JsThrow::	Throw(str);
-    #define JSP_RUN_SCRIPT(script)   __JSRun::Run(script);
+    #define JSP_RUN_SCRIPT(script)   laya::__JSRun::Run(script);
     #define JSP_TO_JS_NULL	((v8::Null(v8::Isolate::GetCurrent())))
     #define JSP_TO_JS_UNDEFINE ((v8::Undefined(v8::Isolate::GetCurrent())))
     #include "V8/JSCProxyTrnasfer.h"
     #define JSP_TO_JS_BYTE_ARRAY(vl,sz) (__JsByteArray::ToJsByteArray(vl,sz))
     #define JSP_TO_JS(tp,v) (__TransferToJs<tp>::ToJs(v))
     #define JS_TO_CPP(tp,v) (__TransferToCpp<tp>::ToCpp(v))
-    #define JSP_TO_JS_STR(str) (v8::String::NewFromUtf8(v8::Isolate::GetCurrent(),str))
+    #define JSP_TO_JS_STR(str) (v8::String::NewFromUtf8(v8::Isolate::GetCurrent(),str).ToLocalChecked())
     #define JS_TRY \
 	    v8::Isolate* isolate = v8::Isolate::GetCurrent();\
 	    v8::HandleScope handle_scope(isolate);\

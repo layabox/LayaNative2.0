@@ -48,6 +48,12 @@
 		A2D1181A1D0B9D51004C229D /* JCZlib.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A2D1180C1D0B9D51004C229D /* JCZlib.cpp */; };
 		A2D1181B1D0B9D51004C229D /* Log.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A2D1180F1D0B9D51004C229D /* Log.cpp */; };
 		A2D11A021D0C2D65004C229D /* JCIniFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A2D11A001D0C2D65004C229D /* JCIniFile.cpp */; };
+		A2FBA9252701FF1F00846E17 /* JCWebGLPlus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A2FBA9232701FF1F00846E17 /* JCWebGLPlus.cpp */; };
+		A2FBA92D2701FF4C00846E17 /* JCArrayBufferManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A2FBA92B2701FF4C00846E17 /* JCArrayBufferManager.cpp */; };
+		A2FBA96E270432F900846E17 /* JCBoundingBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A2FBA968270432F800846E17 /* JCBoundingBox.cpp */; };
+		A2FBA96F270432F900846E17 /* JCBoundingFrustum.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A2FBA96A270432F800846E17 /* JCBoundingFrustum.cpp */; };
+		A2FBA970270432F900846E17 /* JCPlane.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A2FBA96B270432F800846E17 /* JCPlane.cpp */; };
+		A2FBA971270432F900846E17 /* JCBoundingSphere.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A2FBA96D270432F800846E17 /* JCBoundingSphere.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -170,6 +176,19 @@
 		A2D11A001D0C2D65004C229D /* JCIniFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = JCIniFile.cpp; sourceTree = "<group>"; };
 		A2D11A011D0C2D65004C229D /* JCIniFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JCIniFile.h; sourceTree = "<group>"; };
 		A2D11A1F1D0C3FA0004C229D /* JCIOSFTInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JCIOSFTInterface.h; path = ../../../source/common/JCIOSFTInterface.h; sourceTree = "<group>"; };
+		A2FBA9232701FF1F00846E17 /* JCWebGLPlus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = JCWebGLPlus.cpp; path = ../../../../source/common/webglplus/JCWebGLPlus.cpp; sourceTree = "<group>"; };
+		A2FBA9242701FF1F00846E17 /* JCWebGLPlus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JCWebGLPlus.h; path = ../../../../source/common/webglplus/JCWebGLPlus.h; sourceTree = "<group>"; };
+		A2FBA92B2701FF4C00846E17 /* JCArrayBufferManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = JCArrayBufferManager.cpp; path = ../../../../source/common/manager/JCArrayBufferManager.cpp; sourceTree = "<group>"; };
+		A2FBA92C2701FF4C00846E17 /* JCArrayBufferManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JCArrayBufferManager.h; path = ../../../../source/common/manager/JCArrayBufferManager.h; sourceTree = "<group>"; };
+		A2FBA965270432F800846E17 /* JCPlane.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JCPlane.h; path = ../../../source/common/math/JCPlane.h; sourceTree = "<group>"; };
+		A2FBA966270432F800846E17 /* JCBoundingBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JCBoundingBox.h; path = ../../../source/common/math/JCBoundingBox.h; sourceTree = "<group>"; };
+		A2FBA967270432F800846E17 /* JCBoundingFrustum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JCBoundingFrustum.h; path = ../../../source/common/math/JCBoundingFrustum.h; sourceTree = "<group>"; };
+		A2FBA968270432F800846E17 /* JCBoundingBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = JCBoundingBox.cpp; path = ../../../source/common/math/JCBoundingBox.cpp; sourceTree = "<group>"; };
+		A2FBA969270432F800846E17 /* JCBoundingSphere.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JCBoundingSphere.h; path = ../../../source/common/math/JCBoundingSphere.h; sourceTree = "<group>"; };
+		A2FBA96A270432F800846E17 /* JCBoundingFrustum.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = JCBoundingFrustum.cpp; path = ../../../source/common/math/JCBoundingFrustum.cpp; sourceTree = "<group>"; };
+		A2FBA96B270432F800846E17 /* JCPlane.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = JCPlane.cpp; path = ../../../source/common/math/JCPlane.cpp; sourceTree = "<group>"; };
+		A2FBA96C270432F800846E17 /* Vector3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Vector3.h; path = ../../../source/common/math/Vector3.h; sourceTree = "<group>"; };
+		A2FBA96D270432F800846E17 /* JCBoundingSphere.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = JCBoundingSphere.cpp; path = ../../../source/common/math/JCBoundingSphere.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -242,6 +261,9 @@
 		8A42969E1B6758240072C3F7 /* source */ = {
 			isa = PBXGroup;
 			children = (
+				A2FBA9322701FF6D00846E17 /* zip */,
+				A2FBA92A2701FF2900846E17 /* manager */,
+				A2FBA9222701FEBA00846E17 /* webglplus */,
 				24760D662081C29000594375 /* fontMgr */,
 				A2BCECF41E237061003ABF33 /* math */,
 				A2D11A1F1D0C3FA0004C229D /* JCIOSFTInterface.h */,
@@ -434,10 +456,44 @@
 		A2BCECF41E237061003ABF33 /* math */ = {
 			isa = PBXGroup;
 			children = (
+				A2FBA968270432F800846E17 /* JCBoundingBox.cpp */,
+				A2FBA966270432F800846E17 /* JCBoundingBox.h */,
+				A2FBA96A270432F800846E17 /* JCBoundingFrustum.cpp */,
+				A2FBA967270432F800846E17 /* JCBoundingFrustum.h */,
+				A2FBA96D270432F800846E17 /* JCBoundingSphere.cpp */,
+				A2FBA969270432F800846E17 /* JCBoundingSphere.h */,
+				A2FBA96B270432F800846E17 /* JCPlane.cpp */,
+				A2FBA965270432F800846E17 /* JCPlane.h */,
+				A2FBA96C270432F800846E17 /* Vector3.h */,
 				A27D92532106D9BC00CD920F /* Matrix32.cpp */,
 				A27D92572106D9BD00CD920F /* Matrix32.h */,
 			);
 			name = math;
+			sourceTree = "<group>";
+		};
+		A2FBA9222701FEBA00846E17 /* webglplus */ = {
+			isa = PBXGroup;
+			children = (
+				A2FBA9232701FF1F00846E17 /* JCWebGLPlus.cpp */,
+				A2FBA9242701FF1F00846E17 /* JCWebGLPlus.h */,
+			);
+			path = webglplus;
+			sourceTree = "<group>";
+		};
+		A2FBA92A2701FF2900846E17 /* manager */ = {
+			isa = PBXGroup;
+			children = (
+				A2FBA92B2701FF4C00846E17 /* JCArrayBufferManager.cpp */,
+				A2FBA92C2701FF4C00846E17 /* JCArrayBufferManager.h */,
+			);
+			path = manager;
+			sourceTree = "<group>";
+		};
+		A2FBA9322701FF6D00846E17 /* zip */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = zip;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -546,6 +602,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A2FBA92D2701FF4C00846E17 /* JCArrayBufferManager.cpp in Sources */,
 				A2D117F51D0B9D2C004C229D /* JCFileResManager.cpp in Sources */,
 				A2D117F61D0B9D2C004C229D /* JCResManager.cpp in Sources */,
 				A2D1181B1D0B9D51004C229D /* Log.cpp in Sources */,
@@ -556,6 +613,8 @@
 				A2D117DF1D0B9C51004C229D /* JCWaveParser.cpp in Sources */,
 				A2D117A81D0B9BF5004C229D /* JCPngImg.cpp in Sources */,
 				A2D1178D1D0B9BBE004C229D /* JCEventBase.cpp in Sources */,
+				A2FBA96F270432F900846E17 /* JCBoundingFrustum.cpp in Sources */,
+				A2FBA96E270432F900846E17 /* JCBoundingBox.cpp in Sources */,
 				5E6806501D7D504C002A7575 /* JCHttpHeader.cpp in Sources */,
 				A2D117901D0B9BCF004C229D /* JCFileSystem.cpp in Sources */,
 				A2D117F71D0B9D2C004C229D /* JCResource.cpp in Sources */,
@@ -568,6 +627,7 @@
 				A2D118181D0B9D51004C229D /* JCXml.cpp in Sources */,
 				A2D1181A1D0B9D51004C229D /* JCZlib.cpp in Sources */,
 				24760D812081C3E600594375 /* JCFontManager.cpp in Sources */,
+				A2FBA9252701FF1F00846E17 /* JCWebGLPlus.cpp in Sources */,
 				A2D117DC1D0B9C51004C229D /* JCAudioWavplayer.cpp in Sources */,
 				A2D117BD1D0B9C20004C229D /* JCGetClockExact.cpp in Sources */,
 				A2D117C01D0B9C20004C229D /* JCWorkSemaphore.cpp in Sources */,
@@ -584,8 +644,10 @@
 				A2D117791D0B9B8B004C229D /* JCBuffer.cpp in Sources */,
 				A2D117811D0B9B9B004C229D /* JCServerFileCache.cpp in Sources */,
 				A2D117A61D0B9BF5004C229D /* JCImageRW.cpp in Sources */,
+				A2FBA970270432F900846E17 /* JCPlane.cpp in Sources */,
 				A2D118131D0B9D51004C229D /* JCCrypto.cpp in Sources */,
 				24760D7F2081C3E600594375 /* JCFreeTypeRender.cpp in Sources */,
+				A2FBA971270432F900846E17 /* JCBoundingSphere.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -12,7 +12,7 @@
 //包含头文件
 #include <stdio.h>
 #ifndef WEBASM
-    #include <JSObjBase.h>
+	#include "../JSInterface/JSObjBase.h"
     #include "../JSInterface/JSInterface.h"
 #endif
 #include <Image/JCImage.h>

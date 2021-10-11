@@ -12,6 +12,7 @@
 #include <malloc.h>
 #include <imageLib/JCImageRW.h>
 #include "fontMgr/JCFontInfo.h"
+#include <pthread.h>
 CToJavaBridge*	g_pCToJava=NULL;
 std::string     CToJavaBridge::JavaClass="layaair/game/browser/ExportJavaFunction";
 

@@ -1,5 +1,5 @@
 
-#ifdef JS_V8
+#ifdef JS_V8_DEBUGGER
 #include "debug-agent.h"
 #include <util/Log.h>
 #include "V8Socket.h"
@@ -65,9 +65,7 @@ void mygLayaLogSimp(int level, const char* file, int line, const char* msg) {
 	pDbgAgent->sendToDbgConsole((char*)msg, file, line, 0, level<sz ? pTypes[level] : "unknown");
 }
 
-#endif
 
-#ifdef JS_V8
 namespace laya {
 
     int   DebuggerAgent::sMsgID=0;
@@ -301,7 +299,7 @@ namespace laya {
         //printf(">>>%s\n", pMsg);
         nFrontEndMsgID = sMsgID++;
         if (bFirst && nEnableDebuggerMsgID<0) {
-            if (strstr(pMsg, "Debugger.enable") > 0) {
+            if (strstr(pMsg, "Debugger.enable") != NULL) {
                 nEnableDebuggerMsgID = nFrontEndMsgID;
             }
             //bFirst = false;
@@ -432,7 +430,7 @@ namespace laya {
         Local<String> str = String::NewFromUtf8(isolate_, message.c_str(), NewStringType::kNormal).ToLocalChecked();
         int len = str->Length();
         std::unique_ptr<uint16_t[]> buff(new uint16_t[len]);
-        str->Write(buff.get(), 0, len);
+        str->Write(isolate_, buff.get(), 0, len);
         view = std::move(v8_inspector::StringView(buff.get(), len));
         return view;
     }
@@ -440,10 +438,11 @@ namespace laya {
 	void DebuggerAgent::onJSStart(JSThreadInterface* pJSThread,bool bDebugWait) {
 		pJSThread_ = pJSThread;
         isolate_ = (v8::Isolate::GetCurrent());
+		v8::HandleScope handle_scope(isolate_);
         Local<String> nameStr = String::NewFromUtf8(isolate_, "layabox", NewStringType::kNormal).ToLocalChecked();
         int nameLen = nameStr->Length();
         std::unique_ptr<uint16_t[]> nameBuffer(new uint16_t[nameLen]);
-        nameStr->Write(nameBuffer.get(), 0, nameLen);
+        nameStr->Write(isolate_, nameBuffer.get(), 0, nameLen);
 
         m_pInspectorClient = new MyV8InspectorClient(pJSThread);
         _new_inspector = v8_inspector::V8Inspector::create(isolate_, m_pInspectorClient);
@@ -532,5 +531,4 @@ namespace laya {
         sendMsgToFrontend(strbuf.getBuffer(), strbuf.getDataSize());
     }
 }
-
 #endif

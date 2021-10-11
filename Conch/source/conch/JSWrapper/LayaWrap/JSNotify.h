@@ -26,7 +26,7 @@ namespace laya
 
 	    static void exportJS();
 
-        static JSNotify* GetInstance();
+        static JSNotify* getInstance();
 
 	    JSNotify();
 

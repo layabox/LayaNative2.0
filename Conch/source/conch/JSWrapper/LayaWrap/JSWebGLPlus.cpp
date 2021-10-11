@@ -7,9 +7,9 @@
 */
 
 #include "JSWebGLPlus.h"
-#include "JCWebGLPlus.h"
+#include <webglplus/JCWebGLPlus.h>
 #include "JSArrayBufferRef.h"
-#include "Animation/JSKeyframeNodeList.h"
+//#include "Animation/JSKeyframeNodeList.h"
 
 //------------------------------------------------------------------------------
 namespace laya 
@@ -34,7 +34,7 @@ namespace laya
         }
         return s_pWebGLPlus;
     }
-    bool JSWebGLPlus::updateAnimationNodeWorldMatix(JSValueAsParam locPosition, JSValueAsParam locRotation, JSValueAsParam locScaling,
+    /*bool JSWebGLPlus::updateAnimationNodeWorldMatix(JSValueAsParam locPosition, JSValueAsParam locRotation, JSValueAsParam locScaling,
         JSValueAsParam parentIndices, JSValueAsParam outWorldMatrix)
     {
         char* pLocPosition;
@@ -155,7 +155,7 @@ namespace laya
             return false;
         }
         return JCWebGLPlus::getInstance()->culling3D(cullingCount, pFrustumBuffer, nFrustumLen, pCullingBuffer, nCullingBufferLen, pCullingBufferIndices, nCullingBufferIndicesLen, pCullingBufferResult, nCullingBufferResultLen);
-    }
+    }*/
     JsValue JSWebGLPlus::createArrayBufferRef(JSValueAsParam pArrayBuffer, int nType, bool bSyncToRender, int nRefType)
     {
         char* pBuffer = NULL;
@@ -180,10 +180,10 @@ namespace laya
             {
                 pArrayBufferRef->m_nID = JCWebGLPlus::getInstance()->m_pJSArrayBufferManager->createArrayBuffer(pBuffer, nABLen, (JCArrayBufferManager::ARRAY_BUFFER_TYPE)nType, (JCArrayBufferManager::ARRAY_BUFFER_REF_TYPE)nRefType);
             }
-            return JSP_TO_JS(JSArrayBufferRef, pArrayBufferRef);
+            return JSP_TO_JS(JSArrayBufferRef*, pArrayBufferRef);
         }
         LOGE("JSLayaGL::createArrayBufferRef type error");
-        return JSP_TO_JS(JSArrayBufferRef, NULL);
+        return JSP_TO_JS(JSArrayBufferRef*, NULL);
     }
     bool JSWebGLPlus::updateArrayBufferRef(int nID, bool bSyncToRender, JSValueAsParam pArrayBuffer)
     {
@@ -239,7 +239,7 @@ namespace laya
         LOGE("JSLayaGL::syncArrayBufferDataToRuntime type error");
         return false;
     }
-    void JSWebGLPlus::evaluateClipDatasRealTime(JSValueAsParam nodes, float playCurTime, JSValueAsParam realTimeCurrentFrameIndexs, bool addtive, bool frontPlay)
+    /*void JSWebGLPlus::evaluateClipDatasRealTime(JSValueAsParam nodes, float playCurTime, JSValueAsParam realTimeCurrentFrameIndexs, bool addtive, bool frontPlay)
     {
         char* pBuffer = NULL;
         int nABLen = 0;
@@ -257,18 +257,18 @@ namespace laya
             return;
         }
         JSKeyframeNodeList::evaluateClipDatasRealTime(pNodes, playCurTime, (short*)pBuffer, nABLen / sizeof(unsigned short), addtive, frontPlay);
-    }
+    }*/
     void JSWebGLPlus::exportJS()
     {
-        JSP_GLOBAL_CLASS("webglPlus", JSWebGLPlus);
-        JSP_ADD_METHOD("createArrayBufferRef", JSWebGLPlus::createArrayBufferRef);
-        JSP_ADD_METHOD("updateArrayBufferRef", JSWebGLPlus::updateArrayBufferRef);
-        JSP_ADD_METHOD("syncArrayBufferDataToRuntime", JSWebGLPlus::syncArrayBufferDataToRuntime);
-        JSP_ADD_METHOD("evaluateClipDatasRealTime", JSWebGLPlus::evaluateClipDatasRealTime);
-        JSP_ADD_METHOD("updateAnimationNodeWorldMatix", JSWebGLPlus::updateAnimationNodeWorldMatix);
-        JSP_ADD_METHOD("computeSubSkinnedData", JSWebGLPlus::computeSubSkinnedData);
-        JSP_ADD_METHOD("culling", JSWebGLPlus::culling);
-        JSP_INSTALL_GLOBAL_CLASS("webglPlus", JSWebGLPlus,this);
+        JSP_GLOBAL_CLASS("webglPlus", JSWebGLPlus, this);
+        JSP_GLOBAL_ADD_METHOD("createArrayBufferRef", JSWebGLPlus::createArrayBufferRef);
+		JSP_GLOBAL_ADD_METHOD("updateArrayBufferRef", JSWebGLPlus::updateArrayBufferRef);
+		JSP_GLOBAL_ADD_METHOD("syncArrayBufferDataToRuntime", JSWebGLPlus::syncArrayBufferDataToRuntime);
+        //JSP_ADD_METHOD("evaluateClipDatasRealTime", JSWebGLPlus::evaluateClipDatasRealTime);
+        //JSP_ADD_METHOD("updateAnimationNodeWorldMatix", JSWebGLPlus::updateAnimationNodeWorldMatix);
+        //JSP_ADD_METHOD("computeSubSkinnedData", JSWebGLPlus::computeSubSkinnedData);
+        //JSP_ADD_METHOD("culling", JSWebGLPlus::culling);
+        JSP_INSTALL_GLOBAL_CLASS("webglPlus", JSWebGLPlus, this);
     }
 }
 //------------------------------------------------------------------------------

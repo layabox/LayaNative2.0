@@ -25,8 +25,10 @@ namespace laya
     {
 #ifdef JS_V8
         if (p_pJsObj->IsObject()) {
+			v8::Isolate* isolate = v8::Isolate::GetCurrent();
+			v8::Local< v8::Context> context = isolate->GetCurrentContext();
             v8::Local<v8::Object> pobj = v8::Local<v8::Object>::Cast(p_pJsObj);
-            JsValue nativeObj = pobj->Get(JSP_TO_JS(char*, p_strName));
+            JsValue nativeObj = pobj->Get(context, JSP_TO_JS(char*, p_strName)).ToLocalChecked();
             if (!nativeObj.IsEmpty() && nativeObj->IsObject()) {
                 return nativeObj;
             }

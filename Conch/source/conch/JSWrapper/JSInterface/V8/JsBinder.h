@@ -6,61 +6,28 @@
 #include <type_traits> 
 #include "JSCProxyType.h"
 #include <util/Log.h>
-#include <JSObjBase.h>
+#include "../JSObjBase.h"
 #include "JSCProxyTrnasfer.h"
 #include <cassert>
+#include "IsolateData.h"
 
 using namespace v8;
 
 namespace laya {
-    //js的析构，这个是非全局对象的。直接删除创建的c对象
-    template <typename T>
-    static void JsDestructor(const WeakCallbackInfo<Persistent<Object> >& data) {
-        Isolate* pIso  = data.GetIsolate();
-        //Isolate* pIso1 = Isolate::GetCurrent();
-        HandleScope __lHandleScope(pIso);
 
-        Persistent<Object> *pPersistentVal = data.GetParameter();
-        pPersistentVal->Reset();
-        T *ptr = (T *)data.GetInternalField(0);
-        delete ptr;
-        delete pPersistentVal;  //TODO 
-    }
-    //这个是绑定全局对象的。不能直接删除c对象
-    template <typename T>
-    static void JsDestructor1(const WeakCallbackInfo<Persistent<Object> >& data) {
-        Isolate* pIso = data.GetIsolate();// Isolate::GetCurrent();
-        HandleScope __lHandleScope(pIso);
-
-        Persistent<Object> *pPersistentVal = data.GetParameter();
-        T *ptr = (T *)data.GetInternalField(0);
-        //delete ptr;
-        pPersistentVal->Reset();
-        delete pPersistentVal;
-    }
-
-    //直接根据c的类创建一个对应的js对象。 并绑定一个已经存在的c对象
-    //如果weak=true则表示由js负责这个对象的删除（通过weakCallback）。
     template<class T>
-    Local<Object> createJsObjAttachCObj(T* cobj, bool weak) {
-        Isolate* pIso = Isolate::GetCurrent();
-        EscapableHandleScope handle_scope(pIso);
-        Persistent<ObjectTemplate>* pTemp = (Persistent<ObjectTemplate>*)T::JSCLSINFO.objTemplate;
-        if (!pTemp) {
-            return Local<Object>::Cast(Null(pIso));
-        }
-        Handle<ObjectTemplate> pTempl = Local<ObjectTemplate>::New(pIso, pTemp->Get(pIso));
-        Handle<Object> pNewIns = pTempl->NewInstance();//
+    Local<Object> createJsObjAttachCObj(T* cobj) 
+	{
+        Isolate* isolate = Isolate::GetCurrent();
+        EscapableHandleScope handle_scope(isolate);
+		IsolateData* data = IsolateData::From(isolate);
+		v8::Local<v8::ObjectTemplate> pTemp = data->GetObjectTemplate((JsObjClassInfo*)&T::JSCLSINFO);
+		assert(!pTemp.IsEmpty());
+		Local<Object> pNewIns = pTemp->NewInstance(isolate->GetCurrentContext()).ToLocalChecked();
         pNewIns->SetAlignedPointerInInternalField(0, cobj);
         pNewIns->SetAlignedPointerInInternalField(1, (void*)&T::JSCLSINFO);
-        Persistent<Object>* pPersist = new Persistent<Object>(pIso, pNewIns);
-        cobj->mpJsIso = pIso;
-        cobj->mpJsThis = pPersist;
-        if (weak) {
-            pPersist->SetWeak(pPersist, JsDestructor<T>, v8::WeakCallbackType::kInternalFields);
-        }
-        cobj->createRefArray();
-
+		cobj->initialize(isolate, pNewIns);
+		cobj->makeWeak();
         return handle_scope.Escape(pNewIns);
     }
 
@@ -70,7 +37,7 @@ namespace laya {
     typedef Local<Function>		JsFunction;
 
     inline JsString Js_Str(Isolate* pIso, const char* str) {
-        return String::NewFromUtf8(pIso, str);
+        return String::NewFromUtf8(pIso, str).ToLocalChecked();
     }
 
     //下面这个主要是处理void的，让void能像普通返回值 一样，避免下面还要区分是否是void
@@ -157,47 +124,24 @@ namespace laya {
     };
     */
 
-    void imp_js2cfunc_common(const FunctionCallbackInfo<Value>& args);
     //函数无法偏特化，所以用类封装一下
     template <typename T>
-    struct imp_JS2CFunc {
-        static void call(const FunctionCallbackInfo<Value>& args) {	//偏特化去实现。
-            imp_js2cfunc_common(args);
+    struct imp_JS2CFunc
+	{
+        static void call(const FunctionCallbackInfo<Value>& args) 
+		{
+			args.GetIsolate()->ThrowException(v8::String::NewFromUtf8(args.GetIsolate(), "imp_JS2CFunc function not handled").ToLocalChecked());
+			return;
         }
     };
 
-    //直接根据c的类创建一个对应的js对象。 retObj是返回的c对象
-    //需要能调到上面的构造函数
-    template<class T>
-    Local<Object> createAJsObj(T*& retobj) {
-        Isolate* pIso = Isolate::GetCurrent();
-        EscapableHandleScope handle_scope(pIso);
-        Persistent<ObjectTemplate>* pTemp = (Persistent<ObjectTemplate>*)T::JSCLSINFO.objTemplate;
-        if (!pTemp) {
-            retobj = NULL;
-            return Local<Object>::Cast(Null(pIso));
-        }
-        Handle<ObjectTemplate> pTempl = Local<ObjectTemplate>::New(pIso, pTemp->Get(pIso));
-        Handle<Object> pNewIns = pTempl->NewInstance();
-        //不知道为什么他不会调用上面的构造，所以自己来做
-        //retobj = (T*)Local<External>::Cast(pNewIns->GetInternalField(0))->Value();
-        T* obj = new T;
-        obj->mpJsIso = pIso;
-        pNewIns->SetAlignedPointerInInternalField(0, obj);
-        pNewIns->SetAlignedPointerInInternalField(1, (void*)&T::JSCLSINFO);
-        Persistent<Object>* pPersist = new Persistent<Object>(pIso, pNewIns);
-        obj->mpJsThis = pPersist;
-        pPersist->SetWeak(obj->mpJsThis, JsDestructor<T>, v8::WeakCallbackType::kInternalFields);
-        obj->createRefArray();
-        //obj->JSConstructor((JsFuncArgs&)args);
-        retobj = obj;
-
-        return handle_scope.Escape(pNewIns);
-    }
     //保存函数指针，是为了给js回调用。
     template <typename T>
     struct FuncInfo {
         T func;
+#if 1
+		std::string name;
+#endif
         FuncInfo(T f) {
             func = f;
         }
@@ -240,9 +184,6 @@ namespace laya {
         static void call(Local<String> property, const PropertyCallbackInfo<Value>& info) {
             PropFuncInfo< R(Cls::*)(void), S>* funcInfo = (PropFuncInfo< R(Cls::*)(void), S>*)External::Cast(*info.Data())->Value();
             Local<Object> pthis = info.This();
-            JsObjClassInfo* id = (JsObjClassInfo*)pthis->GetAlignedPointerFromInternalField(1);
-            if (!IsSubClass<Cls>(id)) { LOGE("throw !IsSubClass %d", id->ClsID); throw - 1; }
-            //if (id != Cls::JSCLSINFO.ClsID)	throw - 1;
             Cls *pObj = (Cls*)pthis->GetAlignedPointerFromInternalField(0);
             info.GetReturnValue().Set(ToJSValue<R>((pObj->*funcInfo->fGet)()));
         }
@@ -258,9 +199,6 @@ namespace laya {
         static void call(Local<String> property, Local<Value> value, const PropertyCallbackInfo<void>& info) {
             PropFuncInfo<G, void(Cls::*)(T)>* funcInfo = (PropFuncInfo<G, void(Cls::*)(T) >*)External::Cast(*info.Data())->Value();
             Local<Object> pthis = info.This();
-            JsObjClassInfo* id = (JsObjClassInfo*)pthis->GetAlignedPointerFromInternalField(1);
-            if (!IsSubClass<Cls>(id)) { LOGE("throw !IsSubClass2 %d", id->ClsID); throw - 1; }
-            //if (id != Cls::JSCLSINFO.ClsID)	throw - 1;
             Cls *pObj = (Cls*)pthis->GetAlignedPointerFromInternalField(0);
             (pObj->*funcInfo->fSet)(__TransferToCpp<T>::ToCpp(value));
         }
@@ -271,9 +209,6 @@ namespace laya {
         static void call(Local<String> property, Local<Value> value, const PropertyCallbackInfo<void>& info) {
             PropFuncInfo<G, T(Cls::*)(T)>* funcInfo = (PropFuncInfo<G, T(Cls::*)(T)>*)External::Cast(*info.Data())->Value();
             Local<Object> pthis = info.This();
-            JsObjClassInfo* id = (JsObjClassInfo*)pthis->GetAlignedPointerFromInternalField(1);
-            if (!IsSubClass<Cls>(id)) { LOGE("throw !IsSubClass3 %d", id->ClsID); throw - 1; }
-            //if (id != Cls::JSCLSINFO.ClsID)	throw - 1;
             Cls *pObj = (Cls*)pthis->GetAlignedPointerFromInternalField(0);
             T ret = (pObj->*funcInfo->fSet)(__TransferToCpp<T>::ToCpp(value));
             info.GetReturnValue().Set(ToJSValue<T>(ret));
@@ -287,36 +222,36 @@ namespace laya {
     //Local<Function> bindV8(Local<FunctionTemplate> func, T cfunc) {
     //	Isolate* pIso = Isolate::GetCurrent();
     //	//函數不能轉成數字，只好取地址再轉，但是取的地址是堆栈地址，所以再取*转成int,表示实际地址了，再强转void*
-    //	Handle<Value> data = External::New(pIso, (void*)*(int*)&cfunc);
+    //	v8::Local<Value> data = External::New(pIso, (void*)*(int*)&cfunc);
     //	func->SetCallHandler(imp_bindv8cCB<T>::call, data);
     //	//return imp_bindv8c<T>::call(func, cfunc, ptr);
     //	return func->GetFunction();
     //}
 
-    template <class T>
-    Local<Value> WrapCFuncAsInt(T cfunc) {
-        Isolate* pIso = Isolate::GetCurrent();
-        //函數不能轉成數字，只好取地址再轉，但是取的地址是堆栈地址，所以再取*转成int,表示实际地址了，再强转void*
-        return External::New(pIso, (void*)*(int*)&cfunc);
-    }
-
     //由於v8在js對象的0的位置存了c對象了，所以只要傳函數地址就行了
     template <class T>
-    Local<Function> createJSMethod(T cfunc) {
+    Local<Function> createJSMethod(const char* name, T cfunc) {
         Isolate* pIso = Isolate::GetCurrent();
         Local<FunctionTemplate> method = FunctionTemplate::New(pIso);
         FuncInfo<T>* pData = new FuncInfo<T>(cfunc);	//怎么释放呢
+#if 1
+		pData->name = name;
+#endif
         //函數不能轉成數字，只好取地址再轉，但是取的地址是堆栈地址，所以再取*转成int,表示实际地址了，再强转void*
-        Handle<Value> data = External::New(pIso, pData);// (void*)*(int*)&cfunc);
+		v8::Local<Value> data = External::New(pIso, pData);// (void*)*(int*)&cfunc);
         method->SetCallHandler(imp_JS2CFunc<T>::call, data);
-        return method->GetFunction();
+
+        return method->GetFunction(pIso->GetCurrentContext()).ToLocalChecked();
     }
     template <class T>
     void addJSMethod(const char* name, v8::Local<v8::FunctionTemplate> that, T cfunc) {
         Isolate* pIso = Isolate::GetCurrent();
         FuncInfo<T>* pData = new FuncInfo<T>(cfunc);	//怎么释放呢
+#if 1
+		pData->name = name;
+#endif
          //函數不能轉成數字，只好取地址再轉，但是取的地址是堆栈地址，所以再取*转成int,表示实际地址了，再强转void*
-        Handle<Value> data = External::New(pIso, pData);// (void*)*(int*)&cfunc);
+		v8::Local<Value> data = External::New(pIso, pData);// (void*)*(int*)&cfunc);
         //instancTemp->SetNativeDataProperty(Js_Str(pIso, name), imp_JS2CFunc<T>::call, 0, data);
 
         v8::Local<v8::Signature> signature = v8::Signature::New(pIso, that);
@@ -327,49 +262,83 @@ namespace laya {
         that->PrototypeTemplate()->Set(name_string, t);
         t->SetClassName(name_string);  // NODE_SET_PROTOTYPE_METHOD() compatibility.
     }
+	template <class T>
+	void SetMethod(const char* name, v8::Local<v8::Object> that, T callback, v8::Local<v8::FunctionTemplate> functionTemplate)
+	{
+		Isolate* isolate = Isolate::GetCurrent();
+		v8::Local<v8::Context> context = isolate->GetCurrentContext();
+
+		FuncInfo<T>* pData = new FuncInfo<T>(callback);
+#if 1
+		pData->name = name;
+#endif
+		v8::Local<Value> data = External::New(isolate, pData);
+		v8::Local<v8::Signature> signature = v8::Signature::New(isolate, functionTemplate);
+
+		v8::Local<v8::Function> function = v8::FunctionTemplate::New(isolate, imp_JS2CFunc<T>::call, data, signature, 0, v8::ConstructorBehavior::kThrow, v8::SideEffectType::kHasSideEffect)->GetFunction(context).ToLocalChecked();
+		// kInternalized strings are created in the old space.
+		const v8::NewStringType type = v8::NewStringType::kInternalized;
+		v8::Local<v8::String> name_string = v8::String::NewFromUtf8(isolate, name, type).ToLocalChecked();
+		that->Set(context, name_string, function).Check();
+		function->SetName(name_string);  // NODE_SET_METHOD() compatibility.
+	}
+	template <class T>
+	void SetInstanceMethod(const char* name, v8::Local<v8::FunctionTemplate> that, T callback)
+	{
+		Isolate* isolate = Isolate::GetCurrent();
+		v8::Local<v8::Context> context = isolate->GetCurrentContext();
+
+		FuncInfo<T>* pData = new FuncInfo<T>(callback);
+#if 1
+		pData->name = name;
+#endif
+		v8::Local<Value> data = External::New(isolate, pData);
+		v8::Local<v8::Signature> signature = v8::Signature::New(isolate, that);
+
+		
+		v8::Local<v8::FunctionTemplate> t = v8::FunctionTemplate::New(isolate, imp_JS2CFunc<T>::call, data, signature, 0, v8::ConstructorBehavior::kThrow, v8::SideEffectType::kHasSideEffect);
+		// kInternalized strings are created in the old space.
+		const v8::NewStringType type = v8::NewStringType::kInternalized;
+		v8::Local<v8::String> name_string = v8::String::NewFromUtf8(isolate, name, type).ToLocalChecked();
+		that->InstanceTemplate()->Set(name_string, t);
+		t->SetClassName(name_string);
+	}
     //直接封装符合v8标准的指定函数
     Local<Function> createJSMethodRaw(FunctionCallback func, JsValue data);
 
     /////////js对象的基类////////////////
     class JSObjBaseV8 {
-        friend class JsObjHandle2;
-    public:
-        JSObjBaseV8();
+        friend class JsObjHandle;
+	protected:
+        JSObjBaseV8();   
+	public:
         virtual ~JSObjBaseV8();
 
-        void retainThis();			//防止自己被刪除，例如做異步任務的時候。
-        void releaseThis();			//可以被刪除了。
-        static void destroyWeakCB(const WeakCallbackInfo<Persistent<Object> >& data);
-        static void destroyWeakRefArray(const WeakCallbackInfo<Persistent<Array> >& data);
+        void makeStrong();			//防止自己被刪除，例如做異步任務的時候。
 
-        //自己创建一个js对象，主要用于不是与某个固定js对象关联的，又需要
-        //持久引用的临时对象，这时候的this就不是弱引用了，需要主动删掉
-        void createJSObj();
+        void makeWeak();			//可以被刪除了。
 
-        //void addRefHandle(JsObjHandle2* handle);
-        //創建一個數組，用於保存引用的js對象。
-        void createRefArray();
+		void initialize(Isolate* isolate, v8::Local<v8::Object> object);
 
-        void setRefObj(int idx, JsValue obj);
+		static void WeakCallback(const v8::WeakCallbackInfo<JSObjBaseV8>& data)
+		{
+			JSObjBaseV8* obj = data.GetParameter();
+			obj->m_persistent_handle.Reset();
+			delete obj;
+		}
 
-        Local<Object> getRefObj(int idx);
         //检查js环境是否变化了，一般用来异步回调的保护
-        bool IsMyJsEnv() {
-            return Isolate::GetCurrent() == mpJsIso;
+        bool IsMyJsEnv() 
+		{
+            return Isolate::GetCurrent() == m_isolate;
         }
 
-        void setJSArgs(const JsFuncArgs* args) { mpCurJsArgs = args; };
-        Persistent<Object>* weakHoldJsObj(Local<Object>& pobj);
-
         //通过jsthis来调用函数
-        inline JsValue _callJsFunc(JsFunction& func, int argc, JsValue argv[]) {
-            EscapableHandleScope sc(mpJsIso);
-            //TODO 能不能不用再new local了
-            //Local<Function> localfunc = Local<Function>::New(mpJsIso, Persistent<Function>::Cast(func));
-            Local<Object> localthis = Local<Object>::New(mpJsIso, Persistent<Object>::Cast(*mpJsThis));
-            //int argc = 0;
-            //v8::Local<v8::Value> argv[1];
-            return sc.Escape(func->Call(localthis, argc, argv));
+        inline JsValue _callJsFunc(JsFunction& func, int argc, JsValue argv[])
+		{
+            EscapableHandleScope sc(m_isolate);
+            Local<Object> localthis = Local<Object>::New(m_isolate, m_persistent_handle);
+			return sc.Escape(func->Call(m_isolate->GetCurrentContext(), localthis, argc, argv).FromMaybe(Local<Value>()));
         }
 
         JsValue callJsFunc(JsFunction& func);
@@ -477,73 +446,53 @@ namespace laya {
             argv[11] = __TransferToJs<P8>::ToJs(p12);
             return _callJsFunc(func, argc, argv);
         }
-    public:
+	protected:
         //js调用当前函数的时候的参数。主要是有时候想要获得一些具体的变量，
         //所有的公用这一个，所以是非线程安全的
-        const JsFuncArgs*		mpCurJsArgs;
-        Persistent<Object>*		mpJsThis;		//value太基础了，用object，反正function也是object
-        Persistent<Array>*		mpRefArray;
-        Isolate*				mpJsIso;
-    protected:
-        Persistent<Object>		mRetainedThis;
-        bool					mbWeakThis;
-        unsigned short			mnRefArrSize;
+        Isolate*				m_isolate;
+		v8::Global<v8::Object>	m_persistent_handle;
     };
 
-    class MyJsObjHandle {
+    class JsObjHandle
+	{
     public:
-    };
-
-    struct JsValue2Handle {
-        int id;
-        JSObjBaseV8* pobj;
-        JsValue v;
-    };
-    class JsObjHandle2 :public MyJsObjHandle {
-    public:
-        JsObjHandle2() {
+        JsObjHandle()
+		{
             m_pObj = NULL;
             m_nID = 0;
         }
         JSObjBaseV8*	m_pObj;
         int				m_nID;		//數組下標
-        Local<Value>	m_pReturn;
+		v8::Global<v8::Object>	m_persistent_handle;
+
         bool Empty();
 
-        JsValue getJsObj() {
-            if (!m_pObj)
-                return Undefined(Isolate::GetCurrent());
-            return m_pObj->getRefObj(m_nID);
-        }
-        //引用另外一個js對象， 只拷貝內容，idx不要拷。
-        JsObjHandle2 &operator=(JsObjHandle2 *p_Val) {
-            if (m_pObj)
-                m_pObj->setRefObj(m_nID, p_Val->getJsObj());
-            return *this;
+        JsValue getJsObj()
+		{
+			return v8::Local<v8::Object>::New(Isolate::GetCurrent(), m_persistent_handle);
         }
 
-        //不允许直接从JsValue赋值
-        //JsObjHandle2 &operator=(JsValue v)
+		JsObjHandle(const JsObjHandle&) = delete;
 
-        JsObjHandle2 &operator=(JsValue2Handle& v) {
-            if (m_pObj) {
-                m_pObj = v.pobj;
-                m_nID = v.id;
-                m_pObj->setRefObj(m_nID, v.v);
-            }
-            return *this;
-        }
+		JsObjHandle& operator=(const JsObjHandle&) = delete;
 
-        void set(int id, JSObjBaseV8* pobj, JsValue& v) {
+        void set(int id, JSObjBaseV8* pobj, JsValue value)
+		{
             m_pObj = pobj;
             m_nID = id;
-            if (m_pObj)
-                m_pObj->setRefObj(m_nID, v);
+			this->m_persistent_handle.Reset(Isolate::GetCurrent(), value.As<v8::Object>());
+			this->m_persistent_handle.ClearWeak();
         }
-        void set(JsValue& v);
+
+		void set(JsValue value)
+		{
+			this->m_persistent_handle.Reset(Isolate::GetCurrent(), value.As<v8::Object>());
+			this->m_persistent_handle.ClearWeak();
+		}
 
         template <typename _Tp>
-        static bool IsTypeof(JsValue& val) {
+        static bool IsTypeof(JsValue val)
+		{
             if (val.IsEmpty())
                 return false;
             __InferType<_Tp> _it;
@@ -572,16 +521,12 @@ namespace laya {
             }
         }
 
-        template <typename _Tp>
+        /*template <typename _Tp>
         bool IsTypeof() {
             JsValue val = m_pObj->getRefObj(m_nID);
             return IsTypeof<_Tp>(val);
-        }
+        }*/
 
-        template<typename _Tp>
-        bool Get(_Tp* r) {
-            JsValue v;
-        }
 
         //如果类型一致，则能转换，进行转换，否则不转换，返回false。这个主要是针对常用方法进行优化，防止调用两次。
         //这个只能处理对象。基本类型用后面的函数
@@ -607,7 +552,7 @@ namespace laya {
             return false;
         }
 
-        static bool tryGetStrVector(JsValue& val, std::vector<std::string>& pRet) {
+        /*static bool tryGetStrVector(JsValue& val, std::vector<std::string>& pRet) {
             if (val->IsArray()) {
                 pRet.clear();
                 v8::Local<v8::Array> pJSArray = v8::Local<v8::Array>::Cast(val);
@@ -620,112 +565,156 @@ namespace laya {
                 return true;
             }
             return false;
-        }
+        }*/
 
         void Reset() {
-            //这个好多是在js对象析构的时候调用的，这时候，新的v8会非法（js对象已经删了，下面却还要用），所以干脆把这个去掉了，对v8来说
-            //在js对象析构的时候再做这个本身也没意义。
-            //缺点是：如果js对象还在的时候要用这个。。。
-            /*
-            if (m_pObj) {
-                m_pObj->setRefObj(m_nID, Null(m_pObj->mpJsIso));
-                m_pObj = NULL;
-            }
-            */
+			if (!m_persistent_handle.IsEmpty())
+			{
+				m_persistent_handle.ClearWeak();
+				m_persistent_handle.Reset();
+			}
         }
 
-        void __BindThis(JsObjHandle2 &p_This) {}
         bool IsFunction() {
-            return m_pObj->getRefObj(m_nID)->IsFunction();
+            return getJsObj()->IsFunction();
         }
 
-        bool isValid() {
-            return m_pObj && m_pObj->mpJsIso == Isolate::GetCurrent();
-        }
+		#define CALLJSPRE \
+			if (!m_pObj)return false;\
+			HandleScope sc(m_pObj->m_isolate);\
+			JsValue func = getJsObj();\
+			if (!func->IsFunction())\
+			return false;\
+			Local<Function> jsfun = Local<Function>::Cast(func);
 
         bool Call() {
-            if (!m_pObj)return false;
-            EscapableHandleScope sc(m_pObj->mpJsIso);
-            JsValue func = m_pObj->getRefObj(m_nID);
-            if (!func->IsFunction())
-                return false;
-            Local<Function> jsfun = Local<Function>::Cast(func);
-            m_pReturn = sc.Escape(m_pObj->callJsFunc(jsfun));
+			CALLJSPRE
+            m_pObj->callJsFunc(jsfun);
             return true;
         }
         template <typename P1>
         bool Call(P1 p1) {
-            if (!m_pObj)return false;
-            EscapableHandleScope sc(m_pObj->mpJsIso);
-            JsValue func = m_pObj->getRefObj(m_nID);
-            if (!func->IsFunction())
-                return false;
-            Local<Function> jsfun = Local<Function>::Cast(func);
-            m_pReturn = sc.Escape(m_pObj->callJsFunc(jsfun, p1));
+			CALLJSPRE
+            m_pObj->callJsFunc(jsfun, p1);
             return true;
         }
+		template <typename P1, typename R>
+		bool CallWithReturn(P1 p1, R& r) {
+			CALLJSPRE
+			r = __TransferToCpp<R>::ToCpp(m_pObj->callJsFunc(jsfun, p1));
+			return true;
+		}
 
-#define CALLJSPRE \
-	if (!m_pObj)return false;\
-	EscapableHandleScope sc(m_pObj->mpJsIso);\
-	JsValue func = m_pObj->getRefObj(m_nID);\
-	if (!func->IsFunction())\
-		return false;\
-	Local<Function> jsfun = Local<Function>::Cast(func);
+
 
         template <typename P1, typename P2>
         bool Call(P1 p1, P2 p2) {
             CALLJSPRE
-                m_pReturn = sc.Escape(m_pObj->callJsFunc(jsfun, p1, p2));
+            m_pObj->callJsFunc(jsfun, p1, p2);
             return true;
         }
         template <typename P1, typename P2, typename P3>
         bool Call(P1 p1, P2 p2, P3 p3) {
             CALLJSPRE
-                m_pReturn = sc.Escape(m_pObj->callJsFunc(jsfun, p1, p2, p3));
+            m_pObj->callJsFunc(jsfun, p1, p2, p3);
             return true;
         }
         template <typename P1, typename P2, typename P3, typename P4>
         bool Call(P1 p1, P2 p2, P3 p3, P4 p4) {
             CALLJSPRE
-                m_pReturn = sc.Escape(m_pObj->callJsFunc(jsfun, p1, p2, p3, p4));
+            m_pObj->callJsFunc(jsfun, p1, p2, p3, p4);
             return true;
         }
         template <typename P1, typename P2, typename P3, typename P4, typename P5>
         bool Call(P1 p1, P2 p2, P3 p3, P4 p4, P5 p5) {
             CALLJSPRE
-                m_pReturn = sc.Escape(m_pObj->callJsFunc(jsfun, p1, p2, p3, p4, p5));
+            m_pObj->callJsFunc(jsfun, p1, p2, p3, p4, p5);
             return true;
         }
         template <typename P1, typename P2, typename P3, typename P4, typename P5, typename P6>
         bool Call(P1 p1, P2 p2, P3 p3, P4 p4, P5 p5, P6 p6) {
             CALLJSPRE
-                m_pReturn = sc.Escape(m_pObj->callJsFunc(jsfun, p1, p2, p3, p4, p5, p6));
+            m_pObj->callJsFunc(jsfun, p1, p2, p3, p4, p5, p6);
             return true;
         }
         template <typename P1, typename P2, typename P3, typename P4, typename P5, typename P6, typename P7>
         bool Call(P1 p1, P2 p2, P3 p3, P4 p4, P5 p5, P6 p6, P7 p7) {
             CALLJSPRE
-                m_pReturn = sc.Escape(m_pObj->callJsFunc(jsfun, p1, p2, p3, p4, p5, p6, p7));
+            m_pObj->callJsFunc(jsfun, p1, p2, p3, p4, p5, p6, p7);
             return true;
         }
         template <typename P1, typename P2, typename P3, typename P4, typename P5, typename P6, typename P7, typename P8>
         bool Call(P1 p1, P2 p2, P3 p3, P4 p4, P5 p5, P6 p6, P7 p7, P8 p8) {
             CALLJSPRE
-                m_pReturn = sc.Escape(m_pObj->callJsFunc(jsfun, p1, p2, p3, p4, p5, p6, p7, p8));
+            m_pObj->callJsFunc(jsfun, p1, p2, p3, p4, p5, p6, p7, p8);
             return true;
         }
         template <typename P1, typename P2, typename P3, typename P4, typename P5, typename P6, typename P7, typename P8, typename P9>
         bool Call(P1 p1, P2 p2, P3 p3, P4 p4, P5 p5, P6 p6, P7 p7, P8 p8, P9 p9) {
             CALLJSPRE
-                m_pReturn = sc.Escape(m_pObj->callJsFunc(jsfun, p1, p2, p3, p4, p5, p6, p7, p8, p9));
+            m_pObj->callJsFunc(jsfun, p1, p2, p3, p4, p5, p6, p7, p8, p9);
             return true;
         }
-    };
-    //typedef JSObjBaseV8 JsObjHandle;
+		template <typename P1, typename P2>
+		bool Call(v8::Local<v8::Object> objTHIS, P1 p1, P2 p2){
+			v8::HandleScope sc(v8::Isolate::GetCurrent());
+			JsValue func = getJsObj(); 
+			if (!func->IsFunction())
+				return false; 
+			v8::Local<v8::Function> jsfun = v8::Local<v8::Function>::Cast(func);
+		
+			int argc = 2;
+			v8::Local<Value> argv[2];
+			argv[0] = __TransferToJs<P1>::ToJs(p1);
+			argv[1] = __TransferToJs<P2>::ToJs(p2);
 
-    //为了与原来的差不多的宏。 只能在对象的实例中使用。必须按照下面的顺序调用。
-    //第一个name是类名，统计用的
+			jsfun->Call(v8::Isolate::GetCurrent()->GetCurrentContext(), objTHIS, argc, argv).ToLocalChecked();
+			return true;
+		}
+
+		template <typename P1, typename P2, typename P3>
+		bool Call(v8::Local<v8::Object> objTHIS, P1 p1, P2 p2, P3 p3)
+		{
+			v8::HandleScope sc(v8::Isolate::GetCurrent());
+			JsValue func = getJsObj();
+			if (!func->IsFunction())
+				return false;
+			v8::Local<v8::Function> jsfun = v8::Local<v8::Function>::Cast(func);
+
+			int argc = 3;
+			Local<Value> argv[3];
+			argv[0] = __TransferToJs<P1>::ToJs(p1);
+			argv[1] = __TransferToJs<P2>::ToJs(p2);
+			argv[2] = __TransferToJs<P2>::ToJs(p3);
+
+			jsfun->Call(v8::Isolate::GetCurrent()->GetCurrentContext(), objTHIS, argc, argv).ToLocalChecked();
+			return true;
+		}
+		template <typename P1, typename P2, typename P3, typename R>
+		bool CallWithReturn(v8::Local<v8::Object> objTHIS, P1 p1, P2 p2, P3 p3, R& r)
+		{
+			v8::HandleScope sc(v8::Isolate::GetCurrent());
+			JsValue func = getJsObj();
+			if (!func->IsFunction())
+				return false;
+			v8::Local<v8::Function> jsfun = v8::Local<v8::Function>::Cast(func);
+
+			int argc = 3;
+			v8::Local<v8::Value> argv[3];
+			argv[0] = __TransferToJs<P1>::ToJs(p1);
+			argv[1] = __TransferToJs<P2>::ToJs(p2);
+			argv[2] = __TransferToJs<P2>::ToJs(p3);
+
+			r = __TransferToCpp<R>::ToCpp(jsfun->Call(v8::Isolate::GetCurrent()->GetCurrentContext(), objTHIS, argc, argv).ToLocalChecked());
+			return true;
+		}
+	};
+
+#define JSP_GLOBAL_OBJECT \
+	v8::Isolate::GetCurrent()->GetCurrentContext()->Global()
+
+	//为了与原来的差不多的宏。 只能在对象的实例中使用。必须按照下面的顺序调用。
+	//第一个name是类名，统计用的
 #define JSP_CLASS(name,cls) \
 	v8::Isolate* pJsIso = v8::Isolate::GetCurrent(); \
 	v8::HandleScope sc(pJsIso);	\
@@ -733,19 +722,27 @@ namespace laya {
 	xhrtemp->SetClassName(Js_Str(pJsIso, name));	\
 	v8::Local<v8::ObjectTemplate> instancTemp = xhrtemp->InstanceTemplate();	\
 	instancTemp->SetInternalFieldCount(2); \
-	cls::JSCLSINFO.objTemplate = new Persistent<ObjectTemplate>(pJsIso, instancTemp);	\
+	IsolateData* data = IsolateData::From(pJsIso); \
+	data->SetObjectTemplate(&cls::JSCLSINFO, instancTemp); \
 	v8::Local<v8::Context> pCtx = pJsIso->GetCurrentContext(); 
 
 //这个的区别是不能直接创建c对象，而是绑定一个已经存在的对象。
-#define JSP_GLOBAL_CLASS(name,cls) \
-	v8::Isolate* pJsIso = Isolate::GetCurrent(); /*全局的每次都重新创建*/\
+#define JSP_GLOBAL_CLASS(name,cls,inst) \
+	v8::Isolate* pJsIso = Isolate::GetCurrent(); \
 	v8::HandleScope sc(pJsIso);	\
+	v8::Local<v8::Context> pCtx = pJsIso->GetCurrentContext(); \
 	v8::Local<v8::FunctionTemplate> xhrtemp = v8::FunctionTemplate::New(pJsIso);	\
 	xhrtemp->SetClassName(Js_Str(pJsIso, name));	\
-	v8::Local<v8::ObjectTemplate> instancTemp = xhrtemp->InstanceTemplate();	\
-	instancTemp->SetInternalFieldCount(2); \
-	cls::JSCLSINFO.objTemplate = new Persistent<ObjectTemplate>(pJsIso, instancTemp);	\
-	v8::Local<v8::Context> pCtx = pJsIso->GetCurrentContext();		
+    v8::Local<v8::ObjectTemplate> objectTemplate = xhrtemp->InstanceTemplate();	\
+	objectTemplate->SetInternalFieldCount(2); \
+	IsolateData* data = IsolateData::From(pJsIso); \
+	data->SetObjectTemplate(&cls::JSCLSINFO, objectTemplate); \
+	v8::Local<v8::Object> instance = objectTemplate->NewInstance(pCtx).ToLocalChecked(); \
+	instance->SetAlignedPointerInInternalField(0, inst);	\
+	instance->SetAlignedPointerInInternalField(1, &cls::JSCLSINFO);	\
+	inst->initialize(pJsIso, instance);
+	
+
 
 #define JSP_REG_CONSTRUCTOR(cls,...) \
     JSCClass<cls>::getInstance()->addConstructor(regConstructor<cls,##__VA_ARGS__>());
@@ -756,27 +753,23 @@ namespace laya {
 #define JSP_ADD_METHOD(name,fn)    \
 	addJSMethod(name,xhrtemp, &fn);
 
+/*#define JSP_GLOBAL_ADD_METHOD(name,fn)    \
+	SetInstanceMethod(name, xhrtemp, &fn);*/
+
+#define JSP_GLOBAL_ADD_METHOD(name,fn)    \
+	SetMethod(name, instance, &fn, xhrtemp);
+
 #define JSP_ADD_METHODRAW(name, func, data) \
 	instancTemp->Set(Js_Str(pJsIso, name), createJSMethodRaw(func,data));
 
 
 #define JSP_INSTALL_CLASS(name,cls)    \
-	pCtx->Global()->Set(Js_Str(pJsIso, name), xhrtemp->GetFunction()); \
-    JSClassMgr::GetThreadInstance()->allCls.push_back(JSCClass<cls>::reset);
-
-#define JSP_INSTALL_G_CLASS(name,cls,inst)	\
-	Local<Object> jsinst = instancTemp->NewInstance();\
-	jsinst->SetAlignedPointerInInternalField(0, inst);	\
-	jsinst->SetAlignedPointerInInternalField(1, &cls::JSCLSINFO);	\
-	Persistent<Object>* pPersist = new Persistent<Object>(pJsIso, jsinst);\
-	inst->mpJsThis = pPersist;\
-	pPersist->SetWeak(pPersist, JsDestructor1<cls>, v8::WeakCallbackType::kInternalFields);\
-	createRefArray();\
-	pCtx->Global()->Set(Js_Str(pJsIso, name), jsinst);	
+	pCtx->Global()->Set(pCtx, Js_Str(pJsIso, name), xhrtemp->GetFunction(pCtx).ToLocalChecked()); \
+    JSClassMgr::GetInstance()->registerResetFunction(JSCClass<cls>::reset);
 
 //注意，下面的inst是返回的。
 #define JSP_INSTALL_GLOBAL_CLASS(name,cls,inst)	\
-	pCtx->Global()->Set(Js_Str(pJsIso, name), createJsObjAttachCObj<cls>(inst,false));
+	pCtx->Global()->Set(pCtx, Js_Str(pJsIso, name), instance);
 
 //添加一个只读属性。get是函数地址，funcplace是一个存放get和set函数地址的结构的指针
 #define JSP_ADD_PROPERTY_RO(name,cls,get)	\
@@ -785,11 +778,20 @@ namespace laya {
 		imp_JsGetProp<decltype(&cls::get),decltype(&cls::get)>::call,0,	\
 		External::New(pJsIso, (void*)&propFunc_R##cls##name),v8::DEFAULT, v8::ReadOnly);
 
+#define JSP_GLOBAL_ADD_PROPERTY_RO(name,cls,get)	\
+	instance->SetAccessorProperty(Js_Str(pJsIso,#name), createJSMethod(#name, &cls::get));
+
+
 #define JSP_ADD_PROPERTY(name,cls,get,set)	\
 	static PropFuncInfo<decltype(&cls::get),decltype(&cls::set)> propFunc_##cls##name(&cls::get, &cls::set);	\
 	instancTemp->SetAccessor(Js_Str(pJsIso,#name),		\
 			imp_JsGetProp<decltype(&cls::get),decltype(&cls::set)>::call,imp_JsSetProp<decltype(&cls::get),decltype(&cls::set)>::call,	\
 			External::New(pJsIso, (void*)&propFunc_##cls##name));
+
+
+#define JSP_GLOBAL_ADD_PROPERTY(name,cls,get,set)	\
+	instance->SetAccessorProperty(Js_Str(pJsIso,#name), createJSMethod(#name, &cls::get), createJSMethod(#name, &cls::set));
+
 
 #define JSP_GLOBAL_START1()	\
 	v8::Isolate* pIso = v8::Isolate::GetCurrent();	\
@@ -799,34 +801,23 @@ namespace laya {
 
 //func必须是全局函数，不允许成员函数。为了简单，还是与原来的兼容把
 #define JSP_ADD_GLOBAL_FUNCTION(name, func, ...) \
-	gctx->Set(Js_Str(pIso, #name), createJSMethod(func));
+	gctx->Set(pCtx, Js_Str(pIso, #name), createJSMethod(#name, func));
 
 #define JSP_ADD_GLOBAL_PROPERTY(name, v)	\
-	gctx->Set(Js_Str(pIso, #name), ToJSValue(v));
+	gctx->Set(pCtx, Js_Str(pIso, #name), ToJSValue(v));
+
+
+/////////////////////////////////////////////////////////
 
 //检查参数是否>=num个
-    bool checkJSToCArgs(const FunctionCallbackInfo<Value>& args, int num);
+#define CHECK_ARGUMENTS_COUNT(num) \
+	int len = args.Length(); \
+	if (len < num) \
+	{ \
+		args.GetIsolate()->ThrowException(v8::String::NewFromUtf8(args.GetIsolate(), "arguments count error").ToLocalChecked()); \
+		return; \
+	}
 
-    /////////////////////////////////////////////////////////
-
-    //回调的偏特化
-    //没有参数
-    template<typename Cls, typename R>
-    struct imp_JS2CFunc<R(Cls::*)(void)> {
-        typedef R(Cls::*funcType)(void);
-        static void call(const FunctionCallbackInfo<Value>& args) {
-            void* pExData = External::Cast(*args.Data())->Value();
-            //FuncInfo<funcType>* funcInfo = (FuncInfo<funcType>*)(&pExData);
-            FuncInfo<funcType>* funcInfo = (FuncInfo<funcType>*)pExData;
-            Local<Object> pthis = args.This();
-            JsObjClassInfo* id = (JsObjClassInfo*)pthis->GetAlignedPointerFromInternalField(1);
-            if (!IsSubClass<Cls>(id)) { LOGE("throw !IsSubClass 878 %d", id->ClsID); throw - 1; }
-            //if (id != Cls::JSCLSINFO.ClsID)	throw - 1;
-            Cls *pObj = (Cls*)pthis->GetAlignedPointerFromInternalField(0);
-            pObj->setJSArgs(&args);
-            args.GetReturnValue().Set(ToJSValue<R>((pObj->*funcInfo->func)()));
-        }
-    };
 
 #define JS2CCALL_INIT \
 	void* pExData = External::Cast(*args.Data())->Value();\
@@ -834,35 +825,32 @@ namespace laya {
 	Local<Object> pthis = args.This();
 
 #define JS2CCALL_GET_COBJ \
-	JsObjClassInfo* id = (JsObjClassInfo*)pthis->GetAlignedPointerFromInternalField(1);\
-	if (!IsSubClass<Cls>(id)){LOGE("throw isSubClass %d",id->ClsID); throw - 1;}\
-	Cls *pObj = (Cls*)pthis->GetAlignedPointerFromInternalField(0);\
-	pObj->setJSArgs(&args);
+	Cls *pObj = (Cls*)pthis->GetAlignedPointerFromInternalField(0);
 
 #define JS2CCALL_GET_PARAMS1 \
-	if(!checkJSToCArgs(args,1))return;\
+	CHECK_ARGUMENTS_COUNT(1)\
 	P1 p1 = __TransferToCpp<P1>::ToCpp(args[0]);
 
 #define JS2CCALL_GET_PARAMS2 \
-	if(!checkJSToCArgs(args,2))return;\
+	CHECK_ARGUMENTS_COUNT(2)\
 	P1 p1 = __TransferToCpp<P1>::ToCpp(args[0]);\
 	P2 p2 = __TransferToCpp<P2>::ToCpp(args[1]);
 
 #define JS2CCALL_GET_PARAMS3 \
-	if(!checkJSToCArgs(args,3))return;\
+	CHECK_ARGUMENTS_COUNT(3)\
 	P1 p1 = __TransferToCpp<P1>::ToCpp(args[0]);\
 	P2 p2 = __TransferToCpp<P2>::ToCpp(args[1]);\
 	P3 p3 = __TransferToCpp<P3>::ToCpp(args[2]);
 
 #define JS2CCALL_GET_PARAMS4 \
-	if(!checkJSToCArgs(args,4))return;\
+	CHECK_ARGUMENTS_COUNT(4)\
 	P1 p1 = __TransferToCpp<P1>::ToCpp(args[0]);\
 	P2 p2 = __TransferToCpp<P2>::ToCpp(args[1]);\
 	P3 p3 = __TransferToCpp<P3>::ToCpp(args[2]);\
 	P4 p4 = __TransferToCpp<P4>::ToCpp(args[3]);
 
 #define JS2CCALL_GET_PARAMS5 \
-	if(!checkJSToCArgs(args,5))return;\
+	CHECK_ARGUMENTS_COUNT(5);\
 	P1 p1 = __TransferToCpp<P1>::ToCpp(args[0]);\
 	P2 p2 = __TransferToCpp<P2>::ToCpp(args[1]);\
 	P3 p3 = __TransferToCpp<P3>::ToCpp(args[2]);\
@@ -870,7 +858,7 @@ namespace laya {
 	P5 p5 = __TransferToCpp<P5>::ToCpp(args[4]);
 
 #define JS2CCALL_GET_PARAMS6 \
-	if(!checkJSToCArgs(args,6))return;\
+	CHECK_ARGUMENTS_COUNT(6)\
 	P1 p1 = __TransferToCpp<P1>::ToCpp(args[0]);\
 	P2 p2 = __TransferToCpp<P2>::ToCpp(args[1]);\
 	P3 p3 = __TransferToCpp<P3>::ToCpp(args[2]);\
@@ -879,7 +867,7 @@ namespace laya {
 	P6 p6 = __TransferToCpp<P6>::ToCpp(args[5]);
 
 #define JS2CCALL_GET_PARAMS7 \
-	if(!checkJSToCArgs(args,7))return;\
+	CHECK_ARGUMENTS_COUNT(7)\
 	P1 p1 = __TransferToCpp<P1>::ToCpp(args[0]);\
 	P2 p2 = __TransferToCpp<P2>::ToCpp(args[1]);\
 	P3 p3 = __TransferToCpp<P3>::ToCpp(args[2]);\
@@ -889,7 +877,7 @@ namespace laya {
 	P7 p7 = __TransferToCpp<P7>::ToCpp(args[6]);
 
 #define JS2CCALL_GET_PARAMS8 \
-	if(!checkJSToCArgs(args,8))return;\
+	CHECK_ARGUMENTS_COUNT(8)\
 	P1 p1 = __TransferToCpp<P1>::ToCpp(args[0]);\
 	P2 p2 = __TransferToCpp<P2>::ToCpp(args[1]);\
 	P3 p3 = __TransferToCpp<P3>::ToCpp(args[2]);\
@@ -900,7 +888,7 @@ namespace laya {
 	P8 p8 = __TransferToCpp<P8>::ToCpp(args[7]);
 
 #define JS2CCALL_GET_PARAMS9 \
-	if(!checkJSToCArgs(args,9))return;\
+	CHECK_ARGUMENTS_COUNT(9)\
 	P1 p1 = __TransferToCpp<P1>::ToCpp(args[0]);\
 	P2 p2 = __TransferToCpp<P2>::ToCpp(args[1]);\
 	P3 p3 = __TransferToCpp<P3>::ToCpp(args[2]);\
@@ -912,7 +900,7 @@ namespace laya {
 	P9 p9 = __TransferToCpp<P9>::ToCpp(args[8]);
 
 #define JS2CCALL_GET_PARAMS10 \
-	if(!checkJSToCArgs(args,10))return;\
+	CHECK_ARGUMENTS_COUNT(10)\
 	P1 p1 = __TransferToCpp<P1>::ToCpp(args[0]);\
 	P2 p2 = __TransferToCpp<P2>::ToCpp(args[1]);\
 	P3 p3 = __TransferToCpp<P3>::ToCpp(args[2]);\
@@ -925,7 +913,7 @@ namespace laya {
 	P10 p10 = __TransferToCpp<P9>::ToCpp(args[9]);
 
 #define JS2CCALL_GET_PARAMS11 \
-	if(!checkJSToCArgs(args,11))return;\
+	CHECK_ARGUMENTS_COUNT(11)\
 	P1 p1 = __TransferToCpp<P1>::ToCpp(args[0]);\
 	P2 p2 = __TransferToCpp<P2>::ToCpp(args[1]);\
 	P3 p3 = __TransferToCpp<P3>::ToCpp(args[2]);\
@@ -939,7 +927,7 @@ namespace laya {
 	P11 p11 = __TransferToCpp<P11>::ToCpp(args[10]);
 
 #define JS2CCALL_GET_PARAMS12 \
-	if(!checkJSToCArgs(args,12))return;\
+	CHECK_ARGUMENTS_COUNT(12)\
 	P1 p1 = __TransferToCpp<P1>::ToCpp(args[0]);\
 	P2 p2 = __TransferToCpp<P2>::ToCpp(args[1]);\
 	P3 p3 = __TransferToCpp<P3>::ToCpp(args[2]);\
@@ -952,6 +940,19 @@ namespace laya {
 	P10 p10 = __TransferToCpp<P10>::ToCpp(args[9]);\
 	P11 p11 = __TransferToCpp<P11>::ToCpp(args[10]);\
     P12 p12 = __TransferToCpp<P12>::ToCpp(args[11]);
+
+
+	//回调的偏特化
+	//没有参数
+	template<typename Cls, typename R>
+	struct imp_JS2CFunc<R(Cls::*)(void)> {
+		typedef R(Cls::*funcType)(void);
+		static void call(const FunctionCallbackInfo<Value>& args) {
+			JS2CCALL_INIT;
+			JS2CCALL_GET_COBJ;
+			args.GetReturnValue().Set(ToJSValue<R>((pObj->*funcInfo->func)()));
+		}
+	};
 
     //一个参数
     template<typename Cls, typename R, typename P1 >
@@ -1610,13 +1611,10 @@ namespace laya {
                 obj = (T*)pfn->constructor(args);
             }
 
-            obj->mpJsIso = pIso;
             pthis->SetAlignedPointerInInternalField(0, obj);
             pthis->SetAlignedPointerInInternalField(1, (void*)&T::JSCLSINFO);
-            Persistent<Object>* pPersist = new Persistent<Object>(pIso, pthis);
-            obj->mpJsThis = pPersist;
-            pPersist->SetWeak(pPersist, JsDestructor<T>, v8::WeakCallbackType::kInternalFields);
-            obj->createRefArray();
+			obj->initialize(pIso, pthis);
+			obj->makeWeak();
         }
     private:
         void _reset() {
@@ -1626,21 +1624,35 @@ namespace laya {
         FuncEntry m_Constructor;
     };
    
-    class JSClassMgr {
+    class JSClassMgr
+	{
     public:
         typedef void(*RESETFUNC)();
-        static JSClassMgr*   GetThreadInstance() {
+
+        static JSClassMgr* GetInstance() 
+		{
             return &__Ins;
         }
-        std::vector<RESETFUNC> allCls;
-        void resetAllRegClass() {
-            for (int i = 0, sz = allCls.size(); i < sz; i++) {
+
+		void registerResetFunction(RESETFUNC func)
+		{
+			allCls.push_back(func);
+		}
+        void resetAllRegClass()
+		{
+            for (int i = 0, sz = allCls.size(); i < sz; i++)
+			{
                 allCls[i]();
             }
             allCls.clear();
         }
+
     private:
-        static thread_local JSClassMgr __Ins;
+
+		std::vector<RESETFUNC> allCls;
+
+        static JSClassMgr __Ins;
+
     };
 }
 

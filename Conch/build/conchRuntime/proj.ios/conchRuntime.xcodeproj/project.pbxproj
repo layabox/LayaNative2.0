@@ -75,7 +75,9 @@
 		A2DE586123C6DC6600A75F34 /* Uri.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A2DE586023C6DC6600A75F34 /* Uri.cpp */; };
 		A2EE055D1C8A77B700A35FB6 /* conchRuntime.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A2EE055C1C8A77B700A35FB6 /* conchRuntime.h */; };
 		A2EE055F1C8A77B700A35FB6 /* conchRuntime.mm in Sources */ = {isa = PBXBuildFile; fileRef = A2EE055E1C8A77B700A35FB6 /* conchRuntime.mm */; };
-		A2F3B7A1216CAB8B0016F0A2 /* bullet_glue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A2F3B79E216CAB8B0016F0A2 /* bullet_glue.cpp */; };
+		A2FBA93A2702015300846E17 /* JSObjBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A2FBA9392702015300846E17 /* JSObjBase.cpp */; };
+		A2FBA9402702BC7E00846E17 /* JSWebGLPlus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A2FBA93C2702BC7D00846E17 /* JSWebGLPlus.cpp */; };
+		A2FBA9412702BC7E00846E17 /* JSArrayBufferRef.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A2FBA93D2702BC7D00846E17 /* JSArrayBufferRef.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -236,9 +238,11 @@
 		A2EE05591C8A77B700A35FB6 /* libconchRuntime.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libconchRuntime.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2EE055C1C8A77B700A35FB6 /* conchRuntime.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = conchRuntime.h; sourceTree = "<group>"; };
 		A2EE055E1C8A77B700A35FB6 /* conchRuntime.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = conchRuntime.mm; sourceTree = "<group>"; };
-		A2F3B79E216CAB8B0016F0A2 /* bullet_glue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = bullet_glue.cpp; path = ../../../../source/conch/JSWrapper/LayaWrap/Bullet/bullet_glue.cpp; sourceTree = "<group>"; };
-		A2F3B79F216CAB8B0016F0A2 /* bullet_glue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = bullet_glue.h; path = ../../../../source/conch/JSWrapper/LayaWrap/Bullet/bullet_glue.h; sourceTree = "<group>"; };
-		A2F3B7A0216CAB8B0016F0A2 /* JSbtBindHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JSbtBindHelper.h; path = ../../../../source/conch/JSWrapper/LayaWrap/Bullet/JSbtBindHelper.h; sourceTree = "<group>"; };
+		A2FBA9392702015300846E17 /* JSObjBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = JSObjBase.cpp; path = ../../../../source/conch/JSWrapper/JSInterface/JSObjBase.cpp; sourceTree = "<group>"; };
+		A2FBA93C2702BC7D00846E17 /* JSWebGLPlus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = JSWebGLPlus.cpp; path = ../../../../source/conch/JSWrapper/LayaWrap/JSWebGLPlus.cpp; sourceTree = "<group>"; };
+		A2FBA93D2702BC7D00846E17 /* JSArrayBufferRef.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = JSArrayBufferRef.cpp; path = ../../../../source/conch/JSWrapper/LayaWrap/JSArrayBufferRef.cpp; sourceTree = "<group>"; };
+		A2FBA93E2702BC7E00846E17 /* JSArrayBufferRef.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JSArrayBufferRef.h; path = ../../../../source/conch/JSWrapper/LayaWrap/JSArrayBufferRef.h; sourceTree = "<group>"; };
+		A2FBA93F2702BC7E00846E17 /* JSWebGLPlus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JSWebGLPlus.h; path = ../../../../source/conch/JSWrapper/LayaWrap/JSWebGLPlus.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -407,6 +411,7 @@
 		A2D119551D0BC946004C229D /* JSInterface */ = {
 			isa = PBXGroup;
 			children = (
+				A2FBA9392702015300846E17 /* JSObjBase.cpp */,
 				A2D1198E1D0BCA59004C229D /* JSInterface.cpp */,
 				A2D1198F1D0BCA59004C229D /* JSInterface.h */,
 				A2D119901D0BCA59004C229D /* jsobjbase.h */,
@@ -438,6 +443,10 @@
 		A2D119571D0BC959004C229D /* LayaWrap */ = {
 			isa = PBXGroup;
 			children = (
+				A2FBA93D2702BC7D00846E17 /* JSArrayBufferRef.cpp */,
+				A2FBA93E2702BC7E00846E17 /* JSArrayBufferRef.h */,
+				A2FBA93C2702BC7D00846E17 /* JSWebGLPlus.cpp */,
+				A2FBA93F2702BC7E00846E17 /* JSWebGLPlus.h */,
 				A2D8F387218C06BD00E232A9 /* Video */,
 				A2252F3920F4EDB000A22490 /* JSCallbackFuncObj.cpp */,
 				A2252F3A20F4EDB000A22490 /* JSCallbackFuncObj.h */,
@@ -559,9 +568,6 @@
 				A247BBFD237109FA009B1189 /* LayaBulletExport.cpp */,
 				A247BBFE237109FA009B1189 /* LayaBulletExport.h */,
 				A247BBFF237109FA009B1189 /* LayaBulletExportImp.cpp */,
-				A2F3B79E216CAB8B0016F0A2 /* bullet_glue.cpp */,
-				A2F3B79F216CAB8B0016F0A2 /* bullet_glue.h */,
-				A2F3B7A0216CAB8B0016F0A2 /* JSbtBindHelper.h */,
 			);
 			name = Bullet;
 			sourceTree = "<group>";
@@ -649,6 +655,7 @@
 				A2C56AE11C8ADB5A009DDC1D /* CToObjectCIOS.mm in Sources */,
 				A2D119F81D0BFA31004C229D /* JSCBinder.cpp in Sources */,
 				A2D119D01D0BCA70004C229D /* JSDOMParser.cpp in Sources */,
+				A2FBA93A2702015300846E17 /* JSObjBase.cpp in Sources */,
 				A2C56AEB1C8B179A009DDC1D /* JCAudioManager.cpp in Sources */,
 				A270D73A2170FD8D000D994D /* JCConchBridge.cpp in Sources */,
 				A2D119CE1D0BCA70004C229D /* JSConchConfig.cpp in Sources */,
@@ -659,7 +666,6 @@
 				A2D119E61D0BCA70004C229D /* XMLHttpRequest.cpp in Sources */,
 				A2D119DC1D0BCA70004C229D /* JSRuntime.cpp in Sources */,
 				A247BC00237109FB009B1189 /* LayaBulletExport.cpp in Sources */,
-				A2F3B7A1216CAB8B0016F0A2 /* bullet_glue.cpp in Sources */,
 				A2D1197B1D0BCA06004C229D /* JCConchRender.cpp in Sources */,
 				A2D8F386218C036F00E232A9 /* LayaVideoPlayer.mm in Sources */,
 				A25F7B2F219AB6DC004FA571 /* IVideoRenderTarget.m in Sources */,
@@ -703,10 +709,12 @@
 				5E7AB4D71DD2CE2B001AE49F /* LayaScreenShotter.mm in Sources */,
 				A2C56AB71C8ADAD3009DDC1D /* Reachability.m in Sources */,
 				A2D119911D0BCA59004C229D /* JSInterface.cpp in Sources */,
+				A2FBA9402702BC7E00846E17 /* JSWebGLPlus.cpp in Sources */,
 				A2757BE6219AB43D00DB3683 /* PlayerLayerRenderTarget.m in Sources */,
 				A264F7C220C7DDC100D95F1B /* JSLayaGL.cpp in Sources */,
 				A2EE055F1C8A77B700A35FB6 /* conchRuntime.mm in Sources */,
 				A2C56AE21C8ADB5A009DDC1D /* LayaEditBox.mm in Sources */,
+				A2FBA9412702BC7E00846E17 /* JSArrayBufferRef.cpp in Sources */,
 				A25F7B32219ABD4D004FA571 /* VideoOutputRenderTarget.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

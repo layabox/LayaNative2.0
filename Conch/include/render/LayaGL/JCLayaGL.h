@@ -20,11 +20,11 @@
 #endif
 #include "../Image/JCImageManager.h"
 #include "JCIDGenerator.h"
-#include <Manager/JCArrayBufferManager.h>
+#include <manager/JCArrayBufferManager.h>
 #include "../RenderEx/JCGlobalValue.h"
 #include "../Manager/JCOrderResManager.h"
 #include "../RenderEx/JCRegister.h"
-#include <buffer/JCCommandEncoderBuffer.h>
+#include <buffer/JCBuffer.h>
 
 //1024*1024*4
 #define  TEX_IMAGE2D_DUMMY_MAX_SIZE 4194304

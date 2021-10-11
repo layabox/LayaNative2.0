@@ -15,7 +15,8 @@
 #include "../../JCScriptRuntime.h"
 #include "JSGlobalExportCFun.h"
 #include <fstream>
-
+#include <ctime>
+#include "../../JCSystemConfig.h"
 namespace laya 
 {
     bool IsTextUTF8(char* str, unsigned long length)
@@ -194,7 +195,7 @@ namespace laya
     */
     void JsFileReader::__LoadRemoteFile(JsFile *p_pFile)
     {
-        retainThis();	//防止被釋放
+		makeStrong();	//防止被釋放
         OnStart();
         if (m_bSync)
         {
@@ -220,12 +221,12 @@ namespace laya
             return false;
         JCResStateDispatcher* pRes = (JCResStateDispatcher*)p_pRes;
         JCFileRes* pFileRes = (JCFileRes*)pRes;
-        if (pFileRes->m_pBuffer.get() == NULL || pFileRes->m_nLength == 0)
-        {
-            OnFinished(false, JsFileReaderErr_NotFoundError);
-            return false;
-        }
-        else
+        //if (pFileRes->m_pBuffer.get() == NULL || pFileRes->m_nLength == 0)
+        //{
+        //    OnFinished(false, JsFileReaderErr_NotFoundError);
+        //    return false;
+       // }
+        //else
         {
             unsigned char* pBuff = (unsigned char*)(pFileRes->m_pBuffer.get());
             int nLen = pFileRes->m_nLength;
@@ -336,21 +337,21 @@ namespace laya
         readyState = EMPTY;
         m_hFileObject.Reset();	//完成后，要把对File的引用去掉
         m_pFile = 0;
-        releaseThis();
+		makeWeak();
     }
     JsValue JsFileReader::GetResult()
     {
         if (DONE != readyState) {
             return JSP_TO_JS_UNDEFINE;
         }
-        else if (0 == m_pFile || 0 == m_pFile->m_i64Size) {
-            return JSP_TO_JS_NULL;
-        }
+        //else if (0 == m_pFile || 0 == m_pFile->m_i64Size) {
+        //    return JSP_TO_JS_NULL;
+        //}
         else if (content_type_buffer == m_iContentType)
         {
-            if (m_pFile->m_i64Size <= 0 || m_pFile->m_pBuffer == NULL) {
-                return JSP_TO_JS_NULL;
-            }
+            //if (m_pFile->m_i64Size <= 0 || m_pFile->m_pBuffer == NULL) {
+            //    return JSP_TO_JS_NULL;
+            //}
 
             if (m_pFile->m_i64Size > 0x7fffffff) {
                 LOGE("文件太大，无法返回！%s", (char*)m_pFile->m_FullName.c_str());
@@ -377,6 +378,10 @@ namespace laya
             }
             else
             {
+                if (m_pFile->m_pBuffer == NULL)
+                {
+                    return (JSP_TO_JS_STR(""));
+                }
                 return (JSP_TO_JS_STR(m_pFile->m_pBuffer));
             }
         }

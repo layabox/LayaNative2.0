@@ -2,9 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:../../webglPlus/proj.ios/webglPlus.xcodeproj">
-   </FileRef>
-   <FileRef
       location = "group:../../common/proj.ios/common.xcodeproj">
    </FileRef>
    <FileRef

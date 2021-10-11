@@ -1,6 +1,7 @@
+
 #ifndef V8_DEBUG_AGENT_H_
 #define V8_DEBUG_AGENT_H_
-#ifdef JS_V8
+#ifdef JS_V8_DEBUGGER
 #include <v8.h>
 #include <v8-inspector.h>
 //#include <misc/boostSemaphore.h>
@@ -18,9 +19,9 @@ namespace laya {
         //返回空就表示没有了。
         virtual char* get(int& len) = 0;
     };
-    class StrBuff :public JCMemClass {
+    class StrBuff :public JCCommandEncoderBuffer {
     public:
-        StrBuff(int sz, int adsz) :JCMemClass(sz, adsz) {}
+        StrBuff(int sz, int adsz) :JCCommandEncoderBuffer(sz, adsz) {}
         StrBuff& operator <<(int v) {
             char buf[64];
             sprintf(buf, "%d", v);

@@ -11,6 +11,7 @@
 #include "../../v8debug/debug-agent.h"
 #include "util/Log.h"
 #include "JSCProxyTLS.h"
+#include "IsolateData.h"
 #ifdef WIN32
     #include <windows.h>
     #include <process.h>
@@ -24,138 +25,75 @@ namespace laya
     {
 		return *value ? *value : "<string conversion failed>";
 	}
-    class LayaHandleScope :public v8::HandleScope
-    {
-    public:
-        LayaHandleScope(v8::Isolate* piso)
-        {
-            HandleScope::Initialize(piso);
-        }
-        ~LayaHandleScope()
-        {
-        }
-    public:
-        void Initialize(v8::Isolate* isolate)
-        {
-            HandleScope::Initialize(isolate);
-        }
-    };
 	Javascript::Javascript() 
     {
 		m_pIsolate = NULL;
 		m_pPlatform = NULL;
-        m_pScope = NULL;
-        m_pHandleScope = NULL;
-        m_pV8Locker = NULL;
-        m_pABAlloc = NULL;
         m_nListenPort = 0;
+
+
+		m_pPlatform = v8::platform::NewDefaultPlatform().release();
+		v8::V8::InitializePlatform(m_pPlatform);
+		v8::V8::Initialize();
+		static char* flags[] =
+		{
+#if __APPLE__
+            " --jitless",
+#endif
+			"--expose_gc",
+			"--no-flush-bytecode",
+			"--no-lazy",
+		};
+		for (auto f : flags)
+		{
+			v8::V8::SetFlagsFromString(f, strlen(f));
+		}
+		
+	}
+	Javascript::~Javascript()
+	{
+
+		v8::V8::Dispose();
+		v8::V8::ShutdownPlatform();
+		delete m_pPlatform;
 	}
 	void Javascript::init(int nPort) 
     {
-        if (!m_pPlatform) 
-        {
-            m_pPlatform = v8::platform::CreateDefaultPlatform();
-            v8::V8::InitializePlatform(m_pPlatform);
-        }
-		v8::V8::Initialize();
-        m_nListenPort = 0;
-		if(nPort > 0 && nPort <0xFFFF )
-        {
+		m_nListenPort = 0;
+		if (nPort > 0 && nPort <0xFFFF)
+		{
 			m_nListenPort = nPort;
 		}
 	}
     void Javascript::uninit() 
     {
-        //不能在v8线程
-        return;
-        if (0 != m_pIsolate) 
-        {
-            m_pIsolate->Dispose();
-            m_pIsolate = 0;
-            ArrayBufferAllocator* pABAlloc = ArrayBufferAllocator::getInstance();
-            //pABAlloc->FreeAllAlive();
-            delete pABAlloc;
-        }
+       
     }
     void Javascript::initJSEngine()
     {
-        v8::Isolate::CreateParams create_params;
-        m_pABAlloc = ArrayBufferAllocator::getInstance();
-        create_params.array_buffer_allocator = m_pABAlloc;
-        m_pIsolate = v8::Isolate::New(create_params);
-        static char* flags[] =
-        {
-            "--expose_gc",
-            "--allow-natives-syntax",//导出内部的%函数
-                                     //"--trace-gc-verbose",
-                                     //"--use-strict",
-                                     //"--harmony",
-                                     //"--print-bytecode", //
-                                     //"--print-bytecode-filter errf1"
-                                     //"--trace-ignition-codegen",
-                                     //"--debug-code",
-                                     //"--trace-opt", 
-                                     //"--trace-deopt",
-                                     //"--prof",
-                                     //"--code-comments", 
-        };
-        for (auto f : flags)
-        {
-            v8::V8::SetFlagsFromString(f, strlen(f));
-        }
-#ifdef V8PROFILE
-        v8::V8::SetFlagsFromString("--prof", 6);
-        char* pSingleLogFile = "--no-logfile_per_isolate";
-        v8::V8::SetFlagsFromString(pSingleLogFile, strlen(pSingleLogFile));
-#ifdef ANDROID
-        char* profFile = "--logfile /sdcard/lr2perf/v8.log";
-#elif WIN32
-        char* profFile = "--logfile d:/temp/v8.log";
-#endif
-        v8::V8::SetFlagsFromString(profFile, strlen(profFile));
-#endif
-        //m_pLocker = new v8::Locker(m_pIsolate);
-
-        //这个{}是为了能让 Scope起作用
-        m_pScope = new v8::Isolate::Scope(m_pIsolate);
-        m_pHandleScope = (v8::HandleScope*)malloc(sizeof(v8::HandleScope));
-        new (m_pHandleScope) LayaHandleScope(m_pIsolate);
-        v8::Handle<v8::ObjectTemplate> pGlobalTemplate = v8::ObjectTemplate::New(m_pIsolate);
-        v8::Local<v8::Context> context = v8::Context::New(m_pIsolate, NULL, pGlobalTemplate, v8::Handle<v8::Value>());
-        context->Enter();
-        //v8::CpuProfiler* pCpuProf =  m_pIsolate->GetCpuProfiler();
-        //pCpuProf->StartCpuProfiling(v8::String::New(""));
-        //pCpuProf->StopCpuProfiling(v8::String::New(""));
-        if (m_nListenPort > 0)
-        {
-            {
-                std::unique_lock<std::recursive_mutex> __guard(m_Lock);
-                if (m_DebugMessageContext.IsEmpty())
-                {
-                    m_DebugMessageContext.Reset(m_pIsolate, v8::Local<v8::Context>::New(m_pIsolate, context));
-                }
-            }
-        }
+		v8::Isolate::CreateParams create_params;
+		create_params.array_buffer_allocator = v8::ArrayBuffer::Allocator::NewDefaultAllocator();
+		m_pIsolate = v8::Isolate::New(create_params);
+		m_pIsolate->Enter();
+		v8::HandleScope handle_scope(m_pIsolate);
+		v8::Local<v8::Context> context = v8::Context::New(m_pIsolate);
+		m_context.Reset(m_pIsolate, context);
+		m_IsolateData = new IsolateData(m_pIsolate, NULL);
+		context->Enter();
     }
     void Javascript::uninitJSEngine()
     {
-        //当js线程要结束的时候，关闭调试，否则调试器客户端在线程结束后再发送调试事件，会导致非法。
-        if (m_nListenPort > 0)
-        {
-            //v8::Debug::DisableAgent();
-        }
-        if (!m_DebugMessageContext.IsEmpty())
-        {
-            m_DebugMessageContext.Reset();
-        }
-        //应该调用退出，但是context在scope中，先不退出了，发现也没有内存泄漏
-        //context->Enter();
-        delete m_pHandleScope;
-        m_pHandleScope = NULL;
-        delete m_pScope;
-        m_pScope = NULL;
-        m_pIsolate->Dispose();
-        delete m_pABAlloc;
+		{
+			v8::HandleScope handle_scope(m_pIsolate);
+			v8::Local<v8::Context> context = m_context.Get(m_pIsolate);
+			context->Exit();
+			m_context.Reset();
+			delete m_IsolateData;
+			m_pIsolate->Exit();
+			
+		}
+		m_pIsolate->Dispose();
+
     }
 	void Javascript::run(const char* sSource, std::function<void(void)> preRunFunc)
     {
@@ -169,7 +107,7 @@ namespace laya
         func(pdata);
         if (try_catch.HasCaught())
         {
-            v8::String::Utf8Value exceptioninfo(try_catch.Exception());
+            v8::String::Utf8Value exceptioninfo(m_pIsolate, try_catch.Exception());
             printf("Exception info [%s]\n", *exceptioninfo);
         }
 	}
@@ -183,7 +121,7 @@ namespace laya
 
     }
 	void JSV8Worker::_defRunLoop()
-    {
+	{
 #ifdef WIN32
 		{
 			DWORD thid = GetCurrentThreadId();
@@ -199,35 +137,36 @@ namespace laya
 		JCEventEmitter::evtPtr startEvt(new JCEventBase);
 		startEvt->m_nID = JCWorkerThread::Event_threadStart;
 		emit(startEvt);
-        JCWorkerThread::runObj task;
+		JCWorkerThread::runObj task;
 		while (!m_bStop)
-        {
+		{
+			v8::HandleScope handle_scope(v8::Isolate::GetCurrent());
 			v8::TryCatch trycatch(v8::Isolate::GetCurrent());
 			if (!m_funcLoop)
-            {
+			{
 				//现在的waitdata返回false不再表示要退出。事件唤醒流程
 				if (m_ThreadTasks.WaitData(&task))
 					task();
 			}
-			else 
-            {
+			else
+			{
 				//固定循环流程
-                runQueue();
+				runQueue();
 				if (!m_funcLoop())
-                {
+				{
 					break;
 				}
 			}
-			if (trycatch.HasCaught()) 
-            {
+			if (trycatch.HasCaught())
+			{
 				v8::Isolate* piso = v8::Isolate::GetCurrent();
-				if( piso )__JSRun::ReportException(piso, &trycatch);
+				if (piso)__JSRun::ReportException(piso, &trycatch);
 			}
 		}
 		//退出事件
 		JCEventEmitter::evtPtr stopEvt(new JCEventBase);
 		stopEvt->m_nID = JCWorkerThread::Event_threadStop;
-        emit(stopEvt);
+		emit(stopEvt);
 	}
 	void call_JSThread__defRunLoop(void* pdata) 
     {
