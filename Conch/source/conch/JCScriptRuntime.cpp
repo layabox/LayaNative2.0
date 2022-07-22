@@ -25,6 +25,7 @@
 #include "JSWrapper/LayaWrap/JSLayaGL.h"
 #include <LayaGL/JCLayaGLDispatch.h>
 #include <webglplus/JCWebGLPlus.h>
+#include "JSWrapper/LayaWrap/JSPromiseRejectionEvent.h"
 #ifdef JS_V8
     #include "JSWrapper/v8debug/debug-agent.h"
 #endif
@@ -205,11 +206,25 @@ namespace laya
         m_pAssetsRes = pAssetRes;
         m_pPoster = pThreadCmdSender;
     }
+    static void onUnhandledRejection(JSValueAsParam pPromise, JSValueAsParam pReason, const char* type)
+    {
+#ifdef JS_V8
+        JSPromiseRejectionEvent* event = new JSPromiseRejectionEvent;
+        event->setPromise(pPromise);
+        event->setReason(pReason);
+        event->setType(type);
+        JCScriptRuntime::s_JSRT->m_pJSOnUnhandledRejectionFunction.Call(JSP_TO_JS(JSPromiseRejectionEvent*, event));
+#endif
+    }
     void JCScriptRuntime::start(const char* pStartJS) 
     {
         LOGI("Start js %s", pStartJS);
         if (pStartJS)m_strStartJS = pStartJS;
+#ifdef JS_V8
+        m_pScriptThread->initialize(JCConch::s_pConch->m_nJSDebugPort, std::bind(&onUnhandledRejection, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+#else
         m_pScriptThread->initialize(JCConch::s_pConch->m_nJSDebugPort);
+#endif
 #ifdef __APPLE__
         m_pScriptThread->setLoopFunc(std::bind(&JCScriptRuntime::onUpdate, this));
 #endif
@@ -374,6 +389,7 @@ namespace laya
         m_pJSOnDrawFunction.Reset();
         m_bJSBulletGetWorldTransformHandle.Reset();
         m_bJSBulletSetWorldTransformHandle.Reset();
+		m_pJSOnUnhandledRejectionFunction.Reset();
 #ifndef WIN32
         m_pCurEditBox = NULL;
 #endif

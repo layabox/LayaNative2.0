@@ -37,7 +37,7 @@ namespace laya
 
 		~Javascript();
 
-		void init(int nPort);
+		void init(int nPort, std::function<void(v8::Local<v8::Value>, v8::Local<v8::Value>, const char*)> func);
 
 		//在init之后，并且在js线程的情况下，可以添加js导出
 		//执行一段脚本。并立即退出。
@@ -63,6 +63,7 @@ namespace laya
 		v8::Global<v8::Context>             m_context;
 		v8::Platform*						m_pPlatform = NULL;
 		IsolateData*						m_IsolateData;
+        std::function<void(v8::Local<v8::Value>, v8::Local<v8::Value>, const char*)>           m_promiseRejectHandler;
 	};
 
 
@@ -81,7 +82,7 @@ namespace laya
         virtual void on(int nEvent, JCEventEmitter::EventHandler func, void* pInThread=0) = 0;
         virtual void start() = 0;
         virtual void stop() = 0;
-        virtual void initialize(int nPort) = 0;
+        virtual void initialize(int nPort, std::function<void(v8::Local<v8::Value>, v8::Local<v8::Value>, const char* func)>) = 0;
         virtual void uninitialize() = 0;
         virtual void setLoopFunc(std::function<bool(void)> func) = 0;
         virtual void pushDbgFunc(std::function<void(void)> task) = 0;
@@ -144,9 +145,9 @@ namespace laya
         {
             m_kWorker.stop();
         }
-        void initialize(int nPort)
+        void initialize(int nPort, std::function<void(v8::Local<v8::Value>, v8::Local<v8::Value>, const char*)> func)
         {
-            m_kJS.init(nPort);
+            m_kJS.init(nPort, func);
         }
         void uninitialize()
         {
@@ -254,10 +255,10 @@ namespace laya
         {
             m_kStopFunc.func(NULL);
         }
-        void initialize(int nPort)
+        void initialize(int nPort, std::function<void(v8::Local<v8::Value>, v8::Local<v8::Value>, const char*)> func)
         {
             clearFunc();
-            m_kJS.init(nPort);
+            m_kJS.init(nPort, func);
             m_kJS.initJSEngine();
         }
         void uninitialize()

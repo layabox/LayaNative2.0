@@ -154,12 +154,12 @@ namespace laya
         {
             LOGW("JSMemoryCanvas::measureText 没有设置FontInfo");
             JSObjectSetProperty(ctx, obj, JSStringCreateWithUTF8CString("width"), JSValueMakeNumber(ctx, width), kJSPropertyAttributeNone, nullptr);
-            //JSObjectSetProperty(ctx, obj, JSStringCreateWithUTF8CString("height"), JSValueMakeNumber(ctx, height), kJSPropertyAttributeNone, nullptr);
+            JSObjectSetProperty(ctx, obj, JSStringCreateWithUTF8CString("height"), JSValueMakeNumber(ctx, height), kJSPropertyAttributeNone, nullptr);
             return obj;
         }
         m_pFreeTypeRender->measureChar(unicode, m_pCurrentFontInfo, width, height);
         JSObjectSetProperty(ctx, obj, JSStringCreateWithUTF8CString("width"), JSValueMakeNumber(ctx, width), kJSPropertyAttributeNone, nullptr);
-        //JSObjectSetProperty(ctx, obj, JSStringCreateWithUTF8CString("height"), JSValueMakeNumber(ctx, height), kJSPropertyAttributeNone, nullptr);
+        JSObjectSetProperty(ctx, obj, JSStringCreateWithUTF8CString("height"), JSValueMakeNumber(ctx, height), kJSPropertyAttributeNone, nullptr);
 #else
         Isolate* iso = Isolate::GetCurrent();
         Local<Context> context = iso->GetCurrentContext();
@@ -169,12 +169,12 @@ namespace laya
         {
             LOGW("JSMemoryCanvas::measureText 没有设置FontInfo");
             obj->Set(context, String::NewFromUtf8(iso, "width").ToLocalChecked(), Number::New(iso, 0));
-            //obj->Set(context, String::NewFromUtf8(iso, "height"), Number::New(iso, 0));
+            obj->Set(context, String::NewFromUtf8(iso, "height").ToLocalChecked(), Number::New(iso, 0));
             return obj;
         }
         m_pFreeTypeRender->measureChar(unicode, m_pCurrentFontInfo, width, height);
         obj->Set(context, String::NewFromUtf8(iso, "width").ToLocalChecked(), Number::New(iso, width));
-        //obj->Set(context, String::NewFromUtf8(iso, "height"), Number::New(iso, height));
+        obj->Set(context, String::NewFromUtf8(iso, "height").ToLocalChecked(), Number::New(iso, height));
 #endif
         return obj;
     }

@@ -55,6 +55,7 @@
 #include "Bullet/LayaBulletExport.h"
 #include "JSArrayBufferRef.h"
 #include "JSWebGLPlus.h"
+#include "JSPromiseRejectionEvent.h"
 extern int g_nInnerWidth ;
 extern int g_nInnerHeight ;
 extern bool g_bGLCanvasSizeChanged;
@@ -206,6 +207,17 @@ namespace laya
     void setJoystickEvtFunc(JSValueAsParam pObj) 
     {
     }
+	void copy(const char* data)
+	{
+#ifdef WIN32
+#elif ANDROID
+		std::string strBuffer = data;
+		CToJavaBridge::JavaRet kRet;
+		CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "copy", strBuffer.c_str(), kRet);
+#elif __APPLE__
+#endif
+	}
+
     void evalJS(const char* p_sSource)
     {
         JSP_RUN_SCRIPT(p_sSource);
@@ -444,6 +456,7 @@ namespace laya
         JSLayaGL::getInstance()->exportJS();
         JSShaderActiveInfo::exportJS();
         JSShaderPrecisionFormat::exportJS();
+		JSPromiseRejectionEvent::exportJS();
 #ifdef WIN32
         JSWindowEditBox::exportJS();
 #elif ANDROID

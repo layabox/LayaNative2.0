@@ -13,6 +13,7 @@ LOCAL_CFLAGS := \
   -DANDROID_ARM_NEON=TRUE \
   -DANDROID_STL=c++_shared \
   -DANDROID_TOOLCHAIN=clang \
+  -DAL_ALEXT_PROTOTYPES \
   -frtti
 
 LOCAL_CPPFLAGS += -std=c++11
@@ -75,28 +76,6 @@ LOCAL_SRC_FILES := \
         ../../../../source/common/resource/JCFileResManager.cpp \
         ../../../../source/common/resource/JCResManager.cpp \
         ../../../../source/common/resource/JCResource.cpp \
-        ../../../../source/common/OpenAL/OpenAL32/alAuxEffectSlot.c \
-        ../../../../source/common/OpenAL/OpenAL32/alBuffer.c        \
-        ../../../../source/common/OpenAL/OpenAL32/alDatabuffer.c    \
-        ../../../../source/common/OpenAL/OpenAL32/alEffect.c        \
-        ../../../../source/common/OpenAL/OpenAL32/alError.c         \
-        ../../../../source/common/OpenAL/OpenAL32/alExtension.c     \
-        ../../../../source/common/OpenAL/OpenAL32/alFilter.c        \
-        ../../../../source/common/OpenAL/OpenAL32/alListener.c      \
-        ../../../../source/common/OpenAL/OpenAL32/alSource.c        \
-        ../../../../source/common/OpenAL/OpenAL32/alState.c         \
-        ../../../../source/common/OpenAL/OpenAL32/alThunk.c         \
-        ../../../../source/common/OpenAL/Alc/ALc.c                  \
-        ../../../../source/common/OpenAL/Alc/alcConfig.c            \
-        ../../../../source/common/OpenAL/Alc/alcEcho.c              \
-        ../../../../source/common/OpenAL/Alc/alcModulator.c         \
-        ../../../../source/common/OpenAL/Alc/alcReverb.c            \
-        ../../../../source/common/OpenAL/Alc/alcRing.c              \
-        ../../../../source/common/OpenAL/Alc/alcThread.c            \
-        ../../../../source/common/OpenAL/Alc/ALu.c                  \
-        ../../../../source/common/OpenAL/Alc/android.c              \
-        ../../../../source/common/OpenAL/Alc/bs2b.c                 \
-        ../../../../source/common/OpenAL/Alc/null.c                 \
 
 
 LOCAL_C_INCLUDES := ../../../../../ThirdParty/curl/include/android \
@@ -106,8 +85,7 @@ LOCAL_C_INCLUDES := ../../../../../ThirdParty/curl/include/android \
         ../../../../../ThirdParty/zip/include/android \
         ../../../../../ThirdParty/ogg/include/android \
 		../../../../../ThirdParty/zlib/include/android \
-        ../../../../source/common/OpenAL/include \
-        ../../../../source/common/OpenAL/OpenAL32/Include \
+        ../../../../../ThirdParty/openal/include/android \
         ../../../../source/common/glm \
 
 #LOCAL_IS64:=32

@@ -20,6 +20,7 @@
 		A247BC01237109FB009B1189 /* LayaBulletExportImp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A247BBFF237109FA009B1189 /* LayaBulletExportImp.cpp */; };
 		A25F7B2F219AB6DC004FA571 /* IVideoRenderTarget.m in Sources */ = {isa = PBXBuildFile; fileRef = A25F7B2E219AB6DC004FA571 /* IVideoRenderTarget.m */; };
 		A25F7B32219ABD4D004FA571 /* VideoOutputRenderTarget.m in Sources */ = {isa = PBXBuildFile; fileRef = A25F7B31219ABD4D004FA571 /* VideoOutputRenderTarget.m */; };
+		A263418F280821BC00FF7034 /* JSPromiseRejectionEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A263418D280821BC00FF7034 /* JSPromiseRejectionEvent.cpp */; };
 		A264F7C220C7DDC100D95F1B /* JSLayaGL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A264F7C020C7DDC100D95F1B /* JSLayaGL.cpp */; };
 		A270D73A2170FD8D000D994D /* JCConchBridge.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A270D7392170FD8D000D994D /* JCConchBridge.cpp */; };
 		A2729C9A1D20C51C00EC01E6 /* JSHistory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A2729C981D20C51C00EC01E6 /* JSHistory.cpp */; };
@@ -118,6 +119,8 @@
 		A25F7B2E219AB6DC004FA571 /* IVideoRenderTarget.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = IVideoRenderTarget.m; path = Video/IVideoRenderTarget.m; sourceTree = "<group>"; };
 		A25F7B30219ABD2D004FA571 /* VideoOutputRenderTarget.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = VideoOutputRenderTarget.h; path = Video/VideoOutputRenderTarget.h; sourceTree = "<group>"; };
 		A25F7B31219ABD4D004FA571 /* VideoOutputRenderTarget.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = VideoOutputRenderTarget.m; path = Video/VideoOutputRenderTarget.m; sourceTree = "<group>"; };
+		A263418D280821BC00FF7034 /* JSPromiseRejectionEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = JSPromiseRejectionEvent.cpp; path = ../../../../source/conch/JSWrapper/LayaWrap/JSPromiseRejectionEvent.cpp; sourceTree = "<group>"; };
+		A263418E280821BC00FF7034 /* JSPromiseRejectionEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JSPromiseRejectionEvent.h; path = ../../../../source/conch/JSWrapper/LayaWrap/JSPromiseRejectionEvent.h; sourceTree = "<group>"; };
 		A264F7BF20C7DDC000D95F1B /* JSLayaGL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JSLayaGL.h; path = ../../../../source/conch/JSWrapper/LayaWrap/JSLayaGL.h; sourceTree = "<group>"; };
 		A264F7C020C7DDC100D95F1B /* JSLayaGL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = JSLayaGL.cpp; path = ../../../../source/conch/JSWrapper/LayaWrap/JSLayaGL.cpp; sourceTree = "<group>"; };
 		A270D7382170FD8D000D994D /* JCConchBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JCConchBridge.h; sourceTree = "<group>"; };
@@ -443,6 +446,8 @@
 		A2D119571D0BC959004C229D /* LayaWrap */ = {
 			isa = PBXGroup;
 			children = (
+				A263418D280821BC00FF7034 /* JSPromiseRejectionEvent.cpp */,
+				A263418E280821BC00FF7034 /* JSPromiseRejectionEvent.h */,
 				A2FBA93D2702BC7D00846E17 /* JSArrayBufferRef.cpp */,
 				A2FBA93E2702BC7E00846E17 /* JSArrayBufferRef.h */,
 				A2FBA93C2702BC7D00846E17 /* JSWebGLPlus.cpp */,
@@ -653,6 +658,7 @@
 				A2D119D71D0BCA70004C229D /* JSInput.cpp in Sources */,
 				A2C56AC21C8ADAF2009DDC1D /* LayaNotifyManager.m in Sources */,
 				A2C56AE11C8ADB5A009DDC1D /* CToObjectCIOS.mm in Sources */,
+				A263418F280821BC00FF7034 /* JSPromiseRejectionEvent.cpp in Sources */,
 				A2D119F81D0BFA31004C229D /* JSCBinder.cpp in Sources */,
 				A2D119D01D0BCA70004C229D /* JSDOMParser.cpp in Sources */,
 				A2FBA93A2702015300846E17 /* JSObjBase.cpp in Sources */,

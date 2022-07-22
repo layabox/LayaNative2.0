@@ -1,6 +1,5 @@
 package demo;
 import java.io.InputStream;
-import layaair.autoupdateversion.AutoUpdateAPK;
 import layaair.game.IMarket.IPlugin;
 import layaair.game.IMarket.IPluginRuntimeProxy;
 import layaair.game.Market.GameEngine;
@@ -18,7 +17,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.webkit.ValueCallback;
 
 
 public class MainActivity extends Activity{
@@ -31,16 +29,16 @@ public class MainActivity extends Activity{
     @Override    
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+		if (!isTaskRoot()) {
+            finish();
+            return;
+        }
         getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         JSBridge.mMainActivity = this;
         mSplashDialog = new SplashDialog(this);
         mSplashDialog.showSplash();
-        /*
-         * 如果不想使用更新流程，可以屏蔽checkApkUpdate函数，直接打开initEngine函数
-         */
-        checkApkUpdate(this);
-        //initEngine();
+        initEngine();
     }
     public void initEngine()
     {
@@ -98,45 +96,8 @@ public class MainActivity extends Activity{
         alertdlg.setCanceledOnTouchOutside(false);
         alertdlg.show();
     }
-    public  void checkApkUpdate( Context context,final ValueCallback<Integer> callback)
-    {
-        if (isOpenNetwork(context)) {
-            // 自动版本更新
-            if ( "0".equals(config.GetInstance().getProperty("IsHandleUpdateAPK","0")) == false ) {
-                Log.e("0", "==============Java流程 checkApkUpdate");
-                new AutoUpdateAPK(context, new ValueCallback<Integer>() {
-                    @Override
-                    public void onReceiveValue(Integer integer) {
-                        Log.e("",">>>>>>>>>>>>>>>>>>");
-                        callback.onReceiveValue(integer);
-                    }
-                });
-            } else {
-                Log.e("0", "==============Java流程 checkApkUpdate 不许要自己管理update");
-                callback.onReceiveValue(1);
-            }
-        } else {
-            settingNetwork(context,AR_CHECK_UPDATE);
-        }
-    }
-    public void checkApkUpdate(Context context) {
-        InputStream inputStream = getClass().getResourceAsStream("/assets/config.ini");
-        config.GetInstance().init(inputStream);
-        checkApkUpdate(context,new ValueCallback<Integer>() {
-            @Override
-            public void onReceiveValue(Integer integer) {
-                if (integer.intValue() == 1) {
-                    initEngine();
-                } else {
-                    finish();
-                }
-            }
-        });
-    }
     public void onActivityResult(int requestCode, int resultCode,Intent intent) {
-        if (requestCode == AR_CHECK_UPDATE) {
-            checkApkUpdate(this);
-        }
+
     }
     protected void onPause()
     {

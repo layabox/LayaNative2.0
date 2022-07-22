@@ -469,7 +469,8 @@ namespace laya
         }
 
         bitmapData->m_nWidth = width + nBorderSize * 2;
-        bitmapData->m_nHeight = height + nBorderSize * 2;;
+        bitmapData->m_nHeight = height + nBorderSize * 2;
+		
         if (bitmapData->m_nHeight > MAX_CHAR_HEIGHT || bitmapData->m_nWidth > MAX_LINE_WIDTH)
         {
             infoVector.clear();
@@ -533,7 +534,7 @@ namespace laya
                             int g = (int)(nBG * fAlpha);
                             int r = (int)(nBR * fAlpha);
                             int pos = offset + x + currentInfo.datal + (y + currentInfo.datat) * bitmapData->m_nWidth;
-                            if (!pBuff[pos])
+                            if (pos < MAX_INT32_INDEX && !pBuff[pos])
                                 pBuff[pos] = ((int)bmpColor << 24) + (b << 16) + (g << 8) + r;
                         }
                     }
@@ -553,7 +554,7 @@ namespace laya
                         int alpha = (int)(currentInfo.pBmp[x + y*currentInfo.dataw]);
                         float fAlpha = alpha / 255.0f;
                         int nPos = (y + currentInfo.datat + nBorderSize) * bitmapData->m_nWidth + offset + x + nBorderSize + currentInfo.datal;
-                        if (alpha > 0)
+                        if (nPos < MAX_INT32_INDEX && alpha > 0)
                         {
                             int r = (int)(nTR * fAlpha + nBR * (1 - fAlpha));
                             int g = (int)(nTG * fAlpha + nBG * (1 - fAlpha));
@@ -571,7 +572,10 @@ namespace laya
                     int nLineTop = currentInfo.nUnderlineTop + nBorderSize * 2;
                     for (int y = 0; y < currentInfo.nUnderlineHeight; y++) {
                         for (int x = 0; x < currentInfo.nTextWidth; x++) {
-                            pBuff[offset + x + (y + nLineTop) * bitmapData->m_nWidth] = *(int*)(pLineColor);
+							int index = offset + x + (y + nLineTop) * bitmapData->m_nWidth;
+							if (index < MAX_INT32_INDEX) {
+								pBuff[index] = *(int*)(pLineColor);
+							}
                         }
                     }
                     if (nLineTop + currentInfo.nUnderlineHeight > currentInfo.nTextHeight)
@@ -592,7 +596,10 @@ namespace laya
                         int b = (int)(nTB * fAlpha);
                         int g = (int)(nTG * fAlpha);
                         int r = (int)(nTR * fAlpha);
-                        pBuff[offset + x + currentInfo.datal + (y + currentInfo.datat) * bitmapData->m_nWidth] = (a << 24) + (b << 16) + (g << 8) + r;
+						int index = offset + x + currentInfo.datal + (y + currentInfo.datat) * bitmapData->m_nWidth;
+						if (index < MAX_INT32_INDEX) {
+							pBuff[index] = (a << 24) + (b << 16) + (g << 8) + r;
+						}
                     }
                 }
                 //下划线
@@ -603,7 +610,10 @@ namespace laya
                     std::swap(pLineColor[0], pLineColor[2]);
                     for (int y = 0; y < currentInfo.nUnderlineHeight; y++) {
                         for (int x = 0; x < currentInfo.nTextWidth; x++) {
-                            pBuff[offset + x + (y + currentInfo.nUnderlineTop) * bitmapData->m_nWidth] = *(int*)(pLineColor);
+							int index = offset + x + (y + currentInfo.nUnderlineTop) * bitmapData->m_nWidth;
+							if (index < MAX_INT32_INDEX) {
+								pBuff[index] = *(int*)(pLineColor);
+							}
                         }
                     }
                     if (currentInfo.nUnderlineTop + currentInfo.nUnderlineHeight > currentInfo.nTextHeight)

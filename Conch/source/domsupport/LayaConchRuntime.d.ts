@@ -261,7 +261,6 @@ interface ZipFile{
      */
     readFile(id:number):ArrayBuffer;
     close():void;
-    
     new ():ZipFile;
 }
 
@@ -524,7 +523,7 @@ interface conchConfig{
     localizable:boolean;
 	pushAtlasMaxWidth:number;
 	maxEJAnimation:number;
-	urlIgnoreCase:boolean;
+    urlIgnoreCase:boolean;
 	getStoragePath():string;
 	setMemoryCanvasSize(w:number,h:number):void;
 	getTotalMem():number;
@@ -664,6 +663,8 @@ interface _textBitmap
 interface conch {
     onerror:Function;
     __onerror:Function;
+    onunhandledrejection:Function;
+    __onunhandledrejection:Function;
     callWebviewJS(methodName:string,parms:string,callbackMethodName:string);
     exp:any;
     showWebView();

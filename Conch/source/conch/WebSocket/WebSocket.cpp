@@ -18,6 +18,7 @@
 #include <thread>
 #include <stdlib.h>
 #include <downloadCache/JCFileSource.h>
+#include <algorithm>
 #ifdef ANDROID
 #include <downloadCache/JCAndroidFileSource.h>
 #elif __APPLE_
@@ -27,11 +28,15 @@
 #ifdef WIN32
 #include <filesystem>
 namespace  fs = std::experimental::filesystem::v1;
+#ifdef min
+#undef min
+#endif
 #else
 #include "fileSystem/JCFileSystem.h"
 #endif
 extern std::string gRedistPath;
 extern std::string gResourcePath;
+const uint32_t RX_BUFFER_SIZE = 65536;
 namespace laya{
 
     std::string WebSocket::s_strProxy;
@@ -266,7 +271,7 @@ bool WebSocket::init(const Delegate& delegate,
 			char* name = new char[(*iter).length()+1];
 			strcpy(name, (*iter).c_str());
 			m_wsProtocols[i].name = name;
-			m_wsProtocols[i].rx_buffer_size=65536;
+			m_wsProtocols[i].rx_buffer_size = RX_BUFFER_SIZE;
 			m_wsProtocols[i].callback = WebSocketCallbackWrapper::onSocketCallback;
 		}
 	}
@@ -275,7 +280,7 @@ bool WebSocket::init(const Delegate& delegate,
 		char* name = new char[20];
 		strcpy(name, "default-protocol");
 		m_wsProtocols[0].name = name;
-		m_wsProtocols[0].rx_buffer_size=65536;	//如果这里不设，则在android下当发送的数据很多的时候，会导致发送失败（返回0）
+		m_wsProtocols[0].rx_buffer_size = RX_BUFFER_SIZE;	//如果这里不设，则在android下当发送的数据很多的时候，会导致发送失败（返回0）
 												//猎刃有时候打不到怪就是因为这个（抓包看到的是发送的为原始内容，同普通socket不知道为什么，可能无关？）
 		m_wsProtocols[0].callback = WebSocketCallbackWrapper::onSocketCallback;
 	}
@@ -457,70 +462,97 @@ int WebSocket::onSocketCallback(
             
 		case LWS_CALLBACK_CLIENT_WRITEABLE:
 			{
-				std::lock_guard<std::mutex> lock(*m_wsHelper->m_subThreadWsMessageQueueMutex);
-                                               
-				std::list<WsMessage*>::iterator iter = m_wsHelper->m_subThreadWsMessageQueue->begin();
-                
-				int bytesWrite = 0;
-				for (; iter != m_wsHelper->m_subThreadWsMessageQueue->end(); )
-				{
-					WsMessage* subThreadMsg = *iter;
-                    
-					if ( WS_MSG_TO_SUBTRHEAD_SENDING_STRING == subThreadMsg->what
-						|| WS_MSG_TO_SUBTRHEAD_SENDING_BINARY == subThreadMsg->what)
-					{
-						Data* data = (Data*)subThreadMsg->obj;
+				do {
+					std::lock_guard<std::mutex> lock(*m_wsHelper->m_subThreadWsMessageQueueMutex);
 
-						unsigned char* buf = new unsigned char[LWS_SEND_BUFFER_PRE_PADDING
-																+ data->len + LWS_SEND_BUFFER_POST_PADDING];
-                        
-						memset(&buf[LWS_SEND_BUFFER_PRE_PADDING], 0, data->len);
-						memcpy((char*)&buf[LWS_SEND_BUFFER_PRE_PADDING], data->bytes, data->len);
-                        
-						enum lws_write_protocol writeProtocol;
-                        
-						if (WS_MSG_TO_SUBTRHEAD_SENDING_STRING == subThreadMsg->what)
-						{
-							writeProtocol = LWS_WRITE_TEXT;
+					std::list<WsMessage *>::iterator iter = m_wsHelper->m_subThreadWsMessageQueue->begin();
+
+					int bytesWrite = 0;
+					for (; iter != m_wsHelper->m_subThreadWsMessageQueue->end();) {
+						WsMessage *subThreadMsg = *iter;
+
+						if (WS_MSG_TO_SUBTRHEAD_SENDING_STRING == subThreadMsg->what
+							|| WS_MSG_TO_SUBTRHEAD_SENDING_BINARY == subThreadMsg->what) {
+							Data *data = (Data *) subThreadMsg->obj;
+
+							uint32_t toWriteSize = std::min(RX_BUFFER_SIZE, data->getBytesLeft());
+							unsigned char *buf = new unsigned char[LWS_SEND_BUFFER_PRE_PADDING
+																   + toWriteSize];
+
+							memset(&buf[LWS_SEND_BUFFER_PRE_PADDING], 0, toWriteSize);
+							memcpy((char *) &buf[LWS_SEND_BUFFER_PRE_PADDING], data->getPayload(),
+								   toWriteSize);
+
+							int writeProtocol;
+							uint32_t bytesLeft = data->getBytesLeft();
+							if (data->bytesWritten == 0) {
+								if (WS_MSG_TO_SUBTRHEAD_SENDING_STRING == subThreadMsg->what) {
+									writeProtocol = LWS_WRITE_TEXT;
+								} else {
+									writeProtocol = LWS_WRITE_BINARY;
+								}
+								if (data->len > RX_BUFFER_SIZE) {
+									writeProtocol |= LWS_WRITE_NO_FIN;
+								}
+							} else {
+								writeProtocol = LWS_WRITE_CONTINUATION;
+								if (data->getBytesLeft() != toWriteSize) {
+									writeProtocol |= LWS_WRITE_NO_FIN;
+								}
+							}
+
+							bytesWrite = lws_write(wsi, &buf[LWS_SEND_BUFFER_PRE_PADDING],
+												   toWriteSize,
+												   static_cast<lws_write_protocol>(writeProtocol));
+							/*if (bytesWrite == 0) {
+								//暂时无法发送，等会儿再试
+								break;
+							}
+							if (bytesWrite == 0) {
+								break;
+							}*/
+							if (bytesWrite < 0) {
+								//发生错误了。
+								LOGE("WebSocket::onSocketCallback libwebsocket_write error! ");
+								LAYA_SAFE_DELETE_ARRAY(data->bytes);
+								LAYA_SAFE_DELETE(data);
+								LAYA_SAFE_DELETE_ARRAY(buf);
+								break;
+							}
+							else if (bytesWrite < toWriteSize) {
+								data->updateBytesWritten(bytesWrite);
+								LAYA_SAFE_DELETE_ARRAY(buf);
+							}
+							else if (bytesLeft == bytesWrite) {
+								LAYA_SAFE_DELETE_ARRAY(data->bytes);
+								LAYA_SAFE_DELETE(data);
+								LAYA_SAFE_DELETE_ARRAY(buf);
+
+								iter = m_wsHelper->m_subThreadWsMessageQueue->erase(iter);
+								LAYA_SAFE_DELETE(subThreadMsg);
+								break;
+							}
+							else {
+								data->updateBytesWritten(bytesWrite);
+								LAYA_SAFE_DELETE_ARRAY(buf);
+							}
+							}
+							//if (bytesWrite < data->len) {
+							//}
+
+
 						}
-						else
-						{
-							writeProtocol = LWS_WRITE_BINARY;
-						}
-                        
-						bytesWrite = lws_write(wsi,  &buf[LWS_SEND_BUFFER_PRE_PADDING], data->len, writeProtocol);
-						  if( bytesWrite==0){
-							//暂时无法发送，等会儿再试
-							break;
-						  }
-						if( bytesWrite==0){
-							break;
-						}
-						if (bytesWrite < 0)
-						{
-						    //发生错误了。
-						    LOGE("WebSocket::onSocketCallback libwebsocket_write error! ");
-							break;
-						}
-						if (bytesWrite < data->len)
-						{
-						}
-                        
-						LAYA_SAFE_DELETE_ARRAY(data->bytes);
-						LAYA_SAFE_DELETE(data);
-						LAYA_SAFE_DELETE_ARRAY(buf);
-					}
-                    
-					iter = m_wsHelper->m_subThreadWsMessageQueue->erase(iter);
-					LAYA_SAFE_DELETE(subThreadMsg);
-				}
+
+
 
 //				m_wsHelper->m_subThreadWsMessageQueue->clear();
-                
-                
+
+
+				} while(false);
+
 				/* get notified as soon as we can write again */
-                
-				lws_callback_on_writable( wsi);
+
+				lws_callback_on_writable(wsi);
 			}
 			break;
             

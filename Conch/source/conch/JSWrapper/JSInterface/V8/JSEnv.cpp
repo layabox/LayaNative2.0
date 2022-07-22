@@ -12,6 +12,7 @@
 #include "util/Log.h"
 #include "JSCProxyTLS.h"
 #include "IsolateData.h"
+#include "JSCProxyTrnasfer.h"
 #ifdef WIN32
     #include <windows.h>
     #include <process.h>
@@ -57,8 +58,9 @@ namespace laya
 		v8::V8::ShutdownPlatform();
 		delete m_pPlatform;
 	}
-	void Javascript::init(int nPort) 
+	void Javascript::init(int nPort, std::function<void(v8::Local<v8::Value>, v8::Local<v8::Value>, const char*)> func)
     {
+		m_promiseRejectHandler = func;
 		m_nListenPort = 0;
 		if (nPort > 0 && nPort <0xFFFF)
 		{
@@ -69,6 +71,33 @@ namespace laya
     {
        
     }
+	static void PromiseRejectHandlerInMainThread(v8::PromiseRejectMessage data) {
+		v8::Local<v8::Promise> promise = data.GetPromise();
+		v8::Isolate* isolate = promise->GetIsolate();
+		if (data.GetEvent() == v8::kPromiseHandlerAddedAfterReject) {
+			return;
+		} else if (data.GetEvent() == v8::kPromiseRejectAfterResolved || data.GetEvent() == v8::kPromiseResolveAfterResolved) {
+			// Ignore reject/resolve after resolved.
+			return;
+		}
+		v8::Local<v8::Value> exception = data.GetValue();
+		char* error_message = nullptr;
+		v8::Local<v8::Message> message = v8::Exception::CreateMessage(isolate, exception);
+		if (!message.IsEmpty()) {
+			if (message->Get().IsEmpty() || message->Get()->IsNull())
+				error_message = "";
+			error_message = __TransferToCpp<char*>::ToCpp(message->Get().As<v8::Value>());
+		}
+
+		//std::string kBuf = "if(conch.onunhandledrejection){conch.onunhandledrejection('";
+		//kBuf += UrlEncode(error_message != nullptr ? error_message : "");
+		//kBuf += "');};";
+		//__JSRun::Run(kBuf.c_str());
+		IsolateData* pIsolateData = IsolateData::From(isolate);
+		Javascript* pJavascript = (Javascript*)pIsolateData->m_data;
+		pJavascript->m_promiseRejectHandler(data.GetPromise(), data.GetValue(), "unhandledrejection");
+	}
+
     void Javascript::initJSEngine()
     {
 		v8::Isolate::CreateParams create_params;
@@ -79,6 +108,8 @@ namespace laya
 		v8::Local<v8::Context> context = v8::Context::New(m_pIsolate);
 		m_context.Reset(m_pIsolate, context);
 		m_IsolateData = new IsolateData(m_pIsolate, NULL);
+		m_IsolateData->m_data = (void*)this;
+		m_pIsolate->SetPromiseRejectCallback(PromiseRejectHandlerInMainThread);
 		context->Enter();
     }
     void Javascript::uninitJSEngine()

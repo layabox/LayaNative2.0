@@ -12,6 +12,9 @@
 #include "JCWaveParser.h"
 #include "JCOggParser.h"
 #include "../JCFileResManager.h"
+#ifdef ANDROID
+#include "AL/alext.h"
+#endif
 //------------------------------------------------------------------------------
 namespace laya
 {
@@ -273,6 +276,9 @@ void JCAudioWavPlayer::pause()
     {
         alSourcePause(m_pOpenALSource[i]->m_nOpenALSouceID);
     }
+	#ifdef ANDROID
+		alcDevicePauseSOFT(m_pDevice);
+	#endif
 }
 void JCAudioWavPlayer::resume()
 {
@@ -281,6 +287,9 @@ void JCAudioWavPlayer::resume()
     {
         alSourcePlay(m_pOpenALSource[i]->m_nOpenALSouceID);
     }
+	#ifdef ANDROID
+		alcDeviceResumeSOFT(m_pDevice);
+	#endif
 }
 //------------------------------------------------------------------------------
 void JCAudioWavPlayer::setAllVolume( float p_nVolume )

@@ -334,11 +334,11 @@ namespace laya
     const char* JSConchConfig::getRuntimeVersion()
     {
 #ifdef __APPLE__
-        return "ios-conch6-release-2.12.2";
+        return "ios-conch6-release-2.13.1";
 #elif ANDROID
-        return "android-conch6-release-2.12.2";
+        return "android-conch6-release-2.13.1";
 #elif WIN32
-        return "window-conch6-release-2.12.2";
+        return "window-conch6-release-2.13.1";
 #endif
     }
     const char* JSConchConfig::getAppVersion()
@@ -350,7 +350,8 @@ namespace laya
         CToJavaBridge::JavaRet kRet;
         if (CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "getAppVersion", kRet))
         {
-            return CToJavaBridge::GetInstance()->getJavaString(kRet.pJNI, kRet.strRet).c_str();;
+            m_sAppVersion = CToJavaBridge::GetInstance()->getJavaString(kRet.pJNI, kRet.strRet);
+			return m_sAppVersion.c_str();
         }
         return "";
 #elif WIN32
@@ -366,7 +367,8 @@ namespace laya
         CToJavaBridge::JavaRet kRet;
         if (CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "getAppLocalVersion", kRet))
         {
-            return CToJavaBridge::GetInstance()->getJavaString(kRet.pJNI, kRet.strRet).c_str();;
+			m_sAppLocalVersion = CToJavaBridge::GetInstance()->getJavaString(kRet.pJNI, kRet.strRet);
+            return m_sAppLocalVersion.c_str();
         }
         return "";
 #elif WIN32

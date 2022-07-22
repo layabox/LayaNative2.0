@@ -246,6 +246,8 @@ void parseFontFamilyAndBorder(const char* pData, std::vector<std::string>& fontF
 	if (!pData)
 		return;
 	int len = strlen(pData);
+	if (len <= 0)
+		return;
 	//当前数据，指向字符串的最末尾
 	char* pDt =(char*)pData+len;
 	char cdt = *(--pDt);

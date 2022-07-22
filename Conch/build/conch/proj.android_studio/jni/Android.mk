@@ -16,6 +16,7 @@ LOCAL_CFLAGS := \
   -DANDROID_TOOLCHAIN=clang \
   -fno-rtti \
   -DJS_V8_DEBUGGER \
+  -DAL_ALEXT_PROTOTYPES \
 
 LOCAL_CPPFLAGS += -std=c++11
 ifeq ($(APP_PERFTEST),1)
@@ -65,6 +66,7 @@ LOCAL_SRC_FILES := \
 		../../../../source/conch/JSWrapper/LayaWrap/JSShaderPrecisionFormat.cpp \
 		../../../../source/conch/JSWrapper/LayaWrap/JSCallbackFuncObj.cpp \
 		../../../../source/conch/JSWrapper/LayaWrap/JSWebGLPlus.cpp \
+		../../../../source/conch/JSWrapper/LayaWrap/JSPromiseRejectionEvent.cpp \
         ../../../../source/conch/Audio/android/JCAudioMp3Media.cpp \
         ../../../../source/conch/Audio/JCAudioManager.cpp \
         ../../../../source/conch/WebSocket/WebSocket.cpp \
@@ -92,8 +94,7 @@ LOCAL_C_INCLUDES := ../../../../../ThirdParty/curl/include/android \
         ../../../../../ThirdParty/ogg/include/android \
         ../../../../../ThirdParty/websockets/include/android \
 		../../../../../ThirdParty/openssl/include/android \
-        ../../../../include/common/OpenAL/include \
-        ../../../../include/common/OpenAL/OpenAL32/Include \
+		../../../../../ThirdParty/openal/include/android \
         ../../../../include/common \
         ../../../../include/render \
 		../../../../include/webglPlus \
@@ -107,7 +108,7 @@ else ifeq ($(TARGET_ARCH),x86)
 LOCAL_IS64:=x86
 endif
 LOCAL_DISABLE_FATAL_LINKER_WARNINGS := true
-LOCAL_LDLIBS    := -llog -lGLESv3 -landroid -ljnigraphics -lm -lz -lc++  \
+LOCAL_LDLIBS    := -lOpenSLES -llog -lGLESv3 -landroid -ljnigraphics -lm -lz -lc++  \
         ../../../../libs/android-$(LOCAL_IS64)/librender.a \
         ../../../../libs/android-$(LOCAL_IS64)/libcommon.a \
         ../../../../../ThirdParty/curl/lib/android-$(LOCAL_IS64)/libcurl.a \
@@ -126,6 +127,7 @@ LOCAL_LDLIBS    := -llog -lGLESv3 -landroid -ljnigraphics -lm -lz -lc++  \
         ../../../../../ThirdParty/bullet/lib/android-$(LOCAL_IS64)/libBulletDynamics.a \
         ../../../../../ThirdParty/bullet/lib/android-$(LOCAL_IS64)/libBulletCollision.a \
         ../../../../../ThirdParty/bullet/lib/android-$(LOCAL_IS64)/libLinearMath.a \
+		../../../../../ThirdParty/openal/lib/android-$(LOCAL_IS64)/libopenal.a \
 #        ../../../../../ThirdParty/bullet/lib/android-$(LOCAL_IS64)/libBullet2FileLoader.a \
 #        ../../../../../ThirdParty/bullet/lib/android-$(LOCAL_IS64)/libBullet3Collision.a \
 #        ../../../../../ThirdParty/bullet/lib/android-$(LOCAL_IS64)/libBullet3Common.a \

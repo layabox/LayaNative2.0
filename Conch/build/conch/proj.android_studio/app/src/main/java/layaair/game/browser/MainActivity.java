@@ -37,7 +37,10 @@ public class MainActivity extends AppCompatActivity {
 	// ------------------------------------------------------------------------------
 	protected void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
-		
+		if (!isTaskRoot()) {
+            finish();
+            return;
+        }
 		JSBridge.mMainActivity = this;
         mSplashDialog = new SplashDialog(this);
         mSplashDialog.showSplash();

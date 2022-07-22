@@ -23,7 +23,7 @@ namespace laya
     public:
         enum 
         {
-            onframeid, ondrawid, onresizeid, ontouchevtid,ondevicemotionevtid, onkeyevtid, onmouseevtid, oninvalidglid,onotherevtid,onnetworkevt,onbackpressed,onblurid,onfocusid, bulletsetid, bulletgetid
+            onframeid, ondrawid, onresizeid, ontouchevtid,ondevicemotionevtid, onkeyevtid, onmouseevtid, oninvalidglid,onotherevtid,onnetworkevt,onbackpressed,onblurid,onfocusid, bulletsetid, bulletgetid,onunhandledrejection,
         };
 
 	    static JsObjClassInfo JSCLSINFO;
@@ -79,6 +79,9 @@ namespace laya
 
         void setSetWorldTransformFunction(JSValueAsParam p_pFunction);
 
+		void setOnUnhandledRejection(JSValueAsParam p_pFunction);
+
+		JsValue getOnUnhandledRejection();
     public:
 		static JSRuntime* getInstance();
 

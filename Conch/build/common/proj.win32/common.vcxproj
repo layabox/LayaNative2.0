@@ -183,7 +183,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_DEPRECATE;GLM_FORCE_DEPTH_ZERO_TO_ONE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\..\..\ThirdParty\curl\include\win32;..\..\..\..\ThirdParty\angle\include;..\..\..\..\ThirdParty\png\include\win32;..\..\..\..\ThirdParty\jpeg\include\win32;..\..\..\..\ThirdParty\zlib\include\win32;..\..\..\..\ThirdParty\freetype\include\win32;..\..\..\..\ThirdParty\zip\include\win32;..\..\..\..\ThirdParty\openal\include;..\..\..\..\ThirdParty\ogg\include\win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\ThirdParty\curl\include\win32;..\..\..\..\ThirdParty\angle\include;..\..\..\..\ThirdParty\png\include\win32;..\..\..\..\ThirdParty\jpeg\include\win32;..\..\..\..\ThirdParty\zlib\include\win32;..\..\..\..\ThirdParty\freetype\include\win32;..\..\..\..\ThirdParty\zip\include\win32;..\..\..\..\ThirdParty\openal\include\win32;..\..\..\..\ThirdParty\ogg\include\win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>

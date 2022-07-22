@@ -458,7 +458,7 @@ void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruptio
         if( nNum > 0 )
         {
             kIOSTouchPD.m_nCount = nNum;
-            [self sendTouchEvent:kIOSTouch ratio:m_fRetinaValue offset:m_nGLViewOffset];
+            [self sendTouchEvent:kIOSTouchPD ratio:m_fRetinaValue offset:m_nGLViewOffset];
         }
     }
     else

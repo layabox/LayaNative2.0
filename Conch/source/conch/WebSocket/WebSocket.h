@@ -48,9 +48,20 @@ public:
 	struct Data
 	{
 		Data():bytes(NULL), len(0), isBinary(false){}
-		char* bytes;
-		int len;
+
 		bool isBinary;
+		char* getPayload() {
+			return bytes + bytesWritten;
+		}
+		void updateBytesWritten(uint32_t bytes) {
+			bytesWritten += bytes;
+		}
+		uint32_t getBytesLeft() {
+			return len - bytesWritten;
+		}
+		int bytesWritten = 0;
+		char* bytes;
+		uint32_t len;
 	};
     
 	/**

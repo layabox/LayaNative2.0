@@ -28,6 +28,7 @@ namespace laya
 
 		v8::Local<v8::ObjectTemplate> GetObjectTemplate(JsObjClassInfo* info);
 
+		void* m_data = nullptr;
 	private:
 
 		v8::Isolate* m_isolate;

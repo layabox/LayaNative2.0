@@ -583,6 +583,10 @@ namespace laya
     std::string UrlEncode(const char* str)
     {
         std::string strTemp = "";
+		if (str == NULL)
+		{
+			return strTemp;
+		}
         size_t length = strlen(str);
         for (size_t i = 0; i < length; i++)
         {

@@ -231,6 +231,7 @@ namespace laya
         JsObjHandle                         m_pJSOnceOtherEvtFuction;       //注册一次的事件 如截屏
         JsObjHandle					        m_pJSNetworkEvtFunction;        //网络事件的监听
         JsObjHandle					        m_pJSOnBackPressedFunction;
+        JsObjHandle                         m_pJSOnUnhandledRejectionFunction;
         bool 						        m_bJSOnBackPressedFunctionSet;
         JsObjHandle                         m_bJSBulletGetWorldTransformHandle;
         JsObjHandle                         m_bJSBulletSetWorldTransformHandle;

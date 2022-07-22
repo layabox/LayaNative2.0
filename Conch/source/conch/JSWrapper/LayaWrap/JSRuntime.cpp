@@ -393,6 +393,14 @@ namespace laya
         return JSWebGLPlus::getInstance()->updateArrayBufferRef(nID, bSyncToRender, pArrayBuffer);
     }*/
 
+    void JSRuntime::setOnUnhandledRejection(JSValueAsParam p_pFunction)
+    {
+	    m_pScrpitRuntime->m_pJSOnUnhandledRejectionFunction.set(onunhandledrejection, this, p_pFunction);
+    }
+    JsValue JSRuntime::getOnUnhandledRejection()
+    {
+        return m_pScrpitRuntime->m_pJSOnUnhandledRejectionFunction.getJsObj();
+    }
     void JSRuntime::exportJS()
     {
         JSP_GLOBAL_CLASS("conch", JSRuntime, this);
@@ -430,6 +438,7 @@ namespace laya
 		JSP_GLOBAL_ADD_METHOD("convertBitmapToPng", JSRuntime::convertBitmapToPng);
 		JSP_GLOBAL_ADD_METHOD("convertBitmapToJpeg", JSRuntime::convertBitmapToJpeg);
 		JSP_GLOBAL_ADD_METHOD("callWebviewJS", JSRuntime::callWebviewJS);
+        JSP_GLOBAL_ADD_PROPERTY(onunhandledrejection, JSRuntime, getOnUnhandledRejection, setOnUnhandledRejection);
 		//JSP_GLOBAL_ADD_METHOD("updateArrayBufferRef", JSRuntime::updateArrayBufferRef);
 		JSP_GLOBAL_ADD_METHOD("exit", JSRuntime::exit);
         JSP_INSTALL_GLOBAL_CLASS("conch", JSRuntime, this );

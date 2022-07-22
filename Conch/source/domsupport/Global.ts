@@ -47,6 +47,7 @@ interface Window extends EventTarget, WindowTimers{
     ConchVirtualBitmap:any;    //TODO 临时
     alert:(message?: any)=> void
     onerror:(message: string, filename?: string, lineno?: number, colno?: number, error?:Error)=>void;
+    onunhandledrejection:(ev: any)=>void;
     onload: (ev: Event) => any;
     open(url?: string, target?: string, features?: string, replace?: boolean): Window;
     onresize: (ev: UIEvent) => any;
@@ -208,7 +209,6 @@ conch.onerror = function (message, filename, lineno, colno, error) {
         window.onerror(mg=="undefined"?undefined:mg,fn=="undefined"?undefined:fn,ln!="undefined"?parseInt(ln):undefined,cn!="undefined"?parseInt(cn):undefined,e);
     }
 };
-
 /**
  * 全局错误处理
  */
@@ -220,6 +220,12 @@ Object.defineProperty(window,'onerror',{set:function(fun){
     return conch.__onerror;
 }});
 
+
+Object.defineProperty(window,'onunhandledrejection',{set:function(fun){
+    conch.onunhandledrejection = fun;
+},get:function(){
+   return conch.onunhandledrejection;
+}});
 
 /*window.onerror = function(message: string, filename?: string, lineno?: number, colno?: number, error?:Error): void{
     alert('window.onerror');

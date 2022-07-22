@@ -41,7 +41,6 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import layaair.autoupdateversion.AutoUpdateAPK;
 import layaair.game.conch.ILayaEventListener;
 import layaair.game.conch.LayaConch5;
 import layaair.game.config.config;
@@ -257,20 +256,7 @@ public class LayaWrapper implements ILayaLibWrapper{
 	public  void checkApkUpdate( Context context,final ValueCallback<Integer> callback)
 	{
 		if (isOpenNetwork(context)) {
-			// 自动版本更新
-			if ( "0".equals(config.GetInstance().getProperty("IsHandleUpdateAPK","0")) == false  && ContextCompat.checkSelfPermission(ms_layaMainActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-				Log.e("0", "==============Java流程 checkApkUpdate");
-				new AutoUpdateAPK(context, new ValueCallback<Integer>() {
-					@Override
-					public void onReceiveValue(Integer integer) {
-						Log.e("",">>>>>>>>>>>>>>>>>>");
-						callback.onReceiveValue(integer);
-					}
-				});
-			} else {
-				Log.e("0", "==============Java流程 checkApkUpdate 不需要自己管理update");
-				callback.onReceiveValue(1);
-			}
+			callback.onReceiveValue(1);
 		} else {
 			settingNetwork(context,1);
 		}
@@ -489,7 +475,6 @@ public class LayaWrapper implements ILayaLibWrapper{
 
 	private static void DelInstance()
 	{
-		AutoUpdateAPK.DelInstance();
 		m_pEngine=null;
 		m_LayaEngineContext=null;
 		ms_layaEngine=null;

@@ -221,9 +221,6 @@
     <ClInclude Include="..\..\..\..\source\conch\JCScriptRuntime.h">
       <Filter>Source Files\App</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\Bullet\JSbtBindHelper.h">
-      <Filter>Source Files\JSWrapper\LayaWrap\Bullet</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\source\conch\Bridge\JCConchBridge.h">
       <Filter>Source Files\Bridge</Filter>
     </ClInclude>
@@ -261,6 +258,9 @@
       <Filter>Source Files\JSWrapper\LayaWrap</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSArrayBufferRef.h">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSPromiseRejectionEvent.h">
       <Filter>Source Files\JSWrapper\LayaWrap</Filter>
     </ClInclude>
   </ItemGroup>
@@ -473,6 +473,9 @@
       <Filter>Source Files\JSWrapper\LayaWrap</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSArrayBufferRef.cpp">
+      <Filter>Source Files\JSWrapper\LayaWrap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\conch\JSWrapper\LayaWrap\JSPromiseRejectionEvent.cpp">
       <Filter>Source Files\JSWrapper\LayaWrap</Filter>
     </ClCompile>
   </ItemGroup>
