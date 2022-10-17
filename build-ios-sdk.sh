@@ -152,10 +152,10 @@ lipo -extract arm64 ./Conch/libs/ios/libconchRuntime.a -o armv64/libconchRuntime
 lipo -extract i386 ./Conch/libs/ios-sim/libconchRuntime.a -o i386/libconchRuntime.a
 lipo -extract x86_64 ./Conch/libs/ios-sim/libconchRuntime.a -o x86_64/libconchRuntime.a
 
-lipo -extract armv7 ./Conch/libs/ios/libwebglPlus.a -o armv7a/libwebglPlus.a
-lipo -extract arm64 ./Conch/libs/ios/libwebglPlus.a -o armv64/libwebglPlus.a
-lipo -extract i386 ./Conch/libs/ios-sim/libwebglPlus.a -o i386/libwebglPlus.a
-lipo -extract x86_64 ./Conch/libs/ios-sim/libwebglPlus.a -o x86_64/libwebglPlus.a
+#lipo -extract armv7 ./Conch/libs/ios/libwebglPlus.a -o armv7a/libwebglPlus.a
+#lipo -extract arm64 ./Conch/libs/ios/libwebglPlus.a -o armv64/libwebglPlus.a
+#lipo -extract i386 ./Conch/libs/ios-sim/libwebglPlus.a -o i386/libwebglPlus.a
+#lipo -extract x86_64 ./Conch/libs/ios-sim/libwebglPlus.a -o x86_64/libwebglPlus.a
 
 
 cd armv7a
