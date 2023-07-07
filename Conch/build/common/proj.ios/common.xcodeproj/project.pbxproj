@@ -12,8 +12,8 @@
 		24760D812081C3E600594375 /* JCFontManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 24760D7C2081C3E500594375 /* JCFontManager.cpp */; };
 		5E6806501D7D504C002A7575 /* JCHttpHeader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E68064E1D7D504C002A7575 /* JCHttpHeader.cpp */; };
 		8A4296901B6757DB0072C3F7 /* libcommon.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A4296841B6757DB0072C3F7 /* libcommon.a */; };
-		8AEDB754288FBC7700EE4A31 /* JCWebGLPlus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8AEDB752288FBC7700EE4A31 /* JCWebGLPlus.cpp */; };
-		8AEDB758288FBCAE00EE4A31 /* JCArrayBufferManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8AEDB756288FBCAE00EE4A31 /* JCArrayBufferManager.cpp */; };
+		8AEDB763288FBFDD00EE4A31 /* JCArrayBufferManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8AEDB762288FBFDD00EE4A31 /* JCArrayBufferManager.cpp */; };
+		8AEDB767288FBFFE00EE4A31 /* JCWebGLPlus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8AEDB765288FBFFE00EE4A31 /* JCWebGLPlus.cpp */; };
 		9DFB1EDE1D34EB33006D31AD /* JCOggParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DFB1EDC1D34EB33006D31AD /* JCOggParser.cpp */; };
 		9DFB1F591D3632AB006D31AD /* JCGifImg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DFB1F571D3632AB006D31AD /* JCGifImg.cpp */; };
 		A242E3EB1D813D420013CCF0 /* JCFlog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A242E3E91D813D420013CCF0 /* JCFlog.cpp */; };
@@ -94,10 +94,10 @@
 		8A42A0881B675CEF0072C3F7 /* rapidxml_iterators.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = rapidxml_iterators.hpp; sourceTree = "<group>"; };
 		8A42A0891B675CEF0072C3F7 /* rapidxml_print.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = rapidxml_print.hpp; sourceTree = "<group>"; };
 		8A42A08A1B675CEF0072C3F7 /* rapidxml_utils.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = rapidxml_utils.hpp; sourceTree = "<group>"; };
-		8AEDB752288FBC7700EE4A31 /* JCWebGLPlus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = JCWebGLPlus.cpp; path = ../../../source/common/webglplus/JCWebGLPlus.cpp; sourceTree = "<group>"; };
-		8AEDB753288FBC7700EE4A31 /* JCWebGLPlus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JCWebGLPlus.h; path = ../../../source/common/webglplus/JCWebGLPlus.h; sourceTree = "<group>"; };
-		8AEDB756288FBCAE00EE4A31 /* JCArrayBufferManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = JCArrayBufferManager.cpp; path = ../../../source/common/manager/JCArrayBufferManager.cpp; sourceTree = "<group>"; };
-		8AEDB757288FBCAE00EE4A31 /* JCArrayBufferManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JCArrayBufferManager.h; path = ../../../source/common/manager/JCArrayBufferManager.h; sourceTree = "<group>"; };
+		8AEDB761288FBFDD00EE4A31 /* JCArrayBufferManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JCArrayBufferManager.h; path = ../../../source/common/manager/JCArrayBufferManager.h; sourceTree = "<group>"; };
+		8AEDB762288FBFDD00EE4A31 /* JCArrayBufferManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = JCArrayBufferManager.cpp; path = ../../../source/common/manager/JCArrayBufferManager.cpp; sourceTree = "<group>"; };
+		8AEDB765288FBFFE00EE4A31 /* JCWebGLPlus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = JCWebGLPlus.cpp; path = ../../../source/common/webglplus/JCWebGLPlus.cpp; sourceTree = "<group>"; };
+		8AEDB766288FBFFE00EE4A31 /* JCWebGLPlus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JCWebGLPlus.h; path = ../../../source/common/webglplus/JCWebGLPlus.h; sourceTree = "<group>"; };
 		9DFB1EDC1D34EB33006D31AD /* JCOggParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = JCOggParser.cpp; sourceTree = "<group>"; };
 		9DFB1EDD1D34EB33006D31AD /* JCOggParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JCOggParser.h; sourceTree = "<group>"; };
 		9DFB1F571D3632AB006D31AD /* JCGifImg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = JCGifImg.cpp; sourceTree = "<group>"; };
@@ -261,8 +261,8 @@
 		8A42969E1B6758240072C3F7 /* source */ = {
 			isa = PBXGroup;
 			children = (
-				8AEDB755288FBC9800EE4A31 /* manager */,
-				8AEDB751288FBC5C00EE4A31 /* webglplus */,
+				8AEDB764288FBFE300EE4A31 /* webglplus */,
+				8AEDB760288FBFC200EE4A31 /* manager */,
 				24760D662081C29000594375 /* fontMgr */,
 				A2BCECF41E237061003ABF33 /* math */,
 				A2D11A1F1D0C3FA0004C229D /* JCIOSFTInterface.h */,
@@ -452,22 +452,22 @@
 			path = rapidxml;
 			sourceTree = "<group>";
 		};
-		8AEDB751288FBC5C00EE4A31 /* webglplus */ = {
+		8AEDB760288FBFC200EE4A31 /* manager */ = {
 			isa = PBXGroup;
 			children = (
-				8AEDB752288FBC7700EE4A31 /* JCWebGLPlus.cpp */,
-				8AEDB753288FBC7700EE4A31 /* JCWebGLPlus.h */,
-			);
-			name = webglplus;
-			sourceTree = "<group>";
-		};
-		8AEDB755288FBC9800EE4A31 /* manager */ = {
-			isa = PBXGroup;
-			children = (
-				8AEDB756288FBCAE00EE4A31 /* JCArrayBufferManager.cpp */,
-				8AEDB757288FBCAE00EE4A31 /* JCArrayBufferManager.h */,
+				8AEDB762288FBFDD00EE4A31 /* JCArrayBufferManager.cpp */,
+				8AEDB761288FBFDD00EE4A31 /* JCArrayBufferManager.h */,
 			);
 			name = manager;
+			sourceTree = "<group>";
+		};
+		8AEDB764288FBFE300EE4A31 /* webglplus */ = {
+			isa = PBXGroup;
+			children = (
+				8AEDB765288FBFFE00EE4A31 /* JCWebGLPlus.cpp */,
+				8AEDB766288FBFFE00EE4A31 /* JCWebGLPlus.h */,
+			);
+			name = webglplus;
 			sourceTree = "<group>";
 		};
 		A2BCECF41E237061003ABF33 /* math */ = {
@@ -594,7 +594,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8AEDB758288FBCAE00EE4A31 /* JCArrayBufferManager.cpp in Sources */,
 				A2D117F51D0B9D2C004C229D /* JCFileResManager.cpp in Sources */,
 				A2D117F61D0B9D2C004C229D /* JCResManager.cpp in Sources */,
 				A2D1181B1D0B9D51004C229D /* Log.cpp in Sources */,
@@ -603,7 +602,7 @@
 				A2D118191D0B9D51004C229D /* JCZipFile.cpp in Sources */,
 				A2D118141D0B9D51004C229D /* JCJson.cpp in Sources */,
 				A2D117DF1D0B9C51004C229D /* JCWaveParser.cpp in Sources */,
-				8AEDB754288FBC7700EE4A31 /* JCWebGLPlus.cpp in Sources */,
+				8AEDB767288FBFFE00EE4A31 /* JCWebGLPlus.cpp in Sources */,
 				A2D117A81D0B9BF5004C229D /* JCPngImg.cpp in Sources */,
 				A2D1178D1D0B9BBE004C229D /* JCEventBase.cpp in Sources */,
 				A2FBA96F270432F900846E17 /* JCBoundingFrustum.cpp in Sources */,
@@ -623,6 +622,7 @@
 				A2D117DC1D0B9C51004C229D /* JCAudioWavplayer.cpp in Sources */,
 				A2D117BD1D0B9C20004C229D /* JCGetClockExact.cpp in Sources */,
 				A2D117C01D0B9C20004C229D /* JCWorkSemaphore.cpp in Sources */,
+				8AEDB763288FBFDD00EE4A31 /* JCArrayBufferManager.cpp in Sources */,
 				A2D117DE1D0B9C51004C229D /* JCWaveInfo.cpp in Sources */,
 				24760D802081C3E600594375 /* JCFontInfo.cpp in Sources */,
 				A2D118121D0B9D51004C229D /* JCCommonMethed.cpp in Sources */,

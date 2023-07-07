@@ -1,7 +1,13 @@
 #import "ViewController.h"
+#import <CoreTelephony/CTCellularData.h>
+#import "Reachability/Reachability.h"
 
 @implementation ViewController
-
+{
+    CTCellularData *_cellularData;
+    LayaReachability *_pNetworkListener;
+    bool _isInit;
+}
 static ViewController* g_pIOSMainViewController = nil;
 //------------------------------------------------------------------------------
 +(ViewController*)GetIOSViewController
@@ -15,6 +21,10 @@ static ViewController* g_pIOSMainViewController = nil;
     if( self != nil )
     {
         g_pIOSMainViewController = self;
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkStateChange) name:LayakReachabilityChangedNotification object:nil];
+        _pNetworkListener = [LayaReachability reachabilityForInternetConnection];
+        [_pNetworkListener startNotifier];
+        _isInit = false;
         return self;
     }
     return Nil;
@@ -49,8 +59,20 @@ static ViewController* g_pIOSMainViewController = nil;
     [EAGLContext setCurrentContext:self->m_pGLContext];
     self.preferredFramesPerSecond = 10000;
     
-    //conchRuntime 初始化ConchRuntime引擎
-    m_pConchRuntime = [[conchRuntime alloc]initWithView:m_pGLKView EAGLContext:m_pGLContext downloadThreadNum:3];
+    
+    _cellularData = [[CTCellularData alloc] init];
+    //选择仅无线网络时也返回kCTCellularDataRestricted，因此需要Reachability协助判断
+    if (_cellularData.restrictedState == kCTCellularDataNotRestricted || _pNetworkListener.currentReachabilityStatus != NotReachable) {
+        [self initConch];
+    } else {
+        __weak ViewController* weakSelf = self;
+        [self networkAuthorizationAvalible:^{
+            ViewController *strongSelf = weakSelf;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [strongSelf initConch];
+            });
+        }];
+    }
 }
 //------------------------------------------------------------------------------
 - (void)dealloc
@@ -60,6 +82,7 @@ static ViewController* g_pIOSMainViewController = nil;
     {
         [EAGLContext setCurrentContext:nil];
     }
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 //------------------------------------------------------------------------------
 - (void)didReceiveMemoryWarning
@@ -124,5 +147,43 @@ static ViewController* g_pIOSMainViewController = nil;
 - (BOOL)shouldAutorotate
 {
     return YES;//支持转屏
+}
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+{
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    [m_pConchRuntime updateCanvasSize:size];
+}
+- (void)initConch
+{
+    if (_isInit)
+        return;
+    _isInit = true;
+    
+    //conchRuntime 初始化ConchRuntime引擎
+    m_pConchRuntime = [[conchRuntime alloc]initWithView:m_pGLKView EAGLContext:m_pGLContext downloadThreadNum:3];
+}
+- (void)networkAuthorizationAvalible:(void(^)())changeAvaliable
+{
+    _cellularData.cellularDataRestrictionDidUpdateNotifier = ^(CTCellularDataRestrictedState state) {
+        switch (state) {
+            case kCTCellularDataRestricted:
+                break;
+            case kCTCellularDataNotRestricted:
+                changeAvaliable();
+                break;
+                //未知，第一次请求
+            case kCTCellularDataRestrictedStateUnknown:
+                break;
+            default:
+                break;
+        };
+    };
+}
+- (void)networkStateChange
+{
+    LayaNetworkStatus networkStatus = _pNetworkListener.currentReachabilityStatus;
+    if (networkStatus != NotReachable) {
+        [self initConch];
+    }
 }
 @end

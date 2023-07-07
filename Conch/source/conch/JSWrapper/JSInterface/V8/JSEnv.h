@@ -84,7 +84,7 @@ namespace laya
         virtual void stop() = 0;
         virtual void initialize(int nPort, std::function<void(v8::Local<v8::Value>, v8::Local<v8::Value>, const char* func)>) = 0;
         virtual void uninitialize() = 0;
-        virtual void setLoopFunc(std::function<bool(void)> func) = 0;
+        virtual void setLoopFunc(std::function<void(void)> func) = 0;
         virtual void pushDbgFunc(std::function<void(void)> task) = 0;
         virtual void runDbgFuncs() = 0;
         virtual void waitAndRunDbgFuncs() = 0;
@@ -153,7 +153,7 @@ namespace laya
         {
             m_kJS.uninit();
         }
-        void setLoopFunc(std::function<bool(void)> func)
+        void setLoopFunc(std::function<void(void)> func)
         {
             m_kWorker.setLoopFunc(func);
         }
@@ -267,7 +267,7 @@ namespace laya
             m_kJS.uninit();
             m_kJS.uninitJSEngine();
         }
-        void setLoopFunc(std::function<bool(void)> func)
+        void setLoopFunc(std::function<void(void)> func)
         {
             LOGE("JSSingleThread setLoopFunc error,You can't call this function on V8 Engine");
         }

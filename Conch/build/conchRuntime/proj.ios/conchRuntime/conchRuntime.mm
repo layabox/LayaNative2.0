@@ -176,10 +176,10 @@ laya::JCConch* m_pConchEngine = NULL;
                                              selector:@selector(orientChange:)
                                                  name:UIDeviceOrientationDidChangeNotification
                                                object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(orientChange:)
-                                                 name:UIDeviceOrientationDidChangeNotification
-                                               object:nil];
+    //[[NSNotificationCenter defaultCenter] addObserver:self
+    //                                         selector:@selector(orientChange:)
+    //                                             name:UIDeviceOrientationDidChangeNotification
+    //                                           object:nil];
     /*[[NSNotificationCenter defaultCenter] addObserver:m_pEditBoxDelegate
                                              selector:@selector(changeValue:)
                                                  name:@"changeValue" object:nil];*/
@@ -349,6 +349,22 @@ void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruptio
         m_pConchEngine->onAppStart();
         laya::JCConch::s_pConchRender->onGLReady();
         m_bEngineInited = true;
+    }
+}
+- (void)updateCanvasSize:(CGSize)size
+{
+    //CGRect kRect = [UIScreen mainScreen].bounds;
+    m_pResolution->x = size.width;
+    m_pResolution->y = size.height;
+
+    int width = m_pResolution->x * m_fRetinaValue;
+    int height =m_pResolution->y * m_fRetinaValue;
+    if(g_nInnerWidth != width || g_nInnerHeight != height)
+    {
+        NSLog(@"=============onResize width=%d,height=%d", width, height);
+        g_nInnerWidth = width;
+        g_nInnerHeight = height;
+        g_bGLCanvasSizeChanged = true;
     }
 }
 //-------------------------------------------------------------------------------
@@ -628,8 +644,70 @@ void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruptio
     }
 }
 //-------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
 -(void) setScreenOrientation:(int)p_nType
 {
+    
+    if (@available(iOS 16.0, *)) {
+        
+        switch(p_nType)
+        {
+            case 0://landscape 16
+                [conchConfig GetInstance]->m_nOrientationType = UIInterfaceOrientationMaskLandscapeRight;
+                break;
+            case 1://portrait 2
+                [conchConfig GetInstance]->m_nOrientationType = UIInterfaceOrientationMaskPortrait;
+                break;
+            case 8://reverse_landscape 8
+                [conchConfig GetInstance]->m_nOrientationType = UIInterfaceOrientationMaskLandscapeLeft;
+                break;
+            case 9://reverse_portrait 4
+                [conchConfig GetInstance]->m_nOrientationType = UIInterfaceOrientationMaskPortraitUpsideDown;
+                break;
+            case 4://sensor all
+                [conchConfig GetInstance]->m_nOrientationType = UIInterfaceOrientationMaskAll;
+                break;
+            case 10://full sensor all
+                [conchConfig GetInstance]->m_nOrientationType = UIInterfaceOrientationMaskAll;
+                break;
+            case 2://user full
+                [conchConfig GetInstance]->m_nOrientationType = UIInterfaceOrientationMaskAll;
+                break;
+            case 6://sensor_landscape
+                [conchConfig GetInstance]->m_nOrientationType = UIInterfaceOrientationMaskLandscapeRight | UIInterfaceOrientationMaskLandscapeLeft;
+                break;
+            case 7://sensor_portrait
+                [conchConfig GetInstance]->m_nOrientationType = UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskPortraitUpsideDown;
+                break;
+            default://behind nosensor
+                break;
+        }
+        
+        [UIApplication.sharedApplication.delegate.window.rootViewController setNeedsUpdateOfSupportedInterfaceOrientations];
+        NSArray *array = [[[UIApplication sharedApplication] connectedScenes] allObjects];
+        UIWindowScene *scene = (UIWindowScene *)array[0];
+        UIWindowSceneGeometryPreferencesIOS *geometryPreferences = [[UIWindowSceneGeometryPreferencesIOS alloc] initWithInterfaceOrientations:[conchConfig GetInstance]->m_nOrientationType];
+        [scene requestGeometryUpdateWithPreferences:geometryPreferences
+            errorHandler:^(NSError * _Nonnull error) {
+            //NSAssert(NO, [NSString stringWithFormat:@"rotate screen error：%@", error]);
+        }];
+        return;
+    }
+    
+    //强制调一次AppDelegate supportedInterfaceOrientationsForWindow，解决调试转屏失败的bug
+    static dispatch_once_t predicate;
+    dispatch_once(&predicate, ^{
+        UITextField *textField = [[UITextField alloc] init];
+        [UIApplication.sharedApplication.delegate.window.rootViewController.view addSubview:textField];
+        [textField becomeFirstResponder];
+        [textField resignFirstResponder];
+        [textField removeFromSuperview];
+    });
+    
+    //防止未锁定屏幕方向时旋转失效
+    NSNumber *value=[NSNumber numberWithInt:UIInterfaceOrientationUnknown];
+    [[UIDevice currentDevice] setValue:value forKey:@"orientation"];
+    
     switch(p_nType)
     {
         case 0://landscape 16
@@ -676,71 +754,32 @@ void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruptio
             [conchConfig GetInstance]->m_nOrientationType = UIInterfaceOrientationMaskAll;
         }
             break;
-        case 6://sensor_landscape 16+8
+        case 6://sensor_landscape
         {
             [conchConfig GetInstance]->m_nOrientationType = UIInterfaceOrientationMaskLandscapeRight | UIInterfaceOrientationMaskLandscapeLeft;
-            if (!UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation))
+            if (!UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation))
             {
-                switch([UIApplication sharedApplication].statusBarOrientation)
-                {
-                    case UIInterfaceOrientationLandscapeRight:
-                    {
-                        NSNumber *value=[NSNumber numberWithInt:UIInterfaceOrientationLandscapeRight];
-                        [[UIDevice currentDevice] setValue:value forKey:@"orientation"];
-                    }
-                    break;
-                    case UIInterfaceOrientationLandscapeLeft:
-                    {
-                        NSNumber *value=[NSNumber numberWithInt:UIInterfaceOrientationLandscapeLeft];
-                        [[UIDevice currentDevice] setValue:value forKey:@"orientation"];
-                    }
-                    default:
-                    {
-                        NSNumber *value=[NSNumber numberWithInt:UIInterfaceOrientationLandscapeLeft];
-                        [[UIDevice currentDevice] setValue:value forKey:@"orientation"];
-                    }
-                    break;
-                }
+                NSNumber *value=[NSNumber numberWithInt:UIInterfaceOrientationLandscapeLeft];
+                [[UIDevice currentDevice] setValue:value forKey:@"orientation"];
             }
         }
             break;
-        case 7://reverse_portrait 2+4
+        case 7://sensor_portrait
         {
             [conchConfig GetInstance]->m_nOrientationType = UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskPortraitUpsideDown;
-            if (!UIDeviceOrientationIsPortrait([UIDevice currentDevice].orientation))
-            {
-                switch([UIApplication sharedApplication].statusBarOrientation)
-                {
-                    case UIInterfaceOrientationMaskPortrait:
-                    {
-                        NSNumber *value=[NSNumber numberWithInt:UIInterfaceOrientationPortrait];
-                        [[UIDevice currentDevice] setValue:value forKey:@"orientation"];
-                    }
-                    break;
-                    case UIInterfaceOrientationMaskPortraitUpsideDown:
-                    {
-                        NSNumber *value=[NSNumber numberWithInt:UIInterfaceOrientationMaskPortraitUpsideDown];
-                        [[UIDevice currentDevice] setValue:value forKey:@"orientation"];
-                    }
-                    break;
-                    default:
-                    {
-                        NSNumber *value=[NSNumber numberWithInt:UIInterfaceOrientationPortrait];
-                        [[UIDevice currentDevice] setValue:value forKey:@"orientation"];
-                    }
-                    break;
-                }
-            }
-        }
-        break;
             
+            if (!UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation))
+            {
+                NSNumber *value=[NSNumber numberWithInt:UIInterfaceOrientationPortrait];
+                [[UIDevice currentDevice] setValue:value forKey:@"orientation"];
+            }
+            break;
+        }
         default://behind nosensor
             break;
     }
-
-    [self updateResolution];
 }
--(void)updateResolution
+/*-(void)updateResolution
 {
     CGRect kRect = [UIScreen mainScreen].bounds;
     int nOrientation=[UIDevice currentDevice].orientation;
@@ -813,7 +852,7 @@ void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruptio
         }
         break;
     };
-}
+}*/
 -(void)reset
 {
     if(m_pLayaAlert)

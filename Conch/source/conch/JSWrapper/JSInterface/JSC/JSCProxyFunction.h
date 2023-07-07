@@ -96,6 +96,19 @@ inline bool checkJSToCArgs(size_t given, size_t expect) {
     P8 p8 = __TransferToCpp<P8>::ToCpp(arguments[7]);\
     P9 p9 = __TransferToCpp<P9>::ToCpp(arguments[8]);
 
+#define JS2CCALL_GET_PARAMS10 \
+    if(!checkJSToCArgs(argumentCount,10))return JSValueMakeUndefined(ctx);\
+    P1 p1 = __TransferToCpp<P1>::ToCpp(arguments[0]);\
+    P2 p2 = __TransferToCpp<P2>::ToCpp(arguments[1]);\
+    P3 p3 = __TransferToCpp<P3>::ToCpp(arguments[2]);\
+    P4 p4 = __TransferToCpp<P4>::ToCpp(arguments[3]);\
+    P5 p5 = __TransferToCpp<P5>::ToCpp(arguments[4]);\
+    P6 p6 = __TransferToCpp<P6>::ToCpp(arguments[5]);\
+    P7 p7 = __TransferToCpp<P7>::ToCpp(arguments[6]);\
+    P8 p8 = __TransferToCpp<P8>::ToCpp(arguments[7]);\
+    P9 p9 = __TransferToCpp<P9>::ToCpp(arguments[8]);\
+    P10 p10 = __TransferToCpp<P10>::ToCpp(arguments[9]);\
+
 #define JS2CCALL_GET_PARAMS11 \
     if(!checkJSToCArgs(argumentCount,11))return JSValueMakeUndefined(ctx);\
     P1 p1 = __TransferToCpp<P1>::ToCpp(arguments[0]);\
@@ -157,6 +170,19 @@ struct JSCCallback<R(Cls::*)(void)> :public IJSCCallback{
     F m_func;
 };
 
+template<typename R, typename P1>
+struct JSCCallback<R(*)(P1)>: public IJSCCallback {
+    typedef R(*F)(P1);
+    JSCCallback(F func):m_func(func){}
+    virtual JSValueRef call(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[], JSValueRef* exception){
+        JS2CCALL_GET_PARAMS1;
+        JSValueRef ret = ToJSValue<R>((*m_func)(p1));
+        resetJsStrBuf();
+        return ret;
+    }
+    virtual uint16_t getNumArgs() { return 1; }
+    F m_func;
+};
 
 template<typename R, typename Cls, typename P1>
 struct JSCCallback<R(Cls::*)(P1)>: public IJSCCallback {
@@ -255,7 +281,7 @@ struct JSCCallback<R(Cls::*)(P1, P2, P3, P4, P5, P6, P7)>:public IJSCCallback {
     virtual JSValueRef call(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[], JSValueRef* exception){
         JS2CCALL_GET_COBJ;
         JS2CCALL_GET_PARAMS7;
-        JSValueRef ret = ToJSValue<R>((pThis->*m_func)(p1, p2, p3, p4, p5,p7));
+        JSValueRef ret = ToJSValue<R>((pThis->*m_func)(p1, p2, p3, p4, p5, p6, p7));
         resetJsStrBuf();
         return ret;
     }
@@ -270,7 +296,7 @@ struct JSCCallback<R(Cls::*)(P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12)>
     virtual JSValueRef call(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[], JSValueRef* exception){
         JS2CCALL_GET_COBJ;
         JS2CCALL_GET_PARAMS12;
-        JSValueRef ret = ToJSValue<R>((pThis->*m_func)(p1, p2, p3, p4, p5, p7, p8, p9, p10, p11, p12));
+        JSValueRef ret = ToJSValue<R>((pThis->*m_func)(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12));
         resetJsStrBuf();
         return ret;
     }
@@ -413,6 +439,22 @@ struct JSCCallback<void(Cls::*)(P1, P2, P3, P4, P5, P6, P7, P8, P9)>:public IJSC
     F m_func;
 };
 
+
+template<typename Cls, typename P1, typename P2, typename P3, typename P4, typename P5, typename P6, typename P7, typename P8, typename P9, typename P10>//10
+struct JSCCallback<void(Cls::*)(P1, P2, P3, P4, P5, P6, P7, P8, P9, P10)>:public IJSCCallback {
+    typedef void(Cls::*F)(P1, P2, P3, P4, P5, P6, P7, P8, P9, P10);
+    JSCCallback(F func):m_func(func){}
+    virtual JSValueRef call(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[], JSValueRef* exception){
+        JS2CCALL_GET_COBJ;
+        JS2CCALL_GET_PARAMS10;
+        (pThis->*m_func)(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10);
+        resetJsStrBuf();
+        return JSValueMakeUndefined(ctx);
+    }
+    virtual uint16_t getNumArgs() { return 10; }
+    F m_func;
+};
+
 template< typename Cls, typename P1, typename P2, typename P3, typename P4, typename P5, typename P6, typename P7, typename P8, typename P9, typename P10, typename P11>//11
 struct JSCCallback<void(Cls::*)(P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11)>:public IJSCCallback {
     typedef void(Cls::*F)(P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11);
@@ -455,6 +497,19 @@ struct JSCCallback<void(Cls::*)(P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P1
     P2 p2 = __TransferToCpp<P2>::ToCpp(arguments[1]);\
     P3 p3 = __TransferToCpp<P3>::ToCpp(arguments[2]);
     
+#define JS2CCONSTRUCTOR_GET_PARAMS4 \
+    P1 p1 = __TransferToCpp<P1>::ToCpp(arguments[0]);\
+    P2 p2 = __TransferToCpp<P2>::ToCpp(arguments[1]);\
+    P3 p3 = __TransferToCpp<P3>::ToCpp(arguments[2]);\
+    P4 p4 = __TransferToCpp<P4>::ToCpp(arguments[3]);
+
+#define JS2CCONSTRUCTOR_GET_PARAMS5 \
+    P1 p1 = __TransferToCpp<P1>::ToCpp(arguments[0]);\
+    P2 p2 = __TransferToCpp<P2>::ToCpp(arguments[1]);\
+    P3 p3 = __TransferToCpp<P3>::ToCpp(arguments[2]);\
+    P4 p4 = __TransferToCpp<P4>::ToCpp(arguments[3]);\
+    P5 p5 = __TransferToCpp<P5>::ToCpp(arguments[4]);
+
 template<typename Cls>
 struct JSCConstructor0: public IJSCCallback {
     virtual JSObjectRef constructor(JSContextRef ctx, JSObjectRef constructor, size_t argumentCount, const JSValueRef arguments[], JSValueRef* exception){
@@ -494,6 +549,48 @@ struct JSCConstructor2:public IJSCCallback{
 template<typename Cls,typename P1,typename P2>
 IJSCCallback* regConstructor(){
     return new JSCConstructor2<Cls,P1,P2>();
+}
+
+template<typename Cls, typename P1,typename P2, typename P3>
+struct JSCConstructor3:public IJSCCallback{
+    virtual JSObjectRef constructor(JSContextRef ctx, JSObjectRef constructor, size_t argumentCount, const JSValueRef arguments[], JSValueRef* exception){
+        JS2CCONSTRUCTOR_GET_PARAMS3;
+        return JSCClass<Cls>::getInstance()->transferObjPtrToJS(new Cls(p1,p2,p3));
+    }
+    virtual uint16_t getNumArgs() { return 3; }
+};
+    
+template<typename Cls,typename P1,typename P2, typename P3>
+IJSCCallback* regConstructor(){
+    return new JSCConstructor3<Cls,P1,P2,P3>();
+}
+
+template<typename Cls, typename P1,typename P2, typename P3, typename P4>
+struct JSCConstructor4:public IJSCCallback{
+    virtual JSObjectRef constructor(JSContextRef ctx, JSObjectRef constructor, size_t argumentCount, const JSValueRef arguments[], JSValueRef* exception){
+        JS2CCONSTRUCTOR_GET_PARAMS4;
+        return JSCClass<Cls>::getInstance()->transferObjPtrToJS(new Cls(p1,p2,p3,p4));
+    }
+    virtual uint16_t getNumArgs() { return 4; }
+};
+    
+template<typename Cls,typename P1,typename P2, typename P3, typename P4>
+IJSCCallback* regConstructor(){
+    return new JSCConstructor4<Cls,P1,P2,P3,P4>();
+}
+
+template<typename Cls, typename P1,typename P2, typename P3, typename P4, typename P5>
+struct JSCConstructor5:public IJSCCallback{
+    virtual JSObjectRef constructor(JSContextRef ctx, JSObjectRef constructor, size_t argumentCount, const JSValueRef arguments[], JSValueRef* exception){
+        JS2CCONSTRUCTOR_GET_PARAMS5;
+        return JSCClass<Cls>::getInstance()->transferObjPtrToJS(new Cls(p1,p2,p3,p4, p5));
+    }
+    virtual uint16_t getNumArgs() { return 5; }
+};
+    
+template<typename Cls,typename P1,typename P2, typename P3, typename P4, typename P5>
+IJSCCallback* regConstructor(){
+    return new JSCConstructor5<Cls,P1,P2,P3,P4,P5>();
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

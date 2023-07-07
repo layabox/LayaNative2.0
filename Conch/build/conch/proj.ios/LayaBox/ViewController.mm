@@ -167,4 +167,9 @@ static ViewController* g_pIOSMainViewController = nil;
 {
     return YES;//隐藏为YES，显示为NO
 }
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+{
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    [m_pConchRuntime updateCanvasSize:size];
+}
 @end

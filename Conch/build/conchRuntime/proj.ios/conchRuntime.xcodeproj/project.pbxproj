@@ -426,7 +426,6 @@
 		A2D119561D0BC955004C229D /* JSC */ = {
 			isa = PBXGroup;
 			children = (
-				A2F3B79D216CAB020016F0A2 /* Bullet */,
 				A2D119EB1D0BFA31004C229D /* JSCArrayBuffer.cpp */,
 				A2D119EC1D0BFA31004C229D /* JSCArrayBuffer.h */,
 				A2D119ED1D0BFA31004C229D /* JSCBinder.cpp */,
@@ -446,6 +445,7 @@
 		A2D119571D0BC959004C229D /* LayaWrap */ = {
 			isa = PBXGroup;
 			children = (
+				A2F3B79D216CAB020016F0A2 /* Bullet */,
 				A263418D280821BC00FF7034 /* JSPromiseRejectionEvent.cpp */,
 				A263418E280821BC00FF7034 /* JSPromiseRejectionEvent.h */,
 				A2FBA93D2702BC7D00846E17 /* JSArrayBufferRef.cpp */,
@@ -815,6 +815,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 					JS_JSC,
+					BT_USE_DOUBLE_PRECISION,
 				);
 				INSTALL_PATH = /Users/LayaBox/LayaBox/conch5/Trunk/ThirdParty/ios/lib;
 				OTHER_CFLAGS = (
@@ -842,7 +843,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PREPROCESSOR_DEFINITIONS = JS_JSC;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					JS_JSC,
+					BT_USE_DOUBLE_PRECISION,
+				);
 				INSTALL_PATH = /Users/LayaBox/LayaBox/conch5/Trunk/ThirdParty/ios/lib;
 				OTHER_CFLAGS = (
 					"-I../../../include/common",

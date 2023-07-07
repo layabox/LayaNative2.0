@@ -1,4 +1,4 @@
-﻿/**
+/**
 @file			JSAudio.cpp
 @brief			
 @author			James
@@ -238,21 +238,21 @@ namespace laya
 	    }
     }
     //------------------------------------------------------------------------------
-    bool JSAudio::onDownloadErr(void* p_pRes, int p_nErrCode,std::weak_ptr<int> callbackref)
+    void JSAudio::onDownloadErr(void* p_pRes, int p_nErrCode,std::weak_ptr<int> callbackref)
     {
-	    if (!callbackref.lock())return false;
+	    if (!callbackref.lock())return;
 	    auto pFunction = std::bind(&JSAudio::onErrorCallJSFunction, this, p_nErrCode,callbackref);
 	    JCScriptRuntime::s_JSRT->m_pPoster->postToJS(pFunction);
-	    return true;
+	    return;
     }
-    bool JSAudio::onDownloaded(void* p_pRes, std::weak_ptr<int> callbackref)
+    void JSAudio::onDownloaded(void* p_pRes, std::weak_ptr<int> callbackref)
     {
-	    if( !callbackref.lock() )return false;
+	    if( !callbackref.lock() )return;
 	    laya::JCResStateDispatcher* pRes = (laya::JCResStateDispatcher*)p_pRes;
 	    laya::JCFileRes* pFileRes = (laya::JCFileRes*)pRes;
 	    if( pFileRes->m_pBuffer.get()==NULL || pFileRes->m_nLength==0 )
         {
-		    return false;
+		    return;
 	    }
 	    JCBuffer p_buf;
 	    p_buf.m_pPtr=pFileRes->m_pBuffer.get();
@@ -310,7 +310,7 @@ namespace laya
 			    play();
 		    }
 	    }
-	    return true;
+	    return;
     }
     //------------------------------------------------------------------------------
     const char* JSAudio::getSrc()

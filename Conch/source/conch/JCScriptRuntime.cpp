@@ -427,7 +427,7 @@ namespace laya
         m_pCallbackFuncManager->resetGlobalID();
         JCWebGLPlus::getInstance()->clearAll();
     }
-    bool JCScriptRuntime::onUpdate() 
+    void JCScriptRuntime::onUpdate()
     {
         PERF_INITVAR(nBenginTime);
 #ifdef JS_V8
@@ -494,7 +494,7 @@ namespace laya
         JS_CATCH;
         float dt = tmGetCurms() - nBenginTime;
         PERF_UPDATE_DATA(JCPerfHUD::PHUD_JS_DELAY, (float)dt);
-        return true;
+        return;
     }
     void JCScriptRuntime::onUpdateDraw(double vsyncTime) 
     {

@@ -1,4 +1,4 @@
-﻿/**
+/**
 @file			JCWorkerThread.cpp
 @brief			
 @author			James
@@ -84,7 +84,7 @@ namespace laya{
 			stop();
 	}
 
-	void JCWorkerThread::setLoopFunc( loopRun loopFunc ){
+	void JCWorkerThread::setLoopFunc( std::function<void(void)> loopFunc ){
 		if(m_bdbgThreadStarted){
 			printf("After the start of the thread,you can't set loopFunc again,Mainly afraid to call the first 'post',than call 'setLoopFunc' Cause tasks to spread between m_ThreadTasks and m_FuncQueue\n");
 			throw -1;
@@ -175,9 +175,7 @@ namespace laya{
 			}else{
 				//固定循环流程
 				runQueue();
-				if(!m_funcLoop()){
-					break;	//
-				}
+                m_funcLoop();
 			}
 		}	
 

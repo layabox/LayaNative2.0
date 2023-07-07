@@ -1,4 +1,4 @@
-﻿/**
+/**
 @file			JSFileReader.h
 @brief			
 @author			James
@@ -48,7 +48,7 @@ namespace laya
 
         void __LoadRemoteFile(JsFile *p_pFile);
 
-        bool onDownloadEnd(JsFile *p_pFile, void* p_pRes, std::weak_ptr<int> callbackref);
+        void onDownloadEnd(JsFile *p_pFile, void* p_pRes, std::weak_ptr<int> callbackref);
 
         void onDownloadErr(void* p_pRes, int p_nErrCode, std::weak_ptr<int> callbackref);
 

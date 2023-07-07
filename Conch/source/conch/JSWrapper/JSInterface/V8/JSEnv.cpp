@@ -183,10 +183,7 @@ namespace laya
 			{
 				//固定循环流程
 				runQueue();
-				if (!m_funcLoop())
-				{
-					break;
-				}
+				m_funcLoop();
 			}
 			if (trycatch.HasCaught())
 			{

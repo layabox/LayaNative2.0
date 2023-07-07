@@ -137,19 +137,24 @@ lipo -extract x86_64 ./ThirdParty/openssl/lib/ios/libcrypto.a -o x86_64/libcrypt
 #lipo -extract i386 ./ThirdParty/tpg/lib/ios/liblibYUV.a -o i386/liblibYUV.a
 #lipo -extract x86_64 ./ThirdParty/tpg/lib/ios/liblibYUV.a -o x86_64/liblibYUV.a
 
-lipo -extract armv7 ./Conch/libs/ios/libcommon.a -o armv7a/libcommon.a
-lipo -extract arm64 ./Conch/libs/ios/libcommon.a -o armv64/libcommon.a
-lipo -extract i386 ./Conch/libs/ios-sim/libcommon.a -o i386/libcommon.a
+cp ./Conch/libs/ios/libcommon.a armv64/libcommon.a
+#lipo -extract armv7 ./Conch/libs/ios/libcommon.a -o armv7a/libcommon.a
+#lipo -extract arm64 ./Conch/libs/ios-sim/libcommon.a -o armv64/libcommon.a
+#lipo -extract i386 ./Conch/libs/ios-sim/libcommon.a -o i386/libcommon.a
 lipo -extract x86_64 ./Conch/libs/ios-sim/libcommon.a -o x86_64/libcommon.a
 
-lipo -extract armv7 ./Conch/libs/ios/librender.a -o armv7a/librender.a
-lipo -extract arm64 ./Conch/libs/ios/librender.a -o armv64/librender.a
-lipo -extract i386 ./Conch/libs/ios-sim/librender.a -o i386/librender.a
+
+cp ./Conch/libs/ios/librender.a armv64/librender.a
+#lipo -extract armv7 ./Conch/libs/ios/librender.a -o armv7a/librender.a
+#lipo -extract arm64 ./Conch/libs/ios-sim/librender.a -o armv64/librender.a
+#lipo -extract i386 ./Conch/libs/ios-sim/librender.a -o i386/librender.a
 lipo -extract x86_64 ./Conch/libs/ios-sim/librender.a -o x86_64/librender.a
 
-lipo -extract armv7 ./Conch/libs/ios/libconchRuntime.a -o armv7a/libconchRuntime.a
-lipo -extract arm64 ./Conch/libs/ios/libconchRuntime.a -o armv64/libconchRuntime.a
-lipo -extract i386 ./Conch/libs/ios-sim/libconchRuntime.a -o i386/libconchRuntime.a
+
+cp ./Conch/libs/ios/libconchRuntime.a armv64/libconchRuntime.a
+#lipo -extract armv7 ./Conch/libs/ios/libconchRuntime.a -o armv7a/libconchRuntime.a
+#lipo -extract arm64 ./Conch/libs/ios-sim/libconchRuntime.a -o armv64/libconchRuntime.a
+#lipo -extract i386 ./Conch/libs/ios-sim/libconchRuntime.a -o i386/libconchRuntime.a
 lipo -extract x86_64 ./Conch/libs/ios-sim/libconchRuntime.a -o x86_64/libconchRuntime.a
 
 #lipo -extract armv7 ./Conch/libs/ios/libwebglPlus.a -o armv7a/libwebglPlus.a
@@ -158,33 +163,34 @@ lipo -extract x86_64 ./Conch/libs/ios-sim/libconchRuntime.a -o x86_64/libconchRu
 #lipo -extract x86_64 ./Conch/libs/ios-sim/libwebglPlus.a -o x86_64/libwebglPlus.a
 
 
-cd armv7a
+#cd armv7a
 
-libtool -static *.a -o libconch.a
+#libtool -static *.a -o libconch.a
 
-cd ..
+#cd ..
 cd armv64
 
 libtool -static *.a -o libconch.a
 
 cd ..
-cd i386
+#cd i386
 
-libtool -static *.a -o libconch.a
+#libtool -static *.a -o libconch.a
 
-cd ..
+#cd ..
 cd x86_64
 
 libtool -static *.a -o libconch.a
 
 cd ..
 
-lipo -create x86_64/libconch.a i386/libconch.a armv7a/libconch.a armv64/libconch.a -output ./publish/nativetools/template/ios/LayaRuntime-iOS/libs/libconch.a
+#lipo -create x86_64/libconch.a i386/libconch.a armv7a/libconch.a armv64/libconch.a -output ./publish/nativetools/template/ios/LayaRuntime-iOS/libs/libconch.a
+lipo -create x86_64/libconch.a armv64/libconch.a -output ./publish/nativetools/template/ios/LayaRuntime-iOS/libs/libconch.a
 
-rm -rf armv7a
-rm -rf armv64
-rm -rf i386
-rm -rf x86_64
+#rm -rf armv7a
+#rm -rf armv64
+#rm -rf i386
+#rm -rf x86_64
 
 #—————————————————————copy .h————————————————————————
 

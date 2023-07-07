@@ -22,6 +22,7 @@ subject to the following restrictions:
 #include "btCharacterControllerInterface.h"
 
 #include "BulletCollision/BroadphaseCollision/btCollisionAlgorithm.h"
+#include "BulletCollision/CollisionDispatch/btCollisionWorld.h"
 
 
 class btCollisionShape;
@@ -30,6 +31,51 @@ class btRigidBody;
 class btCollisionWorld;
 class btCollisionDispatcher;
 class btPairCachingGhostObject;
+
+/**
+ * @brief 记录角色的所有的碰撞
+ * 
+ */
+struct	AllHitResultCallback {
+
+	btCollisionWorld::tBtCollisionObjectArray		m_collisionObjects;
+	btCollisionWorld::tVector3Array	m_hitNormalWorld;
+	btCollisionWorld::tVector3Array	m_hitPointWorld;
+	
+	void	addSingleResult(btCollisionWorld::LocalConvexResult& convexResult,bool normalInWorldSpace){	
+		m_collisionObjects.push_back(convexResult.m_hitCollisionObject);
+		btVector3 hitNormalWorld;
+		if (normalInWorldSpace)
+		{
+			hitNormalWorld = convexResult.m_hitNormalLocal;
+		} else
+		{
+			///need to transform normal into worldspace
+			hitNormalWorld = convexResult.m_hitCollisionObject->getWorldTransform().getBasis()*convexResult.m_hitNormalLocal;
+		}
+		m_hitNormalWorld.push_back(hitNormalWorld);
+		m_hitPointWorld.push_back(convexResult.m_hitPointLocal);
+	}
+
+	//删除重复的。只是把m_collisionObjects对应的地方清零
+	void clean(){
+		int sz = m_collisionObjects.size();
+		for(int i=0; i<sz; i++){
+			const btCollisionObject* obj = m_collisionObjects[i];
+			for(int j=i+1; j<sz; j++){
+				if(m_collisionObjects[j]==obj){
+					m_collisionObjects[j]=NULL;
+				}
+			}
+		}
+	}
+
+	void clear(){
+		m_collisionObjects.clear();
+		m_hitNormalWorld.clear();
+		m_hitPointWorld.clear();
+	}
+};
 
 ///btKinematicCharacterController is an object that supports a sliding motion in a world.
 ///It uses a ghost object and convex sweep test to test for upcoming collisions. This is combined with discrete collision detection to recover from penetrations.
@@ -94,14 +140,19 @@ protected:
 
 	static btVector3* getUpAxisDirections();
 	bool  m_interpolateUp;
+	// true表示向下没有发生碰撞
 	bool  full_drop;
 	bool  bounce_fix;
+
+	int  hitFlag;
+	btScalar m_PushForce=1.0;
+	btScalar m_stepLeft=0.0;
 
 	btVector3 computeReflectionDirection (const btVector3& direction, const btVector3& normal);
 	btVector3 parallelComponent (const btVector3& direction, const btVector3& normal);
 	btVector3 perpindicularComponent (const btVector3& direction, const btVector3& normal);
 
-	bool recoverFromPenetration ( btCollisionWorld* collisionWorld);
+	bool recoverFromPenetration ( btCollisionWorld* collisionWorld, int it, int type);
 	void stepUp (btCollisionWorld* collisionWorld);
 	void updateTargetPositionBasedOnCollision (const btVector3& hit_normal, btScalar tangentMag = btScalar(0.0), btScalar normalMag = btScalar(1.0));
 	void stepForwardAndStrafe (btCollisionWorld* collisionWorld, const btVector3& walkMove);
@@ -116,6 +167,8 @@ protected:
 public:
 
 	BT_DECLARE_ALIGNED_ALLOCATOR();
+	btIDebugDraw* pDbgDrawer;
+	AllHitResultCallback m_allHitInfo;
 
 	btKinematicCharacterController (btPairCachingGhostObject* ghostObject,btConvexShape* convexShape,btScalar stepHeight, const btVector3& up = btVector3(1.0,0.0,0.0));
 	~btKinematicCharacterController ();
@@ -124,6 +177,9 @@ public:
 	///btActionInterface interface
 	virtual void updateAction( btCollisionWorld* collisionWorld,btScalar deltaTime)
 	{
+		// 如果多步的话，后面的不做。现在是根据实际帧时间做的，做多步有问题
+		if(collisionWorld->m_subStep>0) return;
+		pDbgDrawer = collisionWorld->getDebugDrawer();
 		preStep ( collisionWorld);
 		playerStep (collisionWorld, deltaTime);
 	}
@@ -134,6 +190,8 @@ public:
 	void setUp(const btVector3& up);
 
 	const btVector3& getUp() { return m_up; }
+
+	int getHitFlag(){ return hitFlag;}
 
 	/// This should probably be called setPositionIncrementPerSimulatorStep.
 	/// This is neither a direction nor a velocity, but the amount to
@@ -166,6 +224,7 @@ public:
 
 	void preStep (  btCollisionWorld* collisionWorld);
 	void playerStep ( btCollisionWorld* collisionWorld, btScalar dt);
+	void _playerStep ( btCollisionWorld* collisionWorld, btScalar dt);
 
 	void setStepHeight(btScalar h);
 	btScalar getStepHeight() const { return m_stepHeight; }
@@ -188,6 +247,9 @@ public:
 	void setMaxSlope(btScalar slopeRadians);
 	btScalar getMaxSlope() const;
 
+	void setPushForce(btScalar f){ m_PushForce=f;}
+	btScalar getPushForce(){return m_PushForce;}
+
 	void setMaxPenetrationDepth(btScalar d);
 	btScalar getMaxPenetrationDepth() const;
 
@@ -199,6 +261,24 @@ public:
 
 	bool onGround () const;
 	void setUpInterpolate (bool value);
+
+	btScalar getVerticalVelocity(){ return m_verticalVelocity;}
+	void setJumpAxis(btScalar x, btScalar y, btScalar z){ m_jumpAxis.setX(x); m_jumpAxis.setY(y); m_jumpAxis.setZ(z);}
+
+	btVector3* getCurrentPosition(){
+		return &m_currentPosition;
+	}
+
+	void setCurrentPosition(btScalar x, btScalar y , btScalar z){
+		m_currentPosition.setValue(x,y,z);
+		btTransform newTrans = m_ghostObject->getWorldTransform();
+		newTrans.setOrigin(m_currentPosition);
+		m_ghostObject->setWorldTransform(newTrans);	
+	}
+
+	btQuaternion* getCurrentOrientation(){
+		return &m_currentOrientation;
+	}
 };
 
 #endif // BT_KINEMATIC_CHARACTER_CONTROLLER_H

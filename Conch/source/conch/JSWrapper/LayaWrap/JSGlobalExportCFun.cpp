@@ -137,7 +137,7 @@ namespace laya
     {
         JCScriptRuntime::s_JSRT->m_pPoster->postToJS(std::bind(downloadBig_onComp_js, curlret,httpret, pWrapper));
     }
-	intptr_t _downloadBigFile(const char* p_pszUrl, const char* p_pszLocal, JSValueAsParam p_ProgCb,JSValueAsParam p_CompleteCb, int p_nTryNum, int p_nOptTimeout)
+	void _downloadBigFile(const char* p_pszUrl, const char* p_pszLocal, JSValueAsParam p_ProgCb,JSValueAsParam p_CompleteCb, int p_nTryNum, int p_nOptTimeout)
     {
         /*
         if (!canWrite(pCurProcess->getFSPermission(p_pszLocal))) {
@@ -151,8 +151,7 @@ namespace laya
         dmgr->downloadBigFile(p_pszUrl, p_pszLocal,
             std::bind(downloadBig_onProg, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, pJSObj),
             std::bind(downloadBig_onComp, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5, std::placeholders::_6, pJSObj), 
-            p_nTryNum, p_nOptTimeout);;
-        return (intptr_t)pJSObj;
+            p_nTryNum, p_nOptTimeout);
     }
     void downloadHeader_onComp_js(char* pBuff, int curlret, int httpret, JSFuncWrapper* pWrapper) 
     {
@@ -189,14 +188,13 @@ namespace laya
         }
         JCScriptRuntime::s_JSRT->m_pPoster->postToJS(std::bind(downloadHeader_onComp_js, pBuff, curlret, httpret, pWrapper));
     }
-	intptr_t _downloadGetHeader(const char* p_pszUrl, JSValueAsParam p_CompleteCb, int p_nTryNum, int p_nOptTimeout)
+	void _downloadGetHeader(const char* p_pszUrl, JSValueAsParam p_CompleteCb, int p_nTryNum, int p_nOptTimeout)
     {
         JCDownloadMgr* dmgr = JCDownloadMgr::getInstance();
         JSFuncWrapper* pJSObj = new JSFuncWrapper(p_CompleteCb, p_CompleteCb);//第一个没有用
         dmgr->getHeader(p_pszUrl,
             std::bind(downloadHeader_onComp, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5, std::placeholders::_6, pJSObj),
             p_nTryNum, p_nOptTimeout);
-        return (intptr_t)pJSObj;
     }
     void setTouchEvtFunc(JSValueAsParam pObj) 
     {

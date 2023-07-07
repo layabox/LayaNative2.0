@@ -97,7 +97,9 @@ class btRigidBody  : public btCollisionObject
 	
 	int				m_debugBodyId;
 	
-
+	// 表面速度，用来做传送带
+	btVector3		m_surfaceVel;
+	bool 			m_surfaceVelIsLocal;
 protected:
 
 	ATTRIBUTE_ALIGNED16(btVector3		m_deltaLinearVelocity);
@@ -377,6 +379,18 @@ public:
 	{ 
 		m_updateRevision++;
 		m_angularVelocity = ang_vel; 
+	}
+
+	inline void setSurfaceVelocity(const btVector3& vel, bool isLocal){
+		if(isStaticOrKinematicObject()){
+			m_linearVelocity = vel;
+			m_surfaceVel=vel;
+			m_surfaceVelIsLocal=isLocal;
+		}
+	}
+
+	inline btVector3& getSurfaceVelocity(){
+		return m_surfaceVel;
 	}
 
 	btVector3 getVelocityInLocalPoint(const btVector3& rel_pos) const

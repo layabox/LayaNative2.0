@@ -30,6 +30,7 @@ namespace laya
     const uint32_t MAX_CHAR_WIDTH = 512;
     const uint32_t MAX_CHAR_HEIGHT = 512;
     const uint32_t MAX_LINE_WIDTH = 2048;
+	const uint32_t MAX_INT32_INDEX = MAX_CHAR_HEIGHT * MAX_LINE_WIDTH;
 	class JCFreeTypeFontRender
     {
     public:

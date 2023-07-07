@@ -16,6 +16,7 @@ LOCAL_CFLAGS := \
   -DANDROID_TOOLCHAIN=clang \
   -fno-rtti \
   -DJS_V8_DEBUGGER \
+  -DBT_USE_DOUBLE_PRECISION \
   -DAL_ALEXT_PROTOTYPES \
 
 LOCAL_CPPFLAGS += -std=c++11
@@ -124,9 +125,9 @@ LOCAL_LDLIBS    := -lOpenSLES -llog -lGLESv3 -landroid -ljnigraphics -lm -lz -lc
 		../../../../../ThirdParty/ogg/lib/android-$(LOCAL_IS64)/libogg.a \
         ../../../../../ThirdParty/openssl/lib/android-$(LOCAL_IS64)/libssl.a \
         ../../../../../ThirdParty/openssl/lib/android-$(LOCAL_IS64)/libcrypto.a \
-        ../../../../../ThirdParty/bullet/lib/android-$(LOCAL_IS64)/libBulletDynamics.a \
+		../../../../../ThirdParty/bullet/lib/android-$(LOCAL_IS64)/libBulletDynamics.a \
         ../../../../../ThirdParty/bullet/lib/android-$(LOCAL_IS64)/libBulletCollision.a \
-        ../../../../../ThirdParty/bullet/lib/android-$(LOCAL_IS64)/libLinearMath.a \
+		../../../../../ThirdParty/bullet/lib/android-$(LOCAL_IS64)/libLinearMath.a \
 		../../../../../ThirdParty/openal/lib/android-$(LOCAL_IS64)/libopenal.a \
 #        ../../../../../ThirdParty/bullet/lib/android-$(LOCAL_IS64)/libBullet2FileLoader.a \
 #        ../../../../../ThirdParty/bullet/lib/android-$(LOCAL_IS64)/libBullet3Collision.a \
@@ -135,7 +136,7 @@ LOCAL_LDLIBS    := -lOpenSLES -llog -lGLESv3 -landroid -ljnigraphics -lm -lz -lc
 #        ../../../../../ThirdParty/bullet/lib/android-$(LOCAL_IS64)/libBullet3Geometry.a \
 #        ../../../../../ThirdParty/bullet/lib/android-$(LOCAL_IS64)/libBullet3OpenCL_clew.a \
 #        ../../../../../ThirdParty/bullet/lib/android-$(LOCAL_IS64)/libBulletInverseDynamics.a \
-#        ../../../../../ThirdParty/bullet/lib/android-$(LOCAL_IS64)/libBulletSoftBody.a \
+
 			
 #ifeq ($(TARGET_ARCH),arm64)
 #LOCAL_LDLIBS += $(NDK_DIR)/sources/cxx-stl/gnu-libstdc++/4.9/libs/arm64-v8a/libgnustl_static.a

@@ -8,6 +8,9 @@
 #include "BulletCollision/Gimpact/btGImpactShape.h"
 #include "BulletCollision/CollisionDispatch/btGhostObject.h"
 #include "BulletDynamics/Character/btKinematicCharacterController.h"
+#include "BulletCollision/CollisionShapes/btHeightfieldTerrainShape.h"
+#include "BulletSoftBody/btSoftRigidDynamicsWorld.h"
+//#include "../../JSWrapper/LayaWrap/JSRuntime.h"
 #define  WASM_EXP JSLayaConchBullet::
 #define __BTWASM_SYSCALL_NAME(name)
 typedef intptr_t pointer_t;
@@ -78,6 +81,8 @@ namespace laya
         pointer_t  btTransform_getOrigin(pointer_t ptr);
         pointer_t  btTransform_getRotation(pointer_t ptr);
         void btTransform_setIdentity(pointer_t ptr);
+		pointer_t btTransform_getBasis(pointer_t ptr);
+		pointer_t btMatrix3x3_getRow(pointer_t ptr, int row);
         void  btMotionState_destroy(pointer_t ptr);
         pointer_t  layaMotionState_create();
         void  layaMotionState_set_rigidBodyID(pointer_t ptr, int rigidBodyID);
@@ -108,6 +113,7 @@ namespace laya
         bool  RayResultCallback_hasHit(pointer_t ptr);
         void  RayResultCallback_set_m_collisionFilterGroup(pointer_t ptr, int group);
         void  RayResultCallback_set_m_collisionFilterMask(pointer_t ptr, int mask);
+		void  RayResultCallback_set_m_ignoreTrigger(pointer_t ptr, bool ignoreTrigger);
         btScalar  RayResultCallback_get_m_closestHitFraction(pointer_t ptr);
         void  RayResultCallback_set_m_closestHitFraction(pointer_t ptr, btScalar fraction);
         pointer_t  RayResultCallback_get_m_collisionObject(pointer_t ptr);
@@ -297,6 +303,81 @@ namespace laya
         void btGeneric6DofSpring2Constraint_setServoTarget(pointer_t g6ds2Constraintptr, int index, btScalar target);
         void btGeneric6DofSpring2Constraint_setMaxMotorForce(pointer_t g6ds2Constraintptr, int index, btScalar force);
         void btGeneric6DofSpring2Constraint_setFrames(pointer_t g6ds2Constraintptr, pointer_t frameAptr, pointer_t frameBptr);
+
+
+		void btQuaternion_delete(pointer_t ptr);
+		pointer_t btBvhTriangleMeshShape_create(pointer_t meshInterface);
+		void btRigidBody_setCenterOfMassPos(pointer_t ptr, btScalar x, btScalar y, btScalar z);
+		void btCollisionWorld_set_UserInfo(pointer_t worldptr, pointer_t worldid);
+        pointer_t btCollisionWorld_get_UserInfo(pointer_t worldptr);
+		void btDynamicsWorld_enableDebugDrawer(pointer_t ptr, int b);
+		void btKinematicCharacterController_setJumpAxis(pointer_t ptr, btScalar x, btScalar y, btScalar z);
+		int btKinematicCharacterController_getHitFlag(pointer_t ptr);
+		btScalar btKinematicCharacterController_getVerticalVelocity(pointer_t ptr);
+		pointer_t btKinematicCharacterController_getCurrentPosition(pointer_t ptr);
+		pointer_t btKinematicCharacterController_getCurrentOrientation(pointer_t ptr);
+
+		int layaMotionState_get_rigidBodyID(pointer_t ptr);
+		int btCollisionObject_getNumOverlappingObjects(pointer_t ptr);
+		pointer_t btCollisionObject_getOverlappingObject(pointer_t ptr, int i);
+		void btSphereShpae_setUnscaledRadius(pointer_t ptr, btScalar r);
+		pointer_t btRigidBody_getMotionState(pointer_t ptr);
+		void btDiscreteDynamicsWorld_SphereQuery(pointer_t ptr, btScalar posx, btScalar posy, btScalar posz, btScalar radius);
+		pointer_t btRaycastVehicle_create(pointer_t pWorld, pointer_t pRigid);
+		pointer_t btRaycastVehicle_addWheel(pointer_t ptr,
+			btScalar connectionPointCSx, btScalar connectionPointCSy, btScalar connectionPointCSz,	// 车体空间连接点
+			btScalar wheelDirectionCS0x, btScalar wheelDirectionCS0y, btScalar wheelDirectionCS0z,	// 车轮朝向
+			btScalar wheelAxleCSx, btScalar wheelAxleCSy, btScalar wheelAxleCSz, 					// 车轮轴
+			btScalar suspensionRestLength, btScalar wheelRadius,
+			//tuning
+			btScalar suspensionStiffness,
+			btScalar suspensionCompression,
+			btScalar suspensionDamping,
+			btScalar frictionSlip,
+			btScalar maxSuspensionTravelCm,
+			btScalar maxSuspensionForce,
+			bool isFrontWheel
+		);
+		int  btRaycastVehicle_getNumWheels(pointer_t ptr);
+		void  btRaycastVehicle_destroy(pointer_t ptr);
+		pointer_t  btRaycastVehicle_getWheelInfo(pointer_t ptr, int i);
+		void btWheelInfo_setEengineForce(pointer_t ptr, btScalar force);
+		btScalar btWheelInfo_getEengineForce(pointer_t ptr, btScalar force);
+		void btWheelInfo_setSteeringValue(pointer_t ptr, btScalar steering);
+		btScalar btWheelInfo_getSteeringValue(pointer_t ptr);
+		void btWheelInfo_setBrake(pointer_t ptr, btScalar brake);
+		btScalar btWheelInfo_getBrake(pointer_t ptr);
+		pointer_t btWheelInfo_getWorldTransform(pointer_t ptr);
+		btScalar btWheelInfo_getRrotation(pointer_t ptr);
+		btScalar btWheelInfo_getDeltaRotation(pointer_t ptr);
+
+		pointer_t btHeightfieldTerrainShape_create(int heightStickWidth, int heightStickLength, const pointer_t heightfieldData, btScalar heightScale,
+			btScalar minHeight, btScalar maxHeight, int datatype);
+		pointer_t _malloc(int size);
+		void copyJSArray(pointer_t ptr, JSValueAsParam jsarray);
+		void _free(pointer_t ptr);
+		void setDrawlineFunction(JSValueAsParam pFunction);
+		void setClearlineFunction(JSValueAsParam pFunction);
+		void btConcaveShape_setMargin(pointer_t ptr, btScalar collisionMargin);
+		btScalar btConcaveShape_getMargin(pointer_t ptr);
+		void btRigidBody_setCenterOfMassOrientation(pointer_t ptr, btScalar x, btScalar y, btScalar z, btScalar w);
+		void btKinematicCharacterController_setPushForce(pointer_t ptr, btScalar force);
+		btScalar btKinematicCharacterController_getPushForce(pointer_t ptr);
+		void btKinematicCharacterController_setCurrentPosition(pointer_t ptr, btScalar x, btScalar y, btScalar z);
+		void btKinematicCharacterController_setUseGhostSweepTest(pointer_t ptr, bool b);
+		pointer_t btKinematicCharacterController_AllHitInfo_get_m_collisionObjects(pointer_t ptr);
+		void btGeneric6DofSpring2Constraint_setRotationOrder(pointer_t g6ds2Constraintptr, int order);
+		bool solveSphereHit(btScalar fromx, btScalar fromy, btScalar fromz, btScalar tox, btScalar toy, btScalar toz, pointer_t npSphere, int group, int mask, pointer_t npWorld, pointer_t noutPos);
+
+		//pointer_t btSoftRigidDynamicsWorld_create(pointer_t dispatcher, pointer_t pairCache, pointer_t constraintSolver, pointer_t collisionConfiguration);
+		//void btSoftRigidDynamicsWorld_addSoftBody(pointer_t ptr, pointer_t bodyptr);
+		//void btSoftRigidDynamicsWorld_removeSoftBody(pointer_t worldptr, pointer_t bodyptr);
+		//void btSoftRigidDynamicsWorld_removeCollisionObject(pointer_t worldptr, pointer_t bodyptr);
+		void btRigidBody_setSurfaceVelocity(pointer_t ptr, pointer_t vel, bool isLocal);
+
+		void btRigidBody_setSurfaceVelocityxyz(pointer_t ptr, btScalar x, btScalar y, btScalar z, bool isLocal);
+		pointer_t btRigidBody_getSurfaceVelocity(pointer_t ptr);
+		void btCollisionObject_setHasCDCallback(pointer_t ptr,bool b);
     };
 }
 #endif

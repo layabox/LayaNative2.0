@@ -1,4 +1,4 @@
-﻿/**
+/**
 @file			JSAudio.h
 @brief			
 @author			James
@@ -71,9 +71,9 @@ namespace laya
 	    void stop();
 
 	    //下载线程的回调
-	    bool onDownloaded( void* p_pRes, std::weak_ptr<int> callbackref );
+	    void onDownloaded( void* p_pRes, std::weak_ptr<int> callbackref );
 
-	    bool onDownloadErr(void* p_pRes, int p_nErrCode, std::weak_ptr<int> callbackref);
+	    void onDownloadErr(void* p_pRes, int p_nErrCode, std::weak_ptr<int> callbackref);
 
     public:
 

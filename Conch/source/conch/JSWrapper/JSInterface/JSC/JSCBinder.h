@@ -259,6 +259,7 @@ public:
 		}
 		m_pValue = v;
 		JSValueProtect(__TlsData::GetInstance()->GetCurContext(), m_pValue);
+        m_pObj = (JSObjBaseJSC*)this;//not good
 
 	}
 	template <typename _Tp>

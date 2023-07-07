@@ -23,5 +23,5 @@ rem ------------------¿½±´conchRuntime------------------
 XCOPY ..\build\conchRuntime\proj.ios\conchRuntime\conchRuntime.h ..\include\conchRuntime\ /s  /y
 XCOPY ..\build\conchRuntime\proj.ios\conchRuntime\conchConfig.h ..\include\conchRuntime\ /s  /y
 XCOPY ..\build\conchRuntime\proj.ios\conchRuntime\PlatformInterface\*.h ..\include\conchRuntime\PlatformInterface\ /s  /e /y
-
+XCOPY ..\build\conchRuntime\proj.ios\conchRuntime\Reachability\Reachability.h ..\include\conchRuntime\Reachability\ /s  /y
 rem ------------------¿½±´Íê±Ï------------------

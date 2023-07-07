@@ -119,4 +119,5 @@ class JCTouchFilter;
 -(void)destory;
 -(void)runJsLoop;
 -(void)runFunc:(NSTimer*)timer;
+-(void)updateCanvasSize:(CGSize)size;
 @end

@@ -12,7 +12,6 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
-	<uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 	
     <application
 		android:usesCleartextTraffic="true"

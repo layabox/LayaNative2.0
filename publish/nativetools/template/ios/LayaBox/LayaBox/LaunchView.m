@@ -34,7 +34,7 @@ static const int LEAST_SHOW_TIME = 2;
                 for (UIView* subView in weakSelf.view.subviews) {
                     if ([subView isKindOfClass:[UILabel class]]) {
                         UILabel* label = (UILabel*)subView;
-                        label.text = [NSString stringWithFormat:@"%@(%%%ld)", [weakSelf.tips objectAtIndex:weakSelf.index], (long)weakSelf.percent];
+                        label.text = [NSString stringWithFormat:@"%@(%ld%%)", [weakSelf.tips objectAtIndex:weakSelf.index], (long)weakSelf.percent];
                     }
                 }
                 weakSelf.index++;

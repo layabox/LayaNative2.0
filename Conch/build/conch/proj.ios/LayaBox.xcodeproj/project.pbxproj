@@ -687,11 +687,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 20;
+				CURRENT_PROJECT_VERSION = 22;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = MH4ZKZTS68;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_PREPROCESSOR_DEFINITIONS = BT_USE_DOUBLE_PRECISION;
 				INFOPLIST_FILE = LayaBox/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -709,7 +710,7 @@
 					../../../../ThirdParty/curl/lib/ios,
 					../../../../ThirdParty/bullet/lib/ios,
 				);
-				MARKETING_VERSION = "release-2.12.0";
+				MARKETING_VERSION = "release-2.13.1";
 				OTHER_CFLAGS = "-I../../../include/conchRuntime";
 				OTHER_LDFLAGS = (
 					"-lcurl",
@@ -730,6 +731,7 @@
 					"-lBulletDynamics",
 					"-lBulletCollision",
 					"-lLinearMath",
+					"-lBulletSoftBody",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.layabox.conch6;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -744,12 +746,13 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 20;
+				CURRENT_PROJECT_VERSION = 22;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = MH4ZKZTS68;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = BT_USE_DOUBLE_PRECISION;
 				INFOPLIST_FILE = LayaBox/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -767,7 +770,7 @@
 					../../../../ThirdParty/curl/lib/ios,
 					../../../../ThirdParty/bullet/lib/ios,
 				);
-				MARKETING_VERSION = "release-2.12.0";
+				MARKETING_VERSION = "release-2.13.1";
 				OTHER_CFLAGS = "-I../../../include/conchRuntime";
 				OTHER_LDFLAGS = (
 					"-lcurl",
@@ -788,6 +791,7 @@
 					"-lBulletDynamics",
 					"-lBulletCollision",
 					"-lLinearMath",
+					"-lBulletSoftBody",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.layabox.conch6;
 				PRODUCT_NAME = "$(TARGET_NAME)";

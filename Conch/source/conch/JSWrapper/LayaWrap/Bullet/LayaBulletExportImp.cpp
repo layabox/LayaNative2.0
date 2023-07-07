@@ -6,14 +6,6 @@ namespace laya
 
     JSLayaConchBullet* JSLayaConchBullet::ms_pInstance = NULL;
     //------------------------------------------------------------------------------
-    JSLayaConchBullet* JSLayaConchBullet::getInstance()
-    {
-        if (ms_pInstance == NULL)
-        {
-            ms_pInstance = new JSLayaConchBullet();
-        }
-        return ms_pInstance;
-    }
     JSLayaConchBullet::JSLayaConchBullet()
     {
     }
@@ -43,6 +35,8 @@ namespace laya
 		JSP_GLOBAL_ADD_METHOD("btTransform_getRotation", JSLayaConchBullet::btTransform_getRotation);
 		JSP_GLOBAL_ADD_METHOD("btTransform_setIdentity", JSLayaConchBullet::btTransform_setIdentity);
 		JSP_GLOBAL_ADD_METHOD("btTransform_equal", JSLayaConchBullet::btTransform_equal);
+		JSP_GLOBAL_ADD_METHOD("btTransform_getBasis", JSLayaConchBullet::btTransform_getBasis);
+		JSP_GLOBAL_ADD_METHOD("btMatrix3x3_getRow", JSLayaConchBullet::btMatrix3x3_getRow);
 		JSP_GLOBAL_ADD_METHOD("btMotionState_destroy", JSLayaConchBullet::btMotionState_destroy);
 		JSP_GLOBAL_ADD_METHOD("layaMotionState_create", JSLayaConchBullet::layaMotionState_create);
 		JSP_GLOBAL_ADD_METHOD("layaMotionState_set_rigidBodyID", JSLayaConchBullet::layaMotionState_set_rigidBodyID);
@@ -73,6 +67,7 @@ namespace laya
 		JSP_GLOBAL_ADD_METHOD("RayResultCallback_hasHit", JSLayaConchBullet::RayResultCallback_hasHit);
 		JSP_GLOBAL_ADD_METHOD("RayResultCallback_set_m_collisionFilterGroup", JSLayaConchBullet::RayResultCallback_set_m_collisionFilterGroup);
 		JSP_GLOBAL_ADD_METHOD("RayResultCallback_set_m_collisionFilterMask", JSLayaConchBullet::RayResultCallback_set_m_collisionFilterMask);
+		JSP_GLOBAL_ADD_METHOD("RayResultCallback_set_m_ignoreTrigger", JSLayaConchBullet::RayResultCallback_set_m_ignoreTrigger);
 		JSP_GLOBAL_ADD_METHOD("RayResultCallback_get_m_closestHitFraction", JSLayaConchBullet::RayResultCallback_get_m_closestHitFraction);
 		JSP_GLOBAL_ADD_METHOD("RayResultCallback_set_m_closestHitFraction", JSLayaConchBullet::RayResultCallback_set_m_closestHitFraction);
 		JSP_GLOBAL_ADD_METHOD("RayResultCallback_get_m_collisionObject", JSLayaConchBullet::RayResultCallback_get_m_collisionObject);
@@ -254,6 +249,56 @@ namespace laya
 		JSP_GLOBAL_ADD_METHOD("btGeneric6DofSpring2Constraint_setServoTarget", JSLayaConchBullet::btGeneric6DofSpring2Constraint_setServoTarget);
 		JSP_GLOBAL_ADD_METHOD("btGeneric6DofSpring2Constraint_setMaxMotorForce", JSLayaConchBullet::btGeneric6DofSpring2Constraint_setMaxMotorForce);
 		JSP_GLOBAL_ADD_METHOD("btGeneric6DofSpring2Constraint_setFrames", JSLayaConchBullet::btGeneric6DofSpring2Constraint_setFrames);
+		JSP_GLOBAL_ADD_METHOD("btDynamicsWorld_enableDebugDrawer", JSLayaConchBullet::btDynamicsWorld_enableDebugDrawer);
+		JSP_GLOBAL_ADD_METHOD("btQuaternion_delete", JSLayaConchBullet::btQuaternion_delete);
+		JSP_GLOBAL_ADD_METHOD("btBvhTriangleMeshShape_create", JSLayaConchBullet::btBvhTriangleMeshShape_create);
+		JSP_GLOBAL_ADD_METHOD("btRigidBody_setCenterOfMassPos", JSLayaConchBullet::btRigidBody_setCenterOfMassPos);
+		JSP_GLOBAL_ADD_METHOD("btCollisionWorld_set_UserInfo", JSLayaConchBullet::btCollisionWorld_set_UserInfo);
+		JSP_GLOBAL_ADD_METHOD("btCollisionWorld_get_UserInfo", JSLayaConchBullet::btCollisionWorld_get_UserInfo);
+		JSP_GLOBAL_ADD_METHOD("btKinematicCharacterController_setJumpAxis", JSLayaConchBullet::btKinematicCharacterController_setJumpAxis);
+		JSP_GLOBAL_ADD_METHOD("btKinematicCharacterController_getHitFlag", JSLayaConchBullet::btKinematicCharacterController_getHitFlag);
+		JSP_GLOBAL_ADD_METHOD("btKinematicCharacterController_getVerticalVelocity", JSLayaConchBullet::btKinematicCharacterController_getVerticalVelocity);
+		JSP_GLOBAL_ADD_METHOD("btKinematicCharacterController_getCurrentPosition", JSLayaConchBullet::btKinematicCharacterController_getCurrentPosition);
+		JSP_GLOBAL_ADD_METHOD("btKinematicCharacterController_getCurrentOrientation", JSLayaConchBullet::btKinematicCharacterController_getCurrentOrientation);
+		JSP_GLOBAL_ADD_METHOD("layaMotionState_get_rigidBodyID", JSLayaConchBullet::layaMotionState_get_rigidBodyID);
+		JSP_GLOBAL_ADD_METHOD("btCollisionObject_getNumOverlappingObjects", JSLayaConchBullet::btCollisionObject_getNumOverlappingObjects);
+		JSP_GLOBAL_ADD_METHOD("btCollisionObject_getOverlappingObject", JSLayaConchBullet::btCollisionObject_getOverlappingObject);
+		JSP_GLOBAL_ADD_METHOD("btSphereShpae_setUnscaledRadius", JSLayaConchBullet::btSphereShpae_setUnscaledRadius);
+		JSP_GLOBAL_ADD_METHOD("btRigidBody_getMotionState", JSLayaConchBullet::btRigidBody_getMotionState);
+		JSP_GLOBAL_ADD_METHOD("btDiscreteDynamicsWorld_SphereQuery", JSLayaConchBullet::btDiscreteDynamicsWorld_SphereQuery);
+		JSP_GLOBAL_ADD_METHOD("btRaycastVehicle_create", JSLayaConchBullet::btRaycastVehicle_create);
+		JSP_GLOBAL_ADD_METHOD("btRaycastVehicle_addWheel", JSLayaConchBullet::btRaycastVehicle_addWheel);
+		JSP_GLOBAL_ADD_METHOD("btRaycastVehicle_getNumWheels", JSLayaConchBullet::btRaycastVehicle_getNumWheels);
+		JSP_GLOBAL_ADD_METHOD("btRaycastVehicle_destroy", JSLayaConchBullet::btRaycastVehicle_destroy);
+		JSP_GLOBAL_ADD_METHOD("btRaycastVehicle_getWheelInfo", JSLayaConchBullet::btRaycastVehicle_getWheelInfo);
+		JSP_GLOBAL_ADD_METHOD("btWheelInfo_setEengineForce", JSLayaConchBullet::btWheelInfo_setEengineForce);
+		JSP_GLOBAL_ADD_METHOD("btWheelInfo_getEengineForce", JSLayaConchBullet::btWheelInfo_getEengineForce);
+		JSP_GLOBAL_ADD_METHOD("btWheelInfo_setSteeringValue", JSLayaConchBullet::btWheelInfo_setSteeringValue);
+		JSP_GLOBAL_ADD_METHOD("btWheelInfo_getSteeringValue", JSLayaConchBullet::btWheelInfo_getSteeringValue);
+		JSP_GLOBAL_ADD_METHOD("btWheelInfo_setBrake", JSLayaConchBullet::btWheelInfo_setBrake);
+		JSP_GLOBAL_ADD_METHOD("btWheelInfo_getBrake", JSLayaConchBullet::btWheelInfo_getBrake);
+		JSP_GLOBAL_ADD_METHOD("btWheelInfo_getWorldTransform", JSLayaConchBullet::btWheelInfo_getWorldTransform);
+		JSP_GLOBAL_ADD_METHOD("btWheelInfo_getRrotation", JSLayaConchBullet::btWheelInfo_getRrotation);
+		JSP_GLOBAL_ADD_METHOD("btWheelInfo_getDeltaRotation", JSLayaConchBullet::btWheelInfo_getDeltaRotation);
+		JSP_GLOBAL_ADD_METHOD("btHeightfieldTerrainShape_create", JSLayaConchBullet::btHeightfieldTerrainShape_create);
+		JSP_GLOBAL_ADD_METHOD("_malloc", JSLayaConchBullet::_malloc);
+		JSP_GLOBAL_ADD_METHOD("copyJSArray", JSLayaConchBullet::copyJSArray);
+		JSP_GLOBAL_ADD_METHOD("_free", JSLayaConchBullet::_free);
+		JSP_GLOBAL_ADD_METHOD("setDrawlineFunction", JSLayaConchBullet::setDrawlineFunction);
+		JSP_GLOBAL_ADD_METHOD("setClearlineFunction", JSLayaConchBullet::setClearlineFunction);
+		JSP_GLOBAL_ADD_METHOD("btConcaveShape_setMargin", JSLayaConchBullet::btConcaveShape_setMargin);
+		JSP_GLOBAL_ADD_METHOD("btConcaveShape_getMargin", JSLayaConchBullet::btConcaveShape_getMargin);
+		JSP_GLOBAL_ADD_METHOD("btRigidBody_setCenterOfMassOrientation", JSLayaConchBullet::btRigidBody_setCenterOfMassOrientation);
+		JSP_GLOBAL_ADD_METHOD("btKinematicCharacterController_setPushForce", JSLayaConchBullet::btKinematicCharacterController_setPushForce);
+		JSP_GLOBAL_ADD_METHOD("btKinematicCharacterController_getPushForce", JSLayaConchBullet::btKinematicCharacterController_getPushForce);
+		JSP_GLOBAL_ADD_METHOD("btKinematicCharacterController_setCurrentPosition", JSLayaConchBullet::btKinematicCharacterController_setCurrentPosition);
+		JSP_GLOBAL_ADD_METHOD("btKinematicCharacterController_setUseGhostSweepTest", JSLayaConchBullet::btKinematicCharacterController_setUseGhostSweepTest);
+		JSP_GLOBAL_ADD_METHOD("btKinematicCharacterController_AllHitInfo_get_m_collisionObjects", JSLayaConchBullet::btKinematicCharacterController_AllHitInfo_get_m_collisionObjects);
+		JSP_GLOBAL_ADD_METHOD("btGeneric6DofSpring2Constraint_setRotationOrder", JSLayaConchBullet::btGeneric6DofSpring2Constraint_setRotationOrder);
+		JSP_GLOBAL_ADD_METHOD("solveSphereHit", JSLayaConchBullet::solveSphereHit);
+		JSP_GLOBAL_ADD_METHOD("btRigidBody_setSurfaceVelocity", JSLayaConchBullet::btRigidBody_setSurfaceVelocity);
+		JSP_GLOBAL_ADD_METHOD("btRigidBody_setSurfaceVelocityxyz", JSLayaConchBullet::btRigidBody_setSurfaceVelocityxyz);
+		JSP_GLOBAL_ADD_METHOD("btCollisionObject_setHasCDCallback", JSLayaConchBullet::btCollisionObject_setHasCDCallback);
         JSP_INSTALL_GLOBAL_CLASS("layaConchBullet", JSLayaConchBullet, JSLayaConchBullet::getInstance());
     }
 }

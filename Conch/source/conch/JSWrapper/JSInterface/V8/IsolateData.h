@@ -1,5 +1,5 @@
-#ifndef __IsolateData _H__
-#define __IsolateData _H__
+#ifndef __IsolateData_H__
+#define __IsolateData_H__
 
 #include <v8.h>
 #include <map>

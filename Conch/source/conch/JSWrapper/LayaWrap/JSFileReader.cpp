@@ -1,4 +1,4 @@
-﻿/**
+/**
 @file			JSFileReader.cpp
 @brief			
 @author			James
@@ -215,10 +215,10 @@ namespace laya
             res->setOnErrorCB(std::bind(&JsFileReader::onDownloadErr, this, std::placeholders::_1, std::placeholders::_2, cbref));
         }
     }
-    bool JsFileReader::onDownloadEnd(JsFile *p_pFile, void* p_pRes, std::weak_ptr<int> callbackref)
+    void JsFileReader::onDownloadEnd(JsFile *p_pFile, void* p_pRes, std::weak_ptr<int> callbackref)
     {
         if (!callbackref.lock())
-            return false;
+            return;
         JCResStateDispatcher* pRes = (JCResStateDispatcher*)p_pRes;
         JCFileRes* pFileRes = (JCFileRes*)pRes;
         //if (pFileRes->m_pBuffer.get() == NULL || pFileRes->m_nLength == 0)
@@ -246,7 +246,7 @@ namespace laya
                     sUCBuffer = NULL;
                     //解压失败
                     OnFinished(false);
-                    return false;
+                    return;
                 }
                 nLen = nUncompressSize;
                 pBuff = sUCBuffer;
@@ -298,7 +298,7 @@ namespace laya
             }
             OnFinished(true);
         }
-        return true;
+        return;
     }
     void JsFileReader::onDownloadErr(void* p_pRes, int p_nErrCode, std::weak_ptr<int> callbackref)
     {
