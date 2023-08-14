@@ -9,8 +9,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 28
-        versionCode 22
-        versionName "release-2.13.1"
+        versionCode 23
+        versionName "release-2.13.3"
     }
     sourceSets.main{
         jniLibs.srcDir 'libs'
@@ -38,7 +38,7 @@ android {
 def SDK_BASENAME = "conch5";
 def SDK_VERSION = "_1.0";
 def sdkDestinationPath = "outJar";
-def zipFile = file('build/intermediates/packaged-classes/release/classes.jar');
+def zipFile = file('build/intermediates/aar_main_jar/release/classes.jar');
 
 def fromJar=sdkDestinationPath +"/"+ SDK_BASENAME + SDK_VERSION + ".jar";
 def toJar=sdkDestinationPath +"/"+ SDK_BASENAME + SDK_VERSION + "_min.jar";

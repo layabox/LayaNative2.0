@@ -32,8 +32,8 @@ struct	btDefaultCollisionConstructionInfo
 	btDefaultCollisionConstructionInfo()
 		:m_persistentManifoldPool(0),
 		m_collisionAlgorithmPool(0),
-		m_defaultMaxPersistentManifoldPoolSize(4096/4),	// 缩小一下内存占用
-		m_defaultMaxCollisionAlgorithmPoolSize(4096/4),
+		m_defaultMaxPersistentManifoldPoolSize(4096),
+		m_defaultMaxCollisionAlgorithmPoolSize(4096),
 		m_customCollisionAlgorithmMaxElementSize(0),
 		m_useEpaPenetrationAlgorithm(true)
 	{

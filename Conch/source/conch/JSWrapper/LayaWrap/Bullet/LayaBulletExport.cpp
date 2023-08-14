@@ -1,7 +1,8 @@
-
+#define BULLET_NATIVE
 #include <stdio.h>
 #include <vector>
-#ifndef __wasi__
+
+#ifdef BULLET_NATIVE
 #include "LayaBulletExport.h"
 namespace laya
 {
@@ -16,15 +17,15 @@ namespace laya
 
 	void layaDrawline(float sx, float sy, float sz, float ex, float ey, float ez, int color)
 	{
-		/*JCScriptRuntime* pScriptRuntime = JCScriptRuntime::s_JSRT;
+		/*auto pScriptRuntime = JCConch::s_pScriptRuntime;
 		if (pScriptRuntime && !pScriptRuntime->m_bJSBulletDrawLineHandle.Empty())
 		{
-			//pScriptRuntime->m_bJSBulletDrawLineHandle.Call(sx, sy, sz, ex, ey, ez, color);
+			pScriptRuntime->m_bJSBulletDrawLineHandle.Call(sx, sy, sz, ex, ey, ez, color);
 		}*/
 	}
 	void layaClearLine()
 	{
-		/*JCScriptRuntime* pScriptRuntime = JCScriptRuntime::s_JSRT;
+        /*auto pScriptRuntime = JCConch::s_pScriptRuntime;
 		if (pScriptRuntime && !pScriptRuntime->m_bJSBulletClearLineHandle.Empty())
 		{
 			pScriptRuntime->m_bJSBulletClearLineHandle.Call();
@@ -38,9 +39,6 @@ typedef int pointer_t;
 #include "../bullet/src/BulletCollision/CollisionDispatch/btGhostObject.h"
 #include "../bullet/src/BulletDynamics/Character/btKinematicCharacterController.h"
 #include "../bullet/src/BulletCollision/CollisionShapes/btHeightfieldTerrainShape.h"
-#include "../bullet/src/BulletSoftBody/btSoftRigidDynamicsWorld.h"
-#include "../bullet/src/BulletCollision/CollisionDispatch/btCollisionObject.h"
-
 #define WASM_EXP __attribute__((visibility("default")))
 #define __BTWASM_SYSCALL_NAME(name) \
 	__attribute__((__import_module__("LayaAirInteractive"), __import_name__(#name)))
@@ -101,7 +99,7 @@ class LayaDebugDraw:public btIDebugDraw{
 };
 
 btIDebugDraw* pDbgDrawer=nullptr;
-#ifdef __wasi__
+#ifndef BULLET_NATIVE
 class LayaMotionState : public btMotionState
 {
 public:
@@ -116,59 +114,14 @@ public:
 	}
 };
 
-extern ContactAddedCallback		gContactAddedCallback;
-
 extern "C"{
 #endif
 
-static bool CustomMaterialCombinerCallback(btManifoldPoint& cp,	
-	const btCollisionObjectWrapper* colObj0Wrap,int partId0,int index0,
-	const btCollisionObjectWrapper* colObj1Wrap,int partId1,int index1)
-{
-	int flags0 = colObj0Wrap->getCollisionObject()->getCollisionFlags();
-	int flags1 = colObj1Wrap->getCollisionObject()->getCollisionFlags();
-/*
-	const btTransform& trans0 = colObj0Wrap->getCollisionObject()->getWorldTransform();
-	const btTransform& trans1 = colObj1Wrap->getCollisionObject()->getWorldTransform();
 
-	bool notFoot=false;
-	if(flags0 & btCollisionObject::CF_CHARACTER_OBJECT){
-		// 0是角色
-		cp.m_normalWorldOnB
-		cp.getPositionWorldOnA().getY()
-	}
-	if(trans0.getOrigin())
-*/
-	if(flags0 & btCollisionObject::CF_CHARACTER_OBJECT || flags1 & btCollisionObject::CF_CHARACTER_OBJECT){
-		btScalar normy = cp.m_normalWorldOnB.getY();
-		if(normy>-0.001 && normy<0.001){
-			// 如果碰撞法线为水平，则无摩擦
-			cp.m_combinedFriction=0.0;
-		}
-	}
+//int main(void){
+//	__wasm_call_ctors(); // 手动调用一下，初始化全局和静态变量。手动调用这个函数以后，llvm就不会在每个导出函数都包上ctor，dtor了
+//}
 
-    //this return value is currently ignored, but to be on the safe side: return false if you don't calculate friction
-    return true;
-}
-
-
-
-#ifdef __wasi__
-int main(void){
-	__wasm_call_ctors(); // 手动调用一下，初始化全局和静态变量。手动调用这个函数以后，llvm就不会在每个导出函数都包上ctor，dtor了
-	gContactAddedCallback = CustomMaterialCombinerCallback;
-}
-#else 
-JSLayaConchBullet* JSLayaConchBullet::getInstance()
-{
-	if (ms_pInstance == NULL)
-	{
-		gContactAddedCallback = CustomMaterialCombinerCallback;
-		ms_pInstance = new JSLayaConchBullet();
-	}
-	return ms_pInstance;
-}
-#endif
 btVector3 tempbtVector3;
 btQuaternion tempbtQuaternion;
 void WASM_EXP btGImpactCollisionAlgorithm_RegisterAlgorithm(pointer_t dispatcher)
@@ -290,7 +243,7 @@ pointer_t WASM_EXP btTransform_getRotation(pointer_t ptr)
 	return (pointer_t)&tempbtQuaternion;
 }
 
-void WASM_EXP btTransform_setIdentity(pointer_t ptr)// WASM_EXPNEW(btTransform_setIdentity)
+void  WASM_EXP btTransform_setIdentity(pointer_t ptr) //WASM_EXPNEW(btTransform_setIdentity)
 {
 	btTransform *trans = (btTransform *)ptr;
 	trans->setIdentity();
@@ -350,13 +303,6 @@ pointer_t WASM_EXP btCollisionObject_create()
 	return (pointer_t) new btCollisionObject();
 }
 
-void WASM_EXP btCollisionObject_setHasCDCallback(pointer_t ptr,bool b)
-//WASM_EXPNEW(btCollisionObject_setHasCDCallback)
-{
-	btCollisionObject *colObj = (btCollisionObject *)ptr;
-	colObj->setHasCDCallback(b);
-}
-
 void WASM_EXP btCollisionObject_setContactProcessingThreshold(pointer_t ptr, btScalar contactProcessingThreshold)
 {
 	btCollisionObject *colObj = (btCollisionObject *)ptr;
@@ -371,11 +317,8 @@ void WASM_EXP btCollisionObject_setActivationState(pointer_t ptr, int newState)
 
 void WASM_EXP btCollisionObject_forceActivationState(pointer_t ptr, int newState)
 {
-    if (ptr != 0)
-    {
-        btCollisionObject *colObj = (btCollisionObject *)ptr;
-        colObj->forceActivationState(newState);
-    }
+	btCollisionObject *colObj = (btCollisionObject *)ptr;
+	colObj->forceActivationState(newState);
 }
 
 void WASM_EXP btCollisionObject_activate(pointer_t ptr, bool forceActivation)
@@ -519,6 +462,7 @@ void WASM_EXP btCollisionObject_destroy(pointer_t ptr)
 	delete colObj;
 }
 void WASM_EXP RayResultCallback_set_m_flags(pointer_t ptr, int flags)
+//WASM_EXPNEW(RayResultCallback_set_m_flags)
 {
 	btCollisionWorld::RayResultCallback *callBack = (btCollisionWorld::RayResultCallback *)ptr;
 	callBack->m_flags = flags;
@@ -539,13 +483,6 @@ void WASM_EXP RayResultCallback_set_m_collisionFilterMask(pointer_t ptr, int mas
 {
 	btCollisionWorld::RayResultCallback *callBack = (btCollisionWorld::RayResultCallback *)ptr;
 	callBack->m_collisionFilterMask = mask;
-}
-
-void WASM_EXP RayResultCallback_set_m_ignoreTrigger(pointer_t ptr, bool ignoreTrigger)
-//WASM_EXPNEW(RayResultCallback_set_m_ignoreTrigger)
-{
-	btCollisionWorld::RayResultCallback *callBack = (btCollisionWorld::RayResultCallback *)ptr;
-	callBack->m_ignoreTrigger = ignoreTrigger;
 }
 
 btScalar WASM_EXP RayResultCallback_get_m_closestHitFraction(pointer_t ptr)
@@ -939,6 +876,8 @@ pointer_t WASM_EXP btConeShape_create(btScalar radius, btScalar height)
 	return (pointer_t) new btConeShape(radius, height);
 }
 
+
+
 //btConeShapeX
 pointer_t WASM_EXP btConeShapeX_create(btScalar radius, btScalar height)
 {
@@ -1278,29 +1217,6 @@ void WASM_EXP btRigidBody_setAngularFactor(pointer_t ptr, pointer_t angularFacto
 	rigid->setAngularFactor(*(btVector3 *)angularFactor);
 }
 
-
-void WASM_EXP btRigidBody_setSurfaceVelocity(pointer_t ptr, pointer_t vel, bool isLocal)
-//WASM_EXPNEW(btRigidBody_setLocalSurfaceVelocity)
-{
-	btRigidBody *rigid = (btRigidBody *)ptr;
-	rigid->setSurfaceVelocity(*(btVector3*)vel, isLocal);
-}
-
-void WASM_EXP btRigidBody_setSurfaceVelocityxyz(pointer_t ptr, btScalar x, btScalar y, btScalar z, bool isLocal)
-//WASM_EXPNEW(btRigidBody_setSurfaceVelocityxyz)
-{
-	btRigidBody *rigid = (btRigidBody *)ptr;
-	btVector3 vel(x,y,z);
-	rigid->setSurfaceVelocity(vel, isLocal);
-}
-
-pointer_t WASM_EXP btRigidBody_getSurfaceVelocity(pointer_t ptr)
-//WASM_EXPNEW(btRigidBody_getLocalSurfaceVelocity)
-{
-	btRigidBody *rigid = (btRigidBody *)ptr;
-	return (pointer_t)&rigid->getSurfaceVelocity();
-}
-
 pointer_t WASM_EXP btRigidBody_getGravity(pointer_t ptr)
 {
 	btRigidBody *rigid = (btRigidBody *)ptr;
@@ -1369,7 +1285,7 @@ void WASM_EXP btCollisionWorld_set_m_useContinuous(pointer_t ptr, bool useContin
 	info->m_useContinuous = useContinuous;
 }
 
-void WASM_EXP btCollisionWorld_set_UserInfo(pointer_t worldptr, pointer_t worldid)
+void WASM_EXP  btCollisionWorld_set_UserInfo(pointer_t worldptr, pointer_t worldid)
 //WASM_EXPNEW(btCollisionWorld_set_UserInfo)
 {
 	btDynamicsWorld *world = (btDynamicsWorld *)worldptr;
@@ -1448,39 +1364,8 @@ pointer_t WASM_EXP btDynamicsWorld_getSolverInfo(pointer_t ptr)
 	btDynamicsWorld *world = (btDynamicsWorld *)ptr;
 	return (pointer_t)&world->getSolverInfo();
 }
-/*
+
 //btDiscreteDynamicsWorld
-pointer_t WASM_EXP btSoftRigidDynamicsWorld_create(pointer_t dispatcher, pointer_t pairCache, pointer_t constraintSolver, pointer_t collisionConfiguration)
-//WASM_EXPNEW(btSoftRigidDynamicsWorld_create)
-{
-	return (pointer_t) new btSoftRigidDynamicsWorld((btDispatcher *)dispatcher, (btBroadphaseInterface *)pairCache, (btConstraintSolver *)constraintSolver, (btCollisionConfiguration *)collisionConfiguration);
-}
-
-void WASM_EXP btSoftRigidDynamicsWorld_addSoftBody(pointer_t ptr, pointer_t bodyptr)
-//WASM_EXPNEW(btSoftRigidDynamicsWorld_addSoftBody)
-{
-	btSoftRigidDynamicsWorld* world = (btSoftRigidDynamicsWorld*)ptr;
-	world->addSoftBody((btSoftBody*)bodyptr);
-
-}
-
-void WASM_EXP btSoftRigidDynamicsWorld_removeSoftBody(pointer_t worldptr, pointer_t bodyptr)
-//WASM_EXPNEW(btSoftRigidDynamicsWorld_removeSoftBody)
-{
-	btSoftRigidDynamicsWorld* world = (btSoftRigidDynamicsWorld*)worldptr;
-	world->removeSoftBody((btSoftBody*)bodyptr);
-
-}
-
-// btSoftRigidDynamicsWorld::removeCollisionObject 做了特殊处理，所以要调用这个
-void WASM_EXP btSoftRigidDynamicsWorld_removeCollisionObject(pointer_t worldptr, pointer_t bodyptr)
-//WASM_EXPNEW(btSoftRigidDynamicsWorld_removeCollisionObject)
-{
-	btSoftRigidDynamicsWorld* world = (btSoftRigidDynamicsWorld*)worldptr;
-	world->removeCollisionObject((btSoftBody*)bodyptr);
-
-}
-*/
 pointer_t WASM_EXP btDiscreteDynamicsWorld_create(pointer_t dispatcher, pointer_t pairCache, pointer_t constraintSolver, pointer_t collisionConfiguration)
 {
 	return (pointer_t) new btDiscreteDynamicsWorld((btDispatcher *)dispatcher, (btBroadphaseInterface *)pairCache, (btConstraintSolver *)constraintSolver, (btCollisionConfiguration *)collisionConfiguration);
@@ -1720,12 +1605,14 @@ void WASM_EXP btKinematicCharacterController_setCurrentPosition(pointer_t ptr, b
 	btKinematicCharacterController *character = (btKinematicCharacterController *)ptr;
 	character->setCurrentPosition(x,y,z);
 }
+
 pointer_t WASM_EXP btKinematicCharacterController_getCurrentOrientation(pointer_t ptr)
 //WASM_EXPNEW(btKinematicCharacterController_getCurrentOrientation)
 {
 	btKinematicCharacterController *character = (btKinematicCharacterController *)ptr;
 	return (pointer_t)character->getCurrentOrientation();
 }
+
 void WASM_EXP btKinematicCharacterController_setUseGhostSweepTest(pointer_t ptr, bool b)
 //WASM_EXPNEW(btKinematicCharacterController_setUseGhostSweepTest)
 {
@@ -1760,19 +1647,20 @@ pointer_t WASM_EXP btGhostPairCallback_create()
 
 
 //btTypedConstraint interface
-void WASM_EXP btTypedConstraint_setEnabled(pointer_t constraintptr, bool enabled)// WASM_EXPNEW(btTypedConstraint_setEnabled)
+void WASM_EXP btTypedConstraint_setEnabled(pointer_t constraintptr, bool enabled) //WASM_EXPNEW(btTypedConstraint_setEnabled)
 {
 	btTypedConstraint* constraint = (btTypedConstraint *)constraintptr;
 	constraint->setEnabled(enabled);
 }
 
-void WASM_EXP btCollisionWorld_addConstraint(pointer_t ptr, pointer_t constraintptr, bool disableCollisionsBetweenLinkedBodies)// WASM_EXPNEW(btCollisionWorld_addConstraint)
+void WASM_EXP btCollisionWorld_addConstraint(pointer_t ptr, pointer_t constraintptr, bool disableCollisionsBetweenLinkedBodies) //WASM_EXPNEW(btCollisionWorld_addConstraint)
 {
 	btDiscreteDynamicsWorld *world = (btDiscreteDynamicsWorld *)ptr;
 	btTypedConstraint* constraint = (btTypedConstraint *)constraintptr;
 	world->addConstraint(constraint, disableCollisionsBetweenLinkedBodies);
 }
 void WASM_EXP btCollisionWorld_removeConstraint(pointer_t ptr, pointer_t constraintptr)
+//WASM_EXPNEW(btCollisionWorld_removeConstraint)
 {
 	btDiscreteDynamicsWorld *world = (btDiscreteDynamicsWorld *)ptr;
 	btTypedConstraint* constraint = (btTypedConstraint *)constraintptr;
@@ -1780,19 +1668,21 @@ void WASM_EXP btCollisionWorld_removeConstraint(pointer_t ptr, pointer_t constra
 }
 
 
-pointer_t  WASM_EXP btJointFeedback_create()// WASM_EXPNEW(btJointFeedback_create)
+pointer_t  WASM_EXP btJointFeedback_create() //WASM_EXPNEW(btJointFeedback_create)
 {
 	btJointFeedback* jointFeedback = new btJointFeedback();
 	return (pointer_t) jointFeedback;
 }
 
 void WASM_EXP btJointFeedback_destroy(pointer_t jointFeedbackptr)
+//WASM_EXPNEW(btJointFeedback_destroy)
 {
 	btJointFeedback* jointFeedback = (btJointFeedback *)jointFeedbackptr;
 	delete jointFeedback;
 }
 
-void WASM_EXP btTypedConstraint_setJointFeedback(pointer_t constraintptr, pointer_t jointFeedbackptr)// WASM_EXPNEW(btTypedConstraint_setJointFeedback)
+void WASM_EXP btTypedConstraint_setJointFeedback(pointer_t constraintptr, pointer_t jointFeedbackptr) //WASM_EXPNEW(btTypedConstraint_setJointFeedback)
+//WASM_EXPNEW(btTypedConstraint_setJointFeedback)
 {
 	btTypedConstraint* constraint = (btTypedConstraint *)constraintptr;
 	btJointFeedback* jointFeedback = (btJointFeedback *)jointFeedbackptr;
@@ -1831,22 +1721,26 @@ void WASM_EXP btTypedConstraint_destroy(pointer_t constraintptr)
 }
 
 pointer_t WASM_EXP btJointFeedback_getAppliedForceBodyA(pointer_t jointFeedbackptr)
+//WASM_EXPNEW(btJointFeedback_getAppliedForceBodyA)
 {
 	btJointFeedback* jointFeedback = (btJointFeedback *)jointFeedbackptr;
 	return (pointer_t) &(jointFeedback->m_appliedForceBodyA);
 }
 pointer_t WASM_EXP btJointFeedback_getAppliedForceBodyB(pointer_t jointFeedbackptr)
+//WASM_EXPNEW(btJointFeedback_getAppliedForceBodyB)
 {
 	btJointFeedback* jointFeedback = (btJointFeedback *)jointFeedbackptr;
 	return (pointer_t) &(jointFeedback->m_appliedForceBodyB);
 }
 
 pointer_t WASM_EXP btJointFeedback_getAppliedTorqueBodyA(pointer_t jointFeedbackptr)
+//WASM_EXPNEW(btJointFeedback_getAppliedTorqueBodyA)
 {
 	btJointFeedback* jointFeedback = (btJointFeedback *)jointFeedbackptr;
 	return (pointer_t) &(jointFeedback->m_appliedTorqueBodyA);
 }
 pointer_t WASM_EXP btJointFeedback_getAppliedTorqueBodyB(pointer_t jointFeedbackptr)
+//WASM_EXPNEW(btJointFeedback_getAppliedTorqueBodyB)
 {
 	btJointFeedback* jointFeedback = (btJointFeedback *)jointFeedbackptr;
 	return (pointer_t) &(jointFeedback->m_appliedTorqueBodyB);
@@ -1866,7 +1760,7 @@ pointer_t WASM_EXP btFixedConstraint_create(pointer_t rigidBodyA, pointer_t fram
 
 //btGeneric6DofSpring2Constraint interface
 pointer_t WASM_EXP btGeneric6DofSpring2Constraint_create(pointer_t rigidBodyAptr, pointer_t frameInAptr,
-	pointer_t rigidBodyBptr, pointer_t frameInBptr, int rotOrder) //WASM_EXPNEW(btGeneric6DofSpring2Constraint_create)
+	pointer_t rigidBodyBptr, pointer_t frameInBptr, int rotOrder)// WASM_EXPNEW(btGeneric6DofSpring2Constraint_create)
 {
 	btRigidBody * rigidBodyA = (btRigidBody *)rigidBodyAptr;
 	btTransform * frameInA = (btTransform *)frameInAptr;
@@ -1889,7 +1783,7 @@ pointer_t WASM_EXP btGeneric6DofSpring2Constraint_create(pointer_t rigidBodyAptr
 	return (pointer_t)btConstraintPtr;
 }
 
-void WASM_EXP btGeneric6DofSpring2Constraint_setAxis(pointer_t g6ds2Constraintptr, pointer_t axis1, pointer_t axis2)// WASM_EXPNEW(btGeneric6DofSpring2Constraint_setAxis)
+void WASM_EXP btGeneric6DofSpring2Constraint_setAxis(pointer_t g6ds2Constraintptr, pointer_t axis1, pointer_t axis2) //WASM_EXPNEW(btGeneric6DofSpring2Constraint_setAxis)
 {
 	btVector3 * axisVec1 = (btVector3 *)axis1;
 	btVector3 * axisVec2 = (btVector3 *)axis2;
@@ -1976,6 +1870,7 @@ void WASM_EXP btGeneric6DofSpring2Constraint_setRotationOrder(pointer_t g6ds2Con
 	btGeneric6DofSpring2Constraint * btConstraint = (btGeneric6DofSpring2Constraint *)g6ds2Constraintptr;
 	btConstraint->setRotationOrder(  (RotateOrder)order);
 }
+
 
 pointer_t WASM_EXP btRaycastVehicle_create(pointer_t pWorld, pointer_t pRigid)
 //WASM_EXPNEW(btRaycastVehicle_create)
@@ -2120,7 +2015,7 @@ int heightStickWidth,int heightStickLength,
 	                          bool flipQuadEdges
 */
 
-	return (pointer_t)new btHeightfieldTerrainShape(heightStickWidth,heightStickLength, (const void*)heightfieldData,heightScale,minHeight,maxHeight,1,(PHY_ScalarType)datatype,false);
+	return (pointer_t)new btHeightfieldTerrainShape(heightStickWidth,heightStickLength,(const void*)heightfieldData,heightScale,minHeight,maxHeight,1,(PHY_ScalarType)datatype,false);
 }
 
 pointer_t WASM_EXP _malloc(int size)
@@ -2133,13 +2028,13 @@ pointer_t WASM_EXP _malloc(int size)
 // runtime要实现这个接口
 void WASM_EXP copyJSArray(pointer_t ptr, JSValueAsParam jsarray)
 {
-	char* data = NULL;
-	int dataLength = 0;
-	bool bIsArrayBuffer = extractJSAB(jsarray, data, dataLength);
-	if (bIsArrayBuffer && dataLength > 0)
-	{
-		memcpy((void*)ptr, data, dataLength);
-	}
+    char* data = NULL;
+    int dataLength = 0;
+    bool bIsArrayBuffer = extractJSAB(jsarray, data, dataLength);
+    if (bIsArrayBuffer && dataLength > 0)
+    {
+        memcpy((void*)ptr, data, dataLength);
+    }
 }
 
 

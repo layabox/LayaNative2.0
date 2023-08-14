@@ -1,6 +1,7 @@
 #ifndef __LayaBulletExport_H__
 #define __LayaBulletExport_H__
 
+#include <JCConch.h>
 #include "../../../JCScriptRuntime.h"
 #include "../../JSInterface/JSInterface.h"
 #include "btBulletDynamicsCommon.h"
@@ -10,7 +11,7 @@
 #include "BulletDynamics/Character/btKinematicCharacterController.h"
 #include "BulletCollision/CollisionShapes/btHeightfieldTerrainShape.h"
 #include "BulletSoftBody/btSoftRigidDynamicsWorld.h"
-//#include "../../JSWrapper/LayaWrap/JSRuntime.h"
+#include "../../JSWrapper/LayaWrap/JSRuntime.h"
 #define  WASM_EXP JSLayaConchBullet::
 #define __BTWASM_SYSCALL_NAME(name)
 typedef intptr_t pointer_t;
@@ -18,19 +19,11 @@ namespace laya
 {
     inline void layaMotionStateGetWorldTransform(int32_t rigidBodyID, pointer_t worldTrans)
     {
-        JCScriptRuntime* pScriptRuntime = JCScriptRuntime::s_JSRT;
-        if (pScriptRuntime)
-        {
-            pScriptRuntime->m_bJSBulletGetWorldTransformHandle.Call(rigidBodyID, worldTrans);
-        }
+		JCConch::s_pScriptRuntime->m_bJSBulletGetWorldTransformHandle.Call(rigidBodyID, worldTrans);
     }
     inline void layaMotionStateSetWorldTransform(int32_t rigidBodyID, const pointer_t worldTrans)
     {
-        JCScriptRuntime* pScriptRuntime = JCScriptRuntime::s_JSRT;
-        if (pScriptRuntime)
-        {
-            pScriptRuntime->m_bJSBulletSetWorldTransformHandle.Call(rigidBodyID, worldTrans);
-        }
+		JCConch::s_pScriptRuntime->m_bJSBulletSetWorldTransformHandle.Call(rigidBodyID, worldTrans);
     }
 
 
@@ -113,7 +106,7 @@ namespace laya
         bool  RayResultCallback_hasHit(pointer_t ptr);
         void  RayResultCallback_set_m_collisionFilterGroup(pointer_t ptr, int group);
         void  RayResultCallback_set_m_collisionFilterMask(pointer_t ptr, int mask);
-		void  RayResultCallback_set_m_ignoreTrigger(pointer_t ptr, bool ignoreTrigger);
+		//void  RayResultCallback_set_m_ignoreTrigger(pointer_t ptr, bool ignoreTrigger);
         btScalar  RayResultCallback_get_m_closestHitFraction(pointer_t ptr);
         void  RayResultCallback_set_m_closestHitFraction(pointer_t ptr, btScalar fraction);
         pointer_t  RayResultCallback_get_m_collisionObject(pointer_t ptr);
@@ -325,9 +318,9 @@ namespace laya
 		void btDiscreteDynamicsWorld_SphereQuery(pointer_t ptr, btScalar posx, btScalar posy, btScalar posz, btScalar radius);
 		pointer_t btRaycastVehicle_create(pointer_t pWorld, pointer_t pRigid);
 		pointer_t btRaycastVehicle_addWheel(pointer_t ptr,
-			btScalar connectionPointCSx, btScalar connectionPointCSy, btScalar connectionPointCSz,	// ³µÌå¿Õ¼äÁ¬½Óµã
-			btScalar wheelDirectionCS0x, btScalar wheelDirectionCS0y, btScalar wheelDirectionCS0z,	// ³µÂÖ³¯Ïò
-			btScalar wheelAxleCSx, btScalar wheelAxleCSy, btScalar wheelAxleCSz, 					// ³µÂÖÖá
+			btScalar connectionPointCSx, btScalar connectionPointCSy, btScalar connectionPointCSz,	// ï¿½ï¿½ï¿½ï¿½Õ¼ï¿½ï¿½ï¿½ï¿½Óµï¿½
+			btScalar wheelDirectionCS0x, btScalar wheelDirectionCS0y, btScalar wheelDirectionCS0z,	// ï¿½ï¿½ï¿½Ö³ï¿½ï¿½ï¿½
+			btScalar wheelAxleCSx, btScalar wheelAxleCSy, btScalar wheelAxleCSz, 					// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			btScalar suspensionRestLength, btScalar wheelRadius,
 			//tuning
 			btScalar suspensionStiffness,
@@ -367,17 +360,17 @@ namespace laya
 		void btKinematicCharacterController_setUseGhostSweepTest(pointer_t ptr, bool b);
 		pointer_t btKinematicCharacterController_AllHitInfo_get_m_collisionObjects(pointer_t ptr);
 		void btGeneric6DofSpring2Constraint_setRotationOrder(pointer_t g6ds2Constraintptr, int order);
-		bool solveSphereHit(btScalar fromx, btScalar fromy, btScalar fromz, btScalar tox, btScalar toy, btScalar toz, pointer_t npSphere, int group, int mask, pointer_t npWorld, pointer_t noutPos);
+        bool solveSphereHit(btScalar fromx, btScalar fromy, btScalar fromz, btScalar tox, btScalar toy, btScalar toz, pointer_t npSphere, int group, int mask, pointer_t npWorld, pointer_t noutPos);
 
 		//pointer_t btSoftRigidDynamicsWorld_create(pointer_t dispatcher, pointer_t pairCache, pointer_t constraintSolver, pointer_t collisionConfiguration);
 		//void btSoftRigidDynamicsWorld_addSoftBody(pointer_t ptr, pointer_t bodyptr);
 		//void btSoftRigidDynamicsWorld_removeSoftBody(pointer_t worldptr, pointer_t bodyptr);
 		//void btSoftRigidDynamicsWorld_removeCollisionObject(pointer_t worldptr, pointer_t bodyptr);
-		void btRigidBody_setSurfaceVelocity(pointer_t ptr, pointer_t vel, bool isLocal);
+		//void btRigidBody_setSurfaceVelocity(pointer_t ptr, pointer_t vel, bool isLocal);
 
-		void btRigidBody_setSurfaceVelocityxyz(pointer_t ptr, btScalar x, btScalar y, btScalar z, bool isLocal);
+		//void btRigidBody_setSurfaceVelocityxyz(pointer_t ptr, btScalar x, btScalar y, btScalar z, bool isLocal);
 		pointer_t btRigidBody_getSurfaceVelocity(pointer_t ptr);
-		void btCollisionObject_setHasCDCallback(pointer_t ptr,bool b);
+		//void btCollisionObject_setHasCDCallback(pointer_t ptr,bool b);
     };
 }
 #endif

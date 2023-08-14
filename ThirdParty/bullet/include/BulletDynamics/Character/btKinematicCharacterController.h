@@ -146,7 +146,6 @@ protected:
 
 	int  hitFlag;
 	btScalar m_PushForce=1.0;
-	btScalar m_stepLeft=0.0;
 
 	btVector3 computeReflectionDirection (const btVector3& direction, const btVector3& normal);
 	btVector3 parallelComponent (const btVector3& direction, const btVector3& normal);
@@ -177,8 +176,6 @@ public:
 	///btActionInterface interface
 	virtual void updateAction( btCollisionWorld* collisionWorld,btScalar deltaTime)
 	{
-		// 如果多步的话，后面的不做。现在是根据实际帧时间做的，做多步有问题
-		if(collisionWorld->m_subStep>0) return;
 		pDbgDrawer = collisionWorld->getDebugDrawer();
 		preStep ( collisionWorld);
 		playerStep (collisionWorld, deltaTime);
@@ -224,7 +221,6 @@ public:
 
 	void preStep (  btCollisionWorld* collisionWorld);
 	void playerStep ( btCollisionWorld* collisionWorld, btScalar dt);
-	void _playerStep ( btCollisionWorld* collisionWorld, btScalar dt);
 
 	void setStepHeight(btScalar h);
 	btScalar getStepHeight() const { return m_stepHeight; }

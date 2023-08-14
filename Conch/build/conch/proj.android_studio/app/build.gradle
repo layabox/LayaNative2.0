@@ -17,8 +17,8 @@ android {
         applicationId "com.layabox.conch6"
         minSdkVersion 14
         targetSdkVersion 28
-        versionCode 22
-        versionName "release-2.13.1"
+        versionCode 23
+        versionName "release-2.13.3"
     }
     sourceSets.main{
         jniLibs.srcDir 'libs'

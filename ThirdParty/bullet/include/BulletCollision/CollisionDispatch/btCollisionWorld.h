@@ -108,8 +108,6 @@ protected:
 	void	serializeCollisionObjects(btSerializer* serializer);
 
 public:
-	btScalar m_realFrameDt=1.0/60.0;	// 实际帧间隔时间，临时方案，给角色使用
-	int 	m_subStep=0;	// 补帧的话，这是第几个帧，例如最多补3帧，则这个可能是0,1,2
 
 	//this constructor doesn't own the dispatcher and paircache/broadphase
 	btCollisionWorld(btDispatcher* dispatcher,btBroadphaseInterface* broadphasePairCache, btCollisionConfiguration* collisionConfiguration);
@@ -210,7 +208,6 @@ public:
 		const btCollisionObject*		m_collisionObject;
 		int	m_collisionFilterGroup;
 		int	m_collisionFilterMask;
-		bool m_ignoreTrigger;
 		//@BP Mod - Custom flags, currently used to enable backface culling on tri-meshes, see btRaycastCallback.h. Apply any of the EFlags defined there on m_flags here to invoke.
 		unsigned int m_flags;
 
@@ -234,10 +231,6 @@ public:
 
 		virtual bool needsCollision(btBroadphaseProxy* proxy0) const
 		{
-			btCollisionObject* pobj = (btCollisionObject*)proxy0->m_clientObject;
-			if(m_ignoreTrigger && !pobj->hasContactResponse()){
-				return false;
-			}
 			bool collides = (proxy0->m_collisionFilterGroup & m_collisionFilterMask) != 0;
 			collides = collides && (m_collisionFilterGroup & proxy0->m_collisionFilterMask);
 			return collides;

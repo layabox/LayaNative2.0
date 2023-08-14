@@ -124,9 +124,6 @@ protected:
 
 	btVector3	m_customDebugColorRGB;
 
-	// 如果不是动态对象，是否有碰撞回调，如果碰撞双方都没有，则不进行窄阶段的检测。为了提高效率
-	bool 		m_hasCDCallback;
-
 public:
 
 	BT_DECLARE_ALIGNED_ALLOCATOR();
@@ -266,13 +263,8 @@ public:
 		return true;
 	}
 
-	void setHasCDCallback(bool b){
-		m_hasCDCallback=b;
-	}
+
 	
-	bool getHasCDCallback() const{
-		return m_hasCDCallback;
-	}
 
 	///Avoid using this internal API call, the extension pointer is used by some Bullet extensions. 
 	///If you need to store your own user pointer, use 'setUserPointer/getUserPointer' instead.
