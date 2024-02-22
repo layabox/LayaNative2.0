@@ -480,10 +480,10 @@ class MouseEvent extends UIEvent {
 }
 var _lbMouseEvent = window['MouseEvent'] = MouseEvent;
 class MouseWheelEvent extends MouseEvent {
-    initMouseWheelEvent(typeArg, canBubbleArg, cancelableArg, viewArg, detailArg, screenXArg, screenYArg, clientXArg, clientYArg, buttonArg, relatedTargetArg, modifiersListArg, wheelDeltaArg) {
-    }
     constructor() {
         super("mousewheel");
+    }
+    initMouseWheelEvent(typeArg, canBubbleArg, cancelableArg, viewArg, detailArg, screenXArg, screenYArg, clientXArg, clientYArg, buttonArg, relatedTargetArg, modifiersListArg, wheelDeltaArg) {
     }
 }
 class WheelEvent extends MouseEvent {
@@ -962,6 +962,8 @@ var _lbKeyboardEvent = window["KeyboardEvent"] = KeyboardEvent;
     });
 })(window.document);
 class Navigator {
+    constructor() {
+    }
     get appName() { return 'Netscape'; }
     get appVersion() { return this.userAgent; }
     ;
@@ -990,8 +992,6 @@ class Navigator {
     get language() { return 'zh-CN'; }
     ;
     get userLanguage() { return 'zh-CN'; }
-    constructor() {
-    }
     getGamepads() {
         return null;
     }
@@ -6310,6 +6310,10 @@ class HTMLMediaElement extends HTMLElement {
     }
 }
 class HTMLMetaElement extends HTMLElement {
+    constructor() {
+        super();
+        this.tagName = "META";
+    }
     get httpEquiv() {
         return this["http-equiv"];
     }
@@ -6320,10 +6324,6 @@ class HTMLMetaElement extends HTMLElement {
     }
     get name() {
         return this._name;
-    }
-    constructor() {
-        super();
-        this.tagName = "META";
     }
 }
 class HTMLAudioElement extends HTMLMediaElement {
@@ -6895,9 +6895,6 @@ class _jsXmlAttr {
     }
 }
 class _jsXmlNode extends _jsXmlAttr {
-    get firstChild() {
-        return this.childNodes ? this.childNodes[0] : null;
-    }
     constructor() {
         super("", "");
         this.childNodes = [];
@@ -6905,6 +6902,9 @@ class _jsXmlNode extends _jsXmlAttr {
             return this[i];
         };
         this.attributes = [];
+    }
+    get firstChild() {
+        return this.childNodes ? this.childNodes[0] : null;
     }
     getElementsByTagName(name) {
         var result = [];

@@ -1,7 +1,6 @@
 #ifndef __LayaBulletExport_H__
 #define __LayaBulletExport_H__
 
-#include <JCConch.h>
 #include "../../../JCScriptRuntime.h"
 #include "../../JSInterface/JSInterface.h"
 #include "btBulletDynamicsCommon.h"
@@ -11,7 +10,6 @@
 #include "BulletDynamics/Character/btKinematicCharacterController.h"
 #include "BulletCollision/CollisionShapes/btHeightfieldTerrainShape.h"
 #include "BulletSoftBody/btSoftRigidDynamicsWorld.h"
-#include "../../JSWrapper/LayaWrap/JSRuntime.h"
 #define  WASM_EXP JSLayaConchBullet::
 #define __BTWASM_SYSCALL_NAME(name)
 typedef intptr_t pointer_t;
@@ -19,11 +17,19 @@ namespace laya
 {
     inline void layaMotionStateGetWorldTransform(int32_t rigidBodyID, pointer_t worldTrans)
     {
-		JCConch::s_pScriptRuntime->m_bJSBulletGetWorldTransformHandle.Call(rigidBodyID, worldTrans);
+        JCScriptRuntime* pScriptRuntime = JCScriptRuntime::s_JSRT;
+        if (pScriptRuntime)
+        {
+            pScriptRuntime->m_bJSBulletGetWorldTransformHandle.Call(rigidBodyID, worldTrans);
+        }
     }
     inline void layaMotionStateSetWorldTransform(int32_t rigidBodyID, const pointer_t worldTrans)
     {
-		JCConch::s_pScriptRuntime->m_bJSBulletSetWorldTransformHandle.Call(rigidBodyID, worldTrans);
+        JCScriptRuntime* pScriptRuntime = JCScriptRuntime::s_JSRT;
+        if (pScriptRuntime)
+        {
+            pScriptRuntime->m_bJSBulletSetWorldTransformHandle.Call(rigidBodyID, worldTrans);
+        }
     }
 
 
