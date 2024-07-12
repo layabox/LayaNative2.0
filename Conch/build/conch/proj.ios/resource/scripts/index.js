@@ -59,7 +59,7 @@ function initFreeType() {
             if (sOS == "Conch-window") {
                 bRet = _conchTextCanvas.initFreeTypeDefaultFontFromFile("C:/Windows/Fonts/simhei.ttf");
             }
-            else if (sOS == "Conch-android") {
+            else if (sOS == "Conch-android" || sOS == "Conch-ohos") {
                 var fSystemVersion = navigator.sv;
                 if (fSystemVersion >= 2.0 && fSystemVersion < 5.0) {
                     bRet = _conchTextCanvas.initFreeTypeDefaultFontFromFile("/system/fonts/DFHEIA5A.ttf");

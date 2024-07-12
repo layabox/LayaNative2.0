@@ -13,8 +13,9 @@
 #include <util/JCColor.h>
 #include "../../CToObjectC.h"
 #include "../../JCScriptRuntime.h"
-	
-namespace laya 
+#include <util/ColorParser.h>
+
+namespace laya
 {
 ADDJSCLSINFO(JSIOSEditBox, JSObjNode);
 //------------------------------------------------------------------------------
@@ -207,7 +208,12 @@ void JSIOSEditBox::blur()
 //------------------------------------------------------------------------------
 void JSIOSEditBox::setColor( const char* p_sColor )
 {
-    int nColor = JCColor::getColorUintFromString( p_sColor );
+    uint32_t colorR{0};
+    uint32_t colorG{0};
+    uint32_t colorB{0};
+    uint32_t colorA{0};
+    parseRGBAFromString(p_sColor, colorR, colorG, colorB, colorA);
+    int nColor = colorA << 24 | colorR << 16 | colorG << 8 | colorB;
 	CToObjectCSetEditBoxColor( nColor );
 }
 //------------------------------------------------------------------------------

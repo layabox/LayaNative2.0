@@ -350,6 +350,7 @@
 		A2D1183A1D0BB25E004C229D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
 				OTHER_CFLAGS = (
 					"-I../../../include/common",
 					"-I../../../../ThirdParty/freetype/include/ios",
@@ -370,6 +371,7 @@
 		A2D1183B1D0BB25E004C229D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				OTHER_CFLAGS = (
 					"-I../../../include/common",

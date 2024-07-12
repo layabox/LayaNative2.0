@@ -65,6 +65,25 @@ namespace laya
 		    JCAudioWavPlayer* pWavPlayer = m_sAudioManager->m_pWavPlayer;
 		    if( pWavPlayer != NULL )
 		    {
+				#ifdef OHOS
+				int nALCount = pWavPlayer->m_pAudioRenderSource.size();
+                for (int i = 0; i < nALCount; i++)
+			    {
+					if( pWavPlayer->m_pAudioRenderSource[i]->m_bPlaying == true ) {
+						OHAudioRenderInfo* pAudioRenderInfo = pWavPlayer->m_pAudioRenderSource[i];
+						if(pAudioRenderInfo->_audioRender != nullptr) {
+							OH_AudioRenderer_Stop(pAudioRenderInfo->_audioRender);
+							OH_AudioRenderer_Release(pAudioRenderInfo->_audioRender);
+						}
+						if(pAudioRenderInfo->_builder != nullptr) {
+							OH_AudioStreamBuilder_Destroy(pAudioRenderInfo->_builder);
+						}
+						pAudioRenderInfo->m_pAudio = NULL;
+						pAudioRenderInfo->m_bPlaying = false;
+					}
+			    }
+
+				#else
                 int nALCount = pWavPlayer->m_pOpenALSource.size();
                 for (int i = 0; i < nALCount; i++)
 			    {
@@ -75,6 +94,7 @@ namespace laya
 					    pWavPlayer->m_pOpenALSource[i]->m_bPlaying = false;
 				    }
 			    }
+				#endif
 			    pWavPlayer->ClearAllWaveInfo();
 		    }
 		    m_sAudioManager->ClearAllAudioBufferPlay();
@@ -100,6 +120,8 @@ namespace laya
 	    m_pMp3Player = new JCAudioMp3Player();
     #elif ANDROID
 	    m_pMp3Player = new JCAudioMp3Media();
+    #elif OHOS
+	    m_pMp3Player = new JCAudioMp3Player();
     #elif __APPLE__
         m_pMp3Player = new JCAudioMp3Player();
     #endif
@@ -196,6 +218,21 @@ namespace laya
 	    }
     }
     //------------------------------------------------------------------------------
+
+	#ifdef OHOS
+    OHAudioRenderInfo* JCAudioManager::playWav(JCAudioInterface* p_pAudio, const std::string& p_sUrl, bool bIsOgg)
+    {
+        return m_pWavPlayer->playAudio(p_pAudio, p_sUrl, bIsOgg);
+    }
+    void JCAudioManager::stopWav(OHAudioRenderInfo* audioRenderInfo)
+    {
+        m_pWavPlayer->stop(audioRenderInfo);
+    }
+    void JCAudioManager::setWavVolume(OHAudioRenderInfo* audioRenderInfo, float nVolume)
+    {
+        m_pWavPlayer->setVolume(audioRenderInfo, nVolume);
+    }
+	#else
     OpenALSourceInfo* JCAudioManager::playWav(JCAudioInterface* p_pAudio, const std::string& p_sUrl, bool bIsOgg)
     {
         return m_pWavPlayer->playAudio(p_pAudio, p_sUrl, bIsOgg);
@@ -204,13 +241,15 @@ namespace laya
     {
         m_pWavPlayer->stop(pOpenALInfo);
     }
-    void JCAudioManager::stopAllWav()
-    {
-        m_pWavPlayer->stopAll();
-    }
     void JCAudioManager::setWavVolume(OpenALSourceInfo* pOpenALInfo, float nVolume)
     {
         m_pWavPlayer->setVolume(pOpenALInfo, nVolume);
+    }
+	#endif
+
+    void JCAudioManager::stopAllWav()
+    {
+        m_pWavPlayer->stopAll();
     }
     void JCAudioManager::setAllWavVolume(float nVolume)
     {

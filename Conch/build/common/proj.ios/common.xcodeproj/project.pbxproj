@@ -11,6 +11,7 @@
 		24760D802081C3E600594375 /* JCFontInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 24760D792081C3E500594375 /* JCFontInfo.cpp */; };
 		24760D812081C3E600594375 /* JCFontManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 24760D7C2081C3E500594375 /* JCFontManager.cpp */; };
 		5E6806501D7D504C002A7575 /* JCHttpHeader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E68064E1D7D504C002A7575 /* JCHttpHeader.cpp */; };
+		8A23427F2C0D6EEB00960E8E /* ColorParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8A23427D2C0D6EEB00960E8E /* ColorParser.cpp */; };
 		8A4296901B6757DB0072C3F7 /* libcommon.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A4296841B6757DB0072C3F7 /* libcommon.a */; };
 		8AEDB763288FBFDD00EE4A31 /* JCArrayBufferManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8AEDB762288FBFDD00EE4A31 /* JCArrayBufferManager.cpp */; };
 		8AEDB767288FBFFE00EE4A31 /* JCWebGLPlus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8AEDB765288FBFFE00EE4A31 /* JCWebGLPlus.cpp */; };
@@ -87,6 +88,8 @@
 		24760D7D2081C3E500594375 /* JCFreeTypeRender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JCFreeTypeRender.h; sourceTree = "<group>"; };
 		5E68064E1D7D504C002A7575 /* JCHttpHeader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = JCHttpHeader.cpp; sourceTree = "<group>"; };
 		5E68064F1D7D504C002A7575 /* JCHttpHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JCHttpHeader.h; sourceTree = "<group>"; };
+		8A23427D2C0D6EEB00960E8E /* ColorParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ColorParser.cpp; sourceTree = "<group>"; };
+		8A23427E2C0D6EEB00960E8E /* ColorParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ColorParser.h; sourceTree = "<group>"; };
 		8A4296841B6757DB0072C3F7 /* libcommon.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libcommon.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		8A42968F1B6757DB0072C3F7 /* commonTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = commonTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8A4296951B6757DB0072C3F7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -408,6 +411,8 @@
 		8A42A0671B675CEF0072C3F7 /* util */ = {
 			isa = PBXGroup;
 			children = (
+				8A23427D2C0D6EEB00960E8E /* ColorParser.cpp */,
+				8A23427E2C0D6EEB00960E8E /* ColorParser.h */,
 				A242E3E91D813D420013CCF0 /* JCFlog.cpp */,
 				A242E3EA1D813D420013CCF0 /* JCFlog.h */,
 				A2D11A001D0C2D65004C229D /* JCIniFile.cpp */,
@@ -634,6 +639,7 @@
 				A2D117861D0B9BB0004C229D /* JCCurlWrap.cpp in Sources */,
 				A2D117BE1D0B9C20004C229D /* JCLayaThreadPool.cpp in Sources */,
 				A2D117791D0B9B8B004C229D /* JCBuffer.cpp in Sources */,
+				8A23427F2C0D6EEB00960E8E /* ColorParser.cpp in Sources */,
 				A2D117811D0B9B9B004C229D /* JCServerFileCache.cpp in Sources */,
 				A2D117A61D0B9BF5004C229D /* JCImageRW.cpp in Sources */,
 				A2FBA970270432F900846E17 /* JCPlane.cpp in Sources */,
@@ -748,10 +754,11 @@
 		8A4296991B6757DB0072C3F7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
 				CLANG_CXX_LIBRARY = "libc++";
 				OTHER_CFLAGS = (
 					"-I../../../../ThirdParty/freetype/include/ios",
-					"-I../../../../ThirdParty/jpeg/include/ios",
+					"-I../../../../ThirdParty/jpeg-turbo/include/ios",
 					"-I../../../../ThirdParty/zip/include/ios",
 					"-I../../../../ThirdParty/curl/include/ios",
 					"-I../../../../ThirdParty/png/include/ios",
@@ -770,12 +777,13 @@
 		8A42969A1B6757DB0072C3F7 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
 				CLANG_CXX_LIBRARY = "libc++";
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				OTHER_CFLAGS = (
 					"-I../../../../ThirdParty/freetype/include/ios",
-					"-I../../../../ThirdParty/jpeg/include/ios",
+					"-I../../../../ThirdParty/jpeg-turbo/include/ios",
 					"-I../../../../ThirdParty/zip/include/ios",
 					"-I../../../../ThirdParty/curl/include/ios",
 					"-I../../../../ThirdParty/png/include/ios",

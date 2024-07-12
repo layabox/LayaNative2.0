@@ -17,7 +17,7 @@ LOCAL_CFLAGS := \
   -DBT_USE_DOUBLE_PRECISION \
   -frtti
 
-LOCAL_CPPFLAGS += -std=c++11
+LOCAL_CPPFLAGS += -std=c++17
 
 ifeq ($(APP_PERFTEST),1)
 LOCAL_CFLAGS += -DPERFTEST 
@@ -63,6 +63,7 @@ LOCAL_SRC_FILES := \
         ../../../../source/common/util/JCZlib.cpp \
         ../../../../source/common/util/Log.cpp \
         ../../../../source/common/util/JCFlog.cpp \
+        ../../../../source/common/util/ColorParser.cpp \
 		../../../../source/common/math/JCBoundingBox.cpp \
 		../../../../source/common/math/JCBoundingFrustum.cpp \
 		../../../../source/common/math/JCBoundingSphere.cpp \
@@ -81,7 +82,7 @@ LOCAL_SRC_FILES := \
 
 LOCAL_C_INCLUDES := ../../../../../ThirdParty/curl/include/android \
         ../../../../../ThirdParty/png/include/android \
-        ../../../../../ThirdParty/jpeg/include/android \
+        ../../../../../ThirdParty/jpeg-turbo/include/android \
         ../../../../../ThirdParty/freetype/include/android \
         ../../../../../ThirdParty/zip/include/android \
         ../../../../../ThirdParty/ogg/include/android \

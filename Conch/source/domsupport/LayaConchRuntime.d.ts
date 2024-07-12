@@ -665,10 +665,7 @@ interface conch {
     __onerror:Function;
     onunhandledrejection:Function;
     __onunhandledrejection:Function;
-    callWebviewJS(methodName:string,parms:string,callbackMethodName:string);
     exp:any;
-    showWebView();
-    hideWebView();
     captureScreen(cb:(ab:ArrayBuffer,w:number,h:number)=>void):void;
     saveAsPng(ab:ArrayBuffer,w:number,h:number,file:string);
 	loadingAuto:boolean;
@@ -705,21 +702,6 @@ interface conch {
     showLoadingView(b: boolean): void;
     showWaiting(b: boolean): void;
     showAssistantTouch(b: boolean): void;
-    /**
-     * 显示一个webview
-     */
-    setExternalLink(url: string): void;
-    /**
-     * 显示一个webview
-     * @param url {string} 要显示的url地址。
-     * @param posx {number} weview的左上角位置
-     * @param posy {number} webivew的左上角位置
-     * @param width {number} webview的宽度
-     * @param height {number} webview的高度
-     * @param canclose {boolean} webview是否可以被关掉。
-     */ 
-    setExternalLinkEx(url:string,posx:number, posy:number,width:number,height:number,canclose:boolean):void;
-    closeExternalLink(): void;
     setScreenWakeLock(b: boolean): void;
     setUrlToLower(b: boolean): void;
     setFontFace(family: string, src: string, type: string): void;

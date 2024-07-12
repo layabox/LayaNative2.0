@@ -22,6 +22,8 @@
     #include "JSWrapper/LayaWrap/JSAndroidEditBox.h"    
 #elif __APPLE__
     #include "JSWrapper/LayaWrap/JSIOSEditBox.h"
+#elif OHOS
+    #include "JSWrapper/LayaWrap/JSOHOSEditBox.h"
 #endif
 #include <util/JCIThreadCmdMgr.h>
 
@@ -259,6 +261,8 @@ namespace laya
         JSAndroidEditBox*                   m_pCurEditBox;
 #elif __APPLE__
         JSIOSEditBox *                      m_pCurEditBox;
+#elif OHOS
+        JSOHOSEditBox *                      m_pCurEditBox;
 #endif
 #ifdef JS_V8
         DebuggerAgent*				        m_pDbgAgent;

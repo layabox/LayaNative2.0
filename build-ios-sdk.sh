@@ -71,10 +71,15 @@ lipo -extract arm64 ./ThirdParty/freetype/lib/ios/libfreetype.a -o armv64/libfre
 lipo -extract i386 ./ThirdParty/freetype/lib/ios/libfreetype.a -o i386/libfreetype.a
 lipo -extract x86_64 ./ThirdParty/freetype/lib/ios/libfreetype.a -o x86_64/libfreetype.a
 
-lipo -extract armv7 ./ThirdParty/jpeg/lib/ios/libjpeg.a -o armv7a/libjpeg.a
-lipo -extract arm64 ./ThirdParty/jpeg/lib/ios/libjpeg.a -o armv64/libjpeg.a
-lipo -extract i386 ./ThirdParty/jpeg/lib/ios/libjpeg.a -o i386/libjpeg.a
-lipo -extract x86_64 ./ThirdParty/jpeg/lib/ios/libjpeg.a -o x86_64/libjpeg.a
+lipo -extract armv7 ./ThirdParty/jpeg-turbo/lib/ios/libjpeg.a -o armv7a/libjpeg.a
+lipo -extract arm64 ./ThirdParty/jpeg-turbo/lib/ios/libjpeg.a -o armv64/libjpeg.a
+lipo -extract i386 ./ThirdParty/jpeg-turbo/lib/ios/libjpeg.a -o i386/libjpeg.a
+lipo -extract x86_64 ./ThirdParty/jpeg-turbo/lib/ios/libjpeg.a -o x86_64/libjpeg.a
+
+lipo -extract armv7 ./ThirdParty/jpeg-turbo/lib/ios/libturbojpeg.a -o armv7a/libturbojpeg.a
+lipo -extract arm64 ./ThirdParty/jpeg-turbo/lib/ios/libturbojpeg.a -o armv64/libturbojpeg.a
+lipo -extract i386 ./ThirdParty/jpeg-turbo/lib/ios/libturbojpeg.a -o i386/libturbojpeg.a
+lipo -extract x86_64 ./ThirdParty/jpeg-turbo/lib/ios/libturbojpeg.a -o x86_64/libturbojpeg.a
 
 lipo -extract armv7 ./ThirdParty/png/lib/ios/libpng.a -o armv7a/libpng.a
 lipo -extract arm64 ./ThirdParty/png/lib/ios/libpng.a -o armv64/libpng.a

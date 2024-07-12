@@ -9,4 +9,4 @@ APP_OPTIM := release
 APP_PERFTEST := 1
 
 #使用硬件fp
-APP_ABI          :=armeabi-v7a arm64-v8a x86
+APP_ABI          :=armeabi-v7a arm64-v8a x86 x86_64

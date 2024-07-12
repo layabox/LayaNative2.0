@@ -30,6 +30,10 @@ namespace laya
 		static JsObjClassInfo JSCLSINFO;
 		static void exportJS();
 
+		static void executeVideoCallback(int index, int event);
+		static void executeLoadedmetadata(int index, const char* evtName);
+		static void executeDurationBack(int index, int duration);
+		static void executeCurrentTimeBack(int index, int currentTime);
 		JSVideo();
 		~JSVideo();
 
@@ -93,6 +97,7 @@ namespace laya
         void DispatchEvtToJS(const std::string path);
 
 	private:
+	    int m_tag; 
 		static int ms_handleIdx;
 		static std::set<std::string> ms_supportFormat;
 

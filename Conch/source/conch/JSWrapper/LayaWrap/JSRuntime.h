@@ -111,8 +111,9 @@ namespace laya
 		
 	    void exit();
 
-        //bool updateArrayBufferRef(int nID, bool bSyncToRender, JSValueAsParam pArrayBuffer);
+        std::string postMessage(const char* eventName, const char* data);
 
+        std::string postSyncMessage(const char* eventName, const char* data);
     public:
 
         JCScriptRuntime*        m_pScrpitRuntime;

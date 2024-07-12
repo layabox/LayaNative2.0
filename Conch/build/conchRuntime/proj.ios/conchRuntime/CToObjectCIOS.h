@@ -130,13 +130,9 @@
 +(void) postCmdToMainThread:(id)param;
 +(void) postCmdToEditBox:(id)param;
 +(char*)fontDataForCGFont:(CGFontRef)cgFont size:(long&)p_nSize;
-+(void) showExternalWebview:(id)param;
 +(void) setScreenWakeLock:(id)param;
 +(NSString*) callMethod:(id)param;
-+(void) runtimeJSCallWebviewJS:(id)param;
 +(void) captureScreen:(id)param;
-+(void) setWebViewRect:(id)param;
-+(void) setWebViewPercent:(id)param;
 //-----------------------------------------------------------------
 
 void reflectionCallback(const std::string& jsonret);

@@ -30,6 +30,10 @@
 #ifdef ANDROID
     #include "JSAndroidEditBox.h"
 	#include "../../CToJavaBridge.h"
+#elif OHOS
+    #include "JSOHOSEditBox.h"
+    #include "aki/jsbind.h"
+    #include "helper/NapiHelper.h"
 #elif WIN32
 	#include <Windows.h>
     #include "JSWindowEditBox.h"
@@ -64,6 +68,8 @@ extern bool g_bGLCanvasSizeChanged;
 #elif ANDROID
 	int g_bEnableTouch = true;
 #elif __APPLE__
+	int g_bEnableTouch = true;
+#elif OHOS
 	int g_bEnableTouch = true;
 #endif
  std::string g_sExePath = "";
@@ -245,6 +251,8 @@ namespace laya
         CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "alert", strBuffer.c_str(), kRet);
 #elif __APPLE__
         CToObjectCAlert(p_sBuffer);
+#elif OHOS
+        NapiHelper::GetInstance()->showDialog(p_sBuffer);
 #endif
     }
     void JSAlert(const char* p_sBuffer)
@@ -267,6 +275,8 @@ namespace laya
 #ifdef WIN32
         return 1.0;
 #elif ANDROID
+        return 1.0;
+#elif OHOS
         return 1.0;
 #elif __APPLE__
 		return 1.0;// CToObjectCGetDevicePixelRatio();
@@ -461,6 +471,8 @@ namespace laya
         JSAndroidEditBox::exportJS();
 #elif __APPLE__
         JSIOSEditBox::exportJS();
+#elif OHOS
+        JSOHOSEditBox::exportJS();
 #endif
         //JSTextCanvas
         JSTextBitmapInfo::exportJS();

@@ -21,7 +21,7 @@
 
 #ifdef WIN32
 extern void SetNameInternal(unsigned int thread_id, const char* name);
-#elif ANDROID
+#elif ANDROID || OHOS
 #include <sys/syscall.h>  
 #include <unistd.h>
 #define gettidv1() syscall(__NR_gettid)  
@@ -42,9 +42,9 @@ namespace laya
 	void ___datathread_onthreadstop(const char* threadname);
 	template<class _Tp>
     /** 
-      * @brief  ¹ÜÀí¶à¸ö¹¤×÷Ïß³Ì¡£ËùÓĞÏß³ÌµÄ¹¤×÷ÈÎÎñÀàËÆ¡£
-              * Õâ¸öÊÇÓÃÀ´´úÌæÔ­À´µÄthreadpoolµÄ¡£ÒòÎªÔ­À´µÄÒÑ¾­¿´²»¶®ÁË£¬²»ºÃÎ¬»¤¡£
-              * TODO ÁÙÊ±Ğ´µÄ£¬¹¦ÄÜÉè¼ÆÓĞĞ©»ìÂÒ¡£ÒÔºóÔÙÕûÀí
+      * @brief  ç®¡ç†å¤šä¸ªå·¥ä½œçº¿ç¨‹ã€‚æ‰€æœ‰çº¿ç¨‹çš„å·¥ä½œä»»åŠ¡ç±»ä¼¼ã€‚
+              * è¿™ä¸ªæ˜¯ç”¨æ¥ä»£æ›¿åŸæ¥çš„threadpoolçš„ã€‚å› ä¸ºåŸæ¥çš„å·²ç»çœ‹ä¸æ‡‚äº†ï¼Œä¸å¥½ç»´æŠ¤ã€‚
+              * TODO ä¸´æ—¶å†™çš„ï¼ŒåŠŸèƒ½è®¾è®¡æœ‰äº›æ··ä¹±ã€‚ä»¥åå†æ•´ç†
     */
 	class JCDataThread{
 	public:
@@ -67,7 +67,7 @@ namespace laya
 				Stop();
 			}
 			m_ThreadFunc = p_pfnThreadFunc;
-			//TODO m_Semaphore µÄstop±ê¼ÇÏÖÔÚ²»ÊÇÔ­×ÓµÄ¡£
+			//TODO m_Semaphore çš„stopæ ‡è®°ç°åœ¨ä¸æ˜¯åŸå­çš„ã€‚
 			//std::interprocess::ipcdetail::atomic_write32( &m_bWantToStop, 0 );
 			m_pThread = new std::thread(std::bind(&JCDataThread::__ThreadEntry,this));
 			if( 0 == m_pThread )
@@ -120,10 +120,10 @@ namespace laya
 		}
 
 		/**
-		* ¶à´Î³¢ÊÔjoin
-		* ·µ»Øtrue±íÊ¾³É¹¦joinÁË
-		* timeout Ã¿´Î³¢ÊÔµÄ³¬Ê±Ê±¼ä£¬µ¥Î»ÊÇºÁÃë
-		* traStopWorker £º ·µ»Øtrue±íÊ¾Ï£ÍûÍ£Ö¹³¢ÊÔ¡£²ÎÊıÊÇµ±Ç°³¢ÊÔ´ÎÊıºÍÓÃ»§¶¨Òå²ÎÊı
+		* å¤šæ¬¡å°è¯•join
+		* è¿”å›trueè¡¨ç¤ºæˆåŠŸjoinäº†
+		* timeout æ¯æ¬¡å°è¯•çš„è¶…æ—¶æ—¶é—´ï¼Œå•ä½æ˜¯æ¯«ç§’
+		* traStopWorker ï¼š è¿”å›trueè¡¨ç¤ºå¸Œæœ›åœæ­¢å°è¯•ã€‚å‚æ•°æ˜¯å½“å‰å°è¯•æ¬¡æ•°å’Œç”¨æˆ·å®šä¹‰å‚æ•°
 		*/
 		typedef bool (*tryStopWorker)(int,void*);
 		bool tryStop(int timeout, tryStopWorker func, void* userdata) {
@@ -135,7 +135,7 @@ namespace laya
 			m_Datas.clear();
 		}
 
-		//±ØĞëÔÚÆô¶¯Ïß³ÌÇ°ÉèÖÃ¡£
+		//å¿…é¡»åœ¨å¯åŠ¨çº¿ç¨‹å‰è®¾ç½®ã€‚
 		void setName(const char* p_pszName){
 			m_strName = p_pszName;
 		}
@@ -190,7 +190,7 @@ namespace laya
 			}
 		}
 
-        //·¢ËÍµ½ÈÎÎñ×îÉÙµÄÏß³ÌÖĞ
+        //å‘é€åˆ°ä»»åŠ¡æœ€å°‘çš„çº¿ç¨‹ä¸­
         bool sendToThread(_DataType p_dt) {
             if (m_nThreadNum <= 0)
                 return false;

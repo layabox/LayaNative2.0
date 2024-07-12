@@ -21,7 +21,10 @@
 #ifdef ANDROID
 #include "../../JCSystemConfig.h"
 #include "../../CToJavaBridge.h"
-#endif   
+#endif
+#ifdef OHOS
+#include "../../JCSystemConfig.h"
+#endif
 
 namespace laya
 {

@@ -33,6 +33,8 @@
     #include <pthread.h>
     #include <sys/types.h>
     #include <unistd.h>
+#elif OHOS
+    #include "helper/NapiHelper.h"
 #elif __APPLE__
     #include "CToObjectC.h"
     #include "pthread.h"
@@ -62,6 +64,8 @@ namespace laya
 #ifdef ANDROID
         CToJavaBridge::JavaRet kRet;
         CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "vibrate", kRet);
+#elif OHOS
+        NapiHelper::GetInstance()->startVibration(0.1f);
 #endif
     }
     JCConch::JCConch(int nDownloadThreadNum, JS_DEBUG_MODE nJSDebugMode, int nJSDebugPort)

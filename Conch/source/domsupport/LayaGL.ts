@@ -1278,7 +1278,7 @@ class GLCommandEncoder
         if (version.indexOf("OpenGL ES 3.") != -1)
         {
             //result.push("WEBGL_draw_buffers");
-            if (conchConfig.getOS() == "Conch-android")
+            if (conchConfig.getOS() == "Conch-android" || conchConfig.getOS() == "Conch-ohos")
             {
                 result.push("WEBGL_compressed_texture_etc");
             }
@@ -1437,7 +1437,7 @@ class GLCommandEncoder
             return {UNSIGNED_INT_24_8_WEBGL:34042};
         }
         //>=3.1
-        else if (name.indexOf('WEBGL_compressed_texture_astc') != -1 && (extention.indexOf('GL_OES_texture_compression_astc') != -1 || extention.indexOf('GL_KHR_texture_compression_astc') != -1 || (conchConfig.getOS() == "Conch-android" && version.indexOf("OpenGL ES 3.") != -1 && version.indexOf("OpenGL ES 3.0") == -1)))
+        else if (name.indexOf('WEBGL_compressed_texture_astc') != -1 && (extention.indexOf('GL_OES_texture_compression_astc') != -1 || extention.indexOf('GL_KHR_texture_compression_astc') != -1 || ((conchConfig.getOS() == "Conch-android" || conchConfig.getOS() == "Conch-ohos") && version.indexOf("OpenGL ES 3.") != -1 && version.indexOf("OpenGL ES 3.0") == -1)))
         {
             return {
                         COMPRESSED_RGBA_ASTC_4x4_KHR : 0x93B0,
@@ -1470,7 +1470,7 @@ class GLCommandEncoder
                         COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR : 0x93DD,
                     };
         }
-        else if (name.indexOf('WEBGL_compressed_texture_etc') != -1 && conchConfig.getOS() == "Conch-android" && version.indexOf("OpenGL ES 3.") != -1 ) 
+        else if (name.indexOf('WEBGL_compressed_texture_etc') != -1 && (conchConfig.getOS() == "Conch-android" || conchConfig.getOS() == "Conch-ohos") && version.indexOf("OpenGL ES 3.") != -1 ) 
         {
             return {
                         COMPRESSED_R11_EAC : 0x9270,

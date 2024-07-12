@@ -57,7 +57,7 @@ async function initFreeType() {
         if (sOS == "Conch-window") {
             bRet = _conchTextCanvas.initFreeTypeDefaultFontFromFile("C:/Windows/Fonts/simhei.ttf");
         }
-        else if (sOS == "Conch-android") {
+        else if (sOS == "Conch-android" || sOS == "Conch-ohos") {
             var fSystemVersion = navigator.sv;
             if (fSystemVersion >= 2.0 && fSystemVersion < 5.0) {
                 //这个步骤为因为HTC部分手机，作出了一个奇葩的决定：将DroidSansFallback架空，引入DFHEIA5A和DFHEIA7A两个字体文件。

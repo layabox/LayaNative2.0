@@ -183,9 +183,6 @@ void CToObjectCSetScreenWakeLock( bool p_bWakeLock );
 void CToObjectCShowToast( const char* p_sInfo );
 void CToObjectCOpenAppStoreUrl( const char* p_sAppID );
 std::string CToObjectCCallMethod(int objid,bool isSync, const char*clsName, const char* methodName, const char* paramStr);//
-void CToObjectCCallWebviewJS(const char* functionName, const char* jsonParam, const char* callback);
-void CToObjectCShowWebView();
-void CToObjectCHideWebView();
 void CToObjectCSetSensorAble(bool p_bAble);
 void CToObjectCRunJS(const std::string& script);
 void CToObjectCCaptureScreen();

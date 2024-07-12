@@ -25,7 +25,6 @@
 #import "LayaEditBox.h"
 #import "TouchFilter.h"
 #import "Audio/JCMp3Player.h"
-#import "LayaWebView.h"
 #import "LayaAlert.h"
 #import "LayaDeviceSensor.h"
 #import "LayaScreenShotter.h"
@@ -284,35 +283,6 @@ static uint32_t CalcTableDataRefCheckSum(CFDataRef dataRef)
     postCmdToEditBoxParam* _param = (postCmdToEditBoxParam*)param;
     ObjectCOperateEditBox(_param->cmd, _param->nParam1,_param->nParam2,_param->bParam2,_param->sParam3);
 }
-+(void) showExternalWebview:(id)param
-{
-    postCmdString4IntParam* _param = (postCmdString4IntParam*)param;
-    NSLog(@">>>>showExternalWebview url=%s",_param->sBuffer.c_str());
-    NSString* nsString = [NSString stringWithUTF8String:_param->sBuffer.c_str()];
-    conchRuntime* pConchRuntime = [conchRuntime GetIOSConchRuntime];
-    int x = _param->iParam0;
-    int y = _param->iParam1;
-    int w = _param->iParam2;
-    int h = _param->iParam3;
-    bool bShowCloseButton = _param->bParam4;
-    [pConchRuntime->m_pWebView showWebView:nsString posx:x posy:y width:w height:h showCloseButton:bShowCloseButton];
-}
-+(void) closeWebview
-{
-    [[conchRuntime GetIOSConchRuntime]->m_pWebView closeWebView];
-}
-+(void) showWebview:(id)param
-{
-    postCmdParam* _param = (postCmdParam*)param;
-    if( _param->bParam == true )
-    {
-        [[conchRuntime GetIOSConchRuntime]->m_pWebView->m_pWebView setHidden:NO];
-    }
-    else
-    {
-        [[conchRuntime GetIOSConchRuntime]->m_pWebView->m_pWebView setHidden:YES];
-    }
-}
 +(void) setScreenWakeLock:(id)param
 {
     postCmdParam* _param = (postCmdParam*)param;
@@ -340,26 +310,6 @@ static uint32_t CalcTableDataRefCheckSum(CFDataRef dataRef)
     Reflection* pReflection = pConchRuntime->m_pReflection;
     assert(pReflection != nil && "pReflection should not be nil");
     return [pReflection callMethod:_param->iObjID className:className methodName:methodName param:sParam];
-}
-+(void) runtimeJSCallWebviewJS:(id)param
-{
-    postCmd3StringParam* _param = (postCmd3StringParam*)param;
-    LOGE("****runtimeJSCallWebviewJS [%s] [%s] [%s]",_param->sParam0.c_str(),_param->sParam1.c_str(),_param->sParam2.c_str());
-    
-    if ([conchRuntime GetIOSConchRuntime]->m_pWebView != nil && ![conchRuntime GetIOSConchRuntime]->m_pWebView->m_pWebView.isHidden){
-        [[conchRuntime GetIOSConchRuntime]->m_pWebView callWebviewJS:[NSString stringWithUTF8String:_param->sParam0.c_str()]
-                                                                    para:[NSString stringWithUTF8String:_param->sParam1.c_str()]
-                                                                callback:[NSString stringWithUTF8String:_param->sParam2.c_str()]];
-    }
-    else{
-        NSMutableString *js = [[NSMutableString alloc] init];
-        [js appendFormat:@"%@(\"%@\");",
-         [NSString stringWithUTF8String:_param->sParam0.c_str()],
-         [NSString stringWithUTF8String:_param->sParam1.c_str()]];
-        
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"conchCallLayaBroswerJS"
-                                                        object:js];
-    }
 }
 +(void) setSensorAble:(id)param
 {
@@ -812,26 +762,6 @@ std::string CToObjectCGetDeviceInfo()
     }
     return "{  \"guid\" : \"unknow\",  \"os\" : \"ios\",  \"resolution\" : \"unkown\",  \"phonename\" : \"unknow\",  \"osversion\" : \"unknow\",  \"phonemodel\" : \"unknow\",  \"retinavalue\" : \"1.000000\",  \"imei\" : \"imeixxx\",  \"imsi\" : \"imsixxx\",  \"localmodel\" : \"unknow\"}";
 }
-void CToObjectCShowWebView()
-{
-    postCmdParam* pParam = [[postCmdParam alloc] init:true i:0 f:0 s:nullptr];
-    [CToObjectCIOS performSelectorOnMainThread:@selector(showWebview:) withObject:pParam waitUntilDone:NO];
-}
-void CToObjectCHideWebView()
-{
-    postCmdParam* pParam = [[postCmdParam alloc] init:false i:0 f:0 s:nullptr];
-    [CToObjectCIOS performSelectorOnMainThread:@selector(showWebview:) withObject:pParam waitUntilDone:NO];
-}
-
-void CToObjectCSetExternalLink( const char* p_sUrl,int x,int y,int w,int h,bool bShowCloseButton )
-{
-    postCmdString4IntParam* pParam = [[postCmdString4IntParam alloc] init:p_sUrl _p0:x _p1:y _p2:w _p3:h _p4:bShowCloseButton];
-    [CToObjectCIOS performSelectorOnMainThread:@selector(showExternalWebview:) withObject:pParam waitUntilDone:NO];
-}
-void CToObjectCCloseExternalLink()
-{
-    [CToObjectCIOS performSelectorOnMainThread:@selector(closeWebview) withObject:nil waitUntilDone:NO];
-}
 void CToObjectCSetScreenWakeLock( bool p_bWakeLock )
 {
     postCmdParam* pParam = [[postCmdParam alloc] init:p_bWakeLock i:0 f:0 s:""];
@@ -928,12 +858,6 @@ void reflectionCallback(const std::string& jsonret)
     std::string script = "conch.platCallBack(" + jsonret + ")";
     JSP_RUN_SCRIPT(script.c_str());
     NSLog(@"%@", [[NSString alloc] initWithUTF8String:jsonret.c_str()]);
-}
-
-void CToObjectCCallWebviewJS(const char* functionName, const char* jsonParam, const char* callback)
-{
-    postCmd3StringParam* pParam = [[postCmd3StringParam alloc] init:functionName _p1:jsonParam _p2:callback];
-    [CToObjectCIOS performSelectorOnMainThread:@selector(runtimeJSCallWebviewJS:) withObject:pParam waitUntilDone:NO];
 }
 
 void CToObjectCSetSensorAble(bool p_bAble)

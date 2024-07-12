@@ -8,17 +8,19 @@
    based on ../cmake-zipconf.h.in.
  */
 
-#define LIBZIP_VERSION "1.5.2"
+#define LIBZIP_VERSION "1.9.2"
 #define LIBZIP_VERSION_MAJOR 1
-#define LIBZIP_VERSION_MINOR 5
+#define LIBZIP_VERSION_MINOR 9
 #define LIBZIP_VERSION_MICRO 2
 
 #define ZIP_STATIC
 
-#define _Nullable
-#define _Nonnull
 
-#include <stdint.h>
+
+#if !defined(__STDC_FORMAT_MACROS)
+#define __STDC_FORMAT_MACROS 1
+#endif
+#include <inttypes.h>
 
 typedef int8_t zip_int8_t;
 typedef uint8_t zip_uint8_t;

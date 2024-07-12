@@ -13,7 +13,6 @@
 #import "LayaEditBox.h"
 #import "TouchFilter.h"
 #import "Audio/JCMp3Player.h"
-#import "LayaWebView.h"
 #import "Reachability/Reachability.h"
 #import "LayaAlert.h"
 #import "CToObjectCIOS.h"
@@ -78,7 +77,6 @@ laya::JCConch* m_pConchEngine = NULL;
         m_pEditBox = NULL;
         m_pEditBoxDelegate = NULL;
         m_pMp3Player = NULL;
-        m_pWebView = NULL;
         m_pNetworkListener = NULL;
         m_fRetinaValue = 1;
         m_nsRootResourcePath = nil;
@@ -157,8 +155,6 @@ laya::JCConch* m_pConchEngine = NULL;
     [m_pEditBoxDelegate setRetinaValue:m_fRetinaValue];
     m_pEditBox = [[LayaEditBox alloc]initWithParentView:m_pGLKView EditBoxDelegate:m_pEditBoxDelegate ScreenRatio:m_fRetinaValue ];
     m_pMp3Player = [[JCMp3Player alloc] init];
-    
-    [self initExternalWebview];
     
     // 注册监听键盘弹出的事件
     [[NSNotificationCenter defaultCenter] addObserver:m_pEditBoxDelegate
@@ -264,11 +260,6 @@ void AudioEngineInterruptionListenerCallback(void* user_data, UInt32 interruptio
     if(laya::JCScriptRuntime::s_JSRT){
 	    laya::JCScriptRuntime::s_JSRT->onVSyncEvent(vsyncTmMs);
     }
-}
--(void) initExternalWebview
-{
-    m_pWebView = [[LayaWebView alloc] init];
-    [m_pGLKView addSubview:m_pWebView->m_pWebView];
 }
 -(void) initNetworkListener
 {

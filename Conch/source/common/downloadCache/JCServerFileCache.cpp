@@ -24,8 +24,11 @@
 
 #ifdef ANDROID
     #include "../downloadCache/JCAndroidFileSource.h"
-#else
+#elif __APPLE__
     #include "../downloadCache/JCIosFileSource.h"
+#elif OHOS
+    #include "../downloadCache/JCOHOSFileSource.h"
+    #include "napi/plugin_manager.h"
 #endif
 #define PATH_SOURCEID "sourceid"
 #define ERROR_FILE_C_R_W (-6)
@@ -40,6 +43,9 @@ extern std::string gRedistPath;
 	std::string gAPKExpansionPatchPath="";
 #elif __APPLE__
 extern std::string gAssetRootPath;
+#elif OHOS
+NativeResourceManager* g_pAssetManager = nullptr;
+std::string gAssetRootPath="";
 #else
 std::string gAssetRootPath="d:/temp/myassets";
 #endif
@@ -328,8 +334,10 @@ namespace laya
 		/*
 #ifdef ANDROID
 		m_pAssets = new JCAndroidFileSource();
-#else
+#elif __APPLE__
 		m_pAssets = new JCIosFileSource();
+#elif OHOS
+		m_pAssets = new JCOHOSFileSource();
 #endif
 		*/
 		m_pFileTable=NULL;
@@ -451,9 +459,13 @@ namespace laya
 				delete pfr;
 			}
 		}
-#else
+#elif __APPLE__
 		JCIosFileSource* pAssets = new JCIosFileSource();
 		pAssets->Init(assetsPath.c_str());
+		pFileReader = pAssets;
+#elif OHOS
+		JCOHOSFileSource* pAssets = new JCOHOSFileSource();
+		pAssets->Init((NativeResourceManager*)g_pAssetManager, assetsPath.c_str());
 		pFileReader = pAssets;
 #endif
 
@@ -545,6 +557,8 @@ namespace laya
 		bool hasAssets = hasAssetsFt || hasAssetsID ;
 
 		if(hasAssets && (cachedAssetsID.length()==0 || assetsidLen != cachedAssetsID.length()|| strcmp(assetsid, cachedAssetsID.c_str())!=0) ){
+			//清理文件缓存
+			clearAllCachedFile();
 			//先获取资源中的filteTable
 			char* pFileTableBuf=NULL;
 			int nFileTableLen = 0;

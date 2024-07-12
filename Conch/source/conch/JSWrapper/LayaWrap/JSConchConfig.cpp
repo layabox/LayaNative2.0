@@ -18,6 +18,10 @@
     #include <Windows.h>
 #elif __APPLE__
     #include "../../CToObjectC.h"
+#elif OHOS
+    #include "aki/jsbind.h"
+    #include <string>
+    #include "helper/NapiHelper.h"
 #endif
 #include "downloadMgr/JCDownloadMgr.h"
 #include "util/Log.h"
@@ -25,7 +29,11 @@
 #include "../../JCConchRender.h"
 #include "../../JCConch.h"
 #include "../../WebSocket/WebSocket.h"
+#ifdef OHOS
+#include <resource/Audio/JCAudioWavPlayer-openharmony.h>
+#else
 #include <resource/Audio/JCAudioWavPlayer.h>
+#endif
 #include "../../Audio/JCAudioManager.h"
 #include <LayaGL/JCLayaGL.h>
 #include <LayaGL/JCLayaGLDispatch.h>
@@ -107,6 +115,8 @@ namespace laya
         return CToObjectCGetUsedMem();
 #elif WIN32
         return getAppUsedMem();
+#elif OHOS
+        return NapiHelper::GetInstance()->getUsedMem();
 #endif
         return 0;
     }
@@ -119,6 +129,8 @@ namespace laya
             return (int)(kRet.floatRet);
         }
         return 0;
+#elif OHOS
+        return NapiHelper::GetInstance()->getAvalidMem();
 #elif WIN32
         MEMORYSTATUSEX statex;
         statex.dwLength = sizeof(statex);
@@ -138,6 +150,8 @@ namespace laya
             return kRet.floatRet;
         }
         return 0;
+#elif OHOS
+        return NapiHelper::GetInstance()->getScreenInch();
 #elif WIN32
         return 0;
 #elif __APPLE__
@@ -193,6 +207,30 @@ namespace laya
         MoveWindow(g_hWnd, 0, 0, g_nInnerWidth, g_nInnerHeight, true);
 #elif __APPLE__
         CToObjectCSetScreenOrientation(p_nOrientation);
+#elif OHOS
+        int orientation = 0;
+        if(p_nOrientation == landscape) {
+           orientation = 2;
+        } else if(p_nOrientation == portrait) {
+           orientation = 1;
+        } else if(p_nOrientation == user) {
+           orientation = 0;
+        } else if(p_nOrientation == behind) {
+           orientation = 5;
+        } else if(p_nOrientation == nosensor) {
+           orientation = 11;
+        } else if(p_nOrientation == sensor_landscape) {
+           orientation = 7;
+        } else if(p_nOrientation == sensor_portrait) {
+           orientation = 6;
+        } else if(p_nOrientation == reverse_landscape) {
+           orientation = 4;
+        } else if(p_nOrientation == reverse_portrait) {
+           orientation = 3;
+        } else if(p_nOrientation == sensor || p_nOrientation == full_sensor) {
+           orientation = 3;
+        }
+        NapiHelper::GetInstance()->setPreferredOrientation(orientation);
 #endif
 
     }
@@ -218,6 +256,8 @@ namespace laya
         return 1;
 #elif __APPLE__
         return CToObjectCGetNetworkType();
+#elif OHOS
+        return NapiHelper::GetInstance()->getNetworkType();
 #endif
         return 0;
     }
@@ -302,6 +342,8 @@ namespace laya
         return "Conch-android";
 #elif WIN32
         return "Conch-window";
+#elif OHOS
+        return "Conch-ohos";
 #endif
     }
     const char* JSConchConfig::getBrowserInfo()
@@ -312,6 +354,8 @@ namespace laya
         return "Conch-android";
 #elif WIN32
         return "Conch-window";
+#elif OHOS
+        return "Conch-ohos";
 #endif
     }
     const char* JSConchConfig::getGuid()
@@ -334,11 +378,13 @@ namespace laya
     const char* JSConchConfig::getRuntimeVersion()
     {
 #ifdef __APPLE__
-        return "ios-conch6-release-2.13.4";
+        return "ios-conch6-release-2.13.5.1";
 #elif ANDROID
-        return "android-conch6-release-2.13.4";
+        return "android-conch6-release-2.13.5.1";
+#elif OHOS
+        return "ohos-conch6-release-2.13.5.1";
 #elif WIN32
-        return "window-conch6-release-2.13.4";
+        return "window-conch6-release-2.13.5.1";
 #endif
     }
     const char* JSConchConfig::getAppVersion()
@@ -354,6 +400,9 @@ namespace laya
 			return m_sAppVersion.c_str();
         }
         return "";
+#elif OHOS
+        m_sAppVersion = NapiHelper::GetInstance()->getAppVersion();
+        return m_sAppVersion.c_str();
 #elif WIN32
         return "2.0";
 #endif
@@ -371,6 +420,9 @@ namespace laya
             return m_sAppLocalVersion.c_str();
         }
         return "";
+#elif OHOS
+        m_sAppLocalVersion = NapiHelper::GetInstance()->getAppLocalVersion();
+        return m_sAppLocalVersion.c_str();
 #elif WIN32
         return "2.0";
 #endif
@@ -400,6 +452,9 @@ namespace laya
             m_sDeviceInfo = CToJavaBridge::GetInstance()->getJavaString(kRet.pJNI, kRet.strRet);
         }
         LOGI("getDeviceInfo::get_Value=%s", m_sDeviceInfo.c_str());
+        return m_sDeviceInfo.c_str();
+#elif OHOS
+        m_sDeviceInfo = NapiHelper::GetInstance()->getDeviceInfo();
         return m_sDeviceInfo.c_str();
 #elif WIN32
         return "{\"resolution\":\"1920*1080\",	\"guid\":\"xxxxxxxxx\",\"imei\":[\"imeixxx\"],\"imsi\":[\"imsixxx\"],\"os\":\"windows\",\"osversion\":\"windows7 64\",\"phonemodel\":\"Wintel\"	}";

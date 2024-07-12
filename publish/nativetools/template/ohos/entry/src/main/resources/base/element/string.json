@@ -1,0 +1,28 @@
+{
+  "string": [
+    {
+      "name": "entry_desc",
+      "value": "LayaBox"
+    },
+    {
+      "name": "MainAbility_label",
+      "value": "LayaBox"
+    },
+    {
+      "name": "MainAbility_desc",
+      "value": "description"
+    },
+    {
+      "name": "text_field_ttf_complete",
+      "value": "完成"
+    },
+    {
+      "name": "Dialog_Title",
+      "value": "提示"
+    },
+    {
+      "name": "text_backpress_toast",
+      "value": "再次点击后退键退出游戏!"
+    }
+  ]
+}

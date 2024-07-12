@@ -249,11 +249,11 @@ var setTimeout:(handler: any, timeout?: any/*, ...args: any[]*/)=>number=window.
 
 //onload
 Object.defineProperty(window,'runtime',{get:function(){return true}});//给window.runtime赋值
-window.postMessage=function(data,d) {
+/*window.postMessage=function(data,d) {
     if(typeof(data)=="object")
         data=JSON.stringify(data);
     conch.callWebviewJS( "window.__getMessemage",encodeURIComponent(data),"" );
-}
+}*/
 
 window.postRuntimeMessage=function(d)
 {

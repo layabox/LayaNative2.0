@@ -2821,7 +2821,7 @@ class GLCommandEncoder {
         if (supports("GL_OES_depth_texture") || supports("GL_ARB_depth_texture") || supports("GL_ANGLE_depth_texture"))
             result.push("WEBGL_depth_texture");
         if (version.indexOf("OpenGL ES 3.") != -1) {
-            if (conchConfig.getOS() == "Conch-android") {
+            if (conchConfig.getOS() == "Conch-android" || conchConfig.getOS() == "Conch-ohos") {
                 result.push("WEBGL_compressed_texture_etc");
             }
         }
@@ -2949,7 +2949,7 @@ class GLCommandEncoder {
         else if (name.indexOf('WEBGL_depth_texture') != -1 && ((supports("GL_OES_depth_texture") || supports("GL_ARB_depth_texture") || supports("GL_ANGLE_depth_texture")))) {
             return { UNSIGNED_INT_24_8_WEBGL: 34042 };
         }
-        else if (name.indexOf('WEBGL_compressed_texture_astc') != -1 && (extention.indexOf('GL_OES_texture_compression_astc') != -1 || extention.indexOf('GL_KHR_texture_compression_astc') != -1 || (conchConfig.getOS() == "Conch-android" && version.indexOf("OpenGL ES 3.") != -1 && version.indexOf("OpenGL ES 3.0") == -1))) {
+        else if (name.indexOf('WEBGL_compressed_texture_astc') != -1 && (extention.indexOf('GL_OES_texture_compression_astc') != -1 || extention.indexOf('GL_KHR_texture_compression_astc') != -1 || ((conchConfig.getOS() == "Conch-android" || conchConfig.getOS() == "Conch-ohos") && version.indexOf("OpenGL ES 3.") != -1 && version.indexOf("OpenGL ES 3.0") == -1))) {
             return {
                 COMPRESSED_RGBA_ASTC_4x4_KHR: 0x93B0,
                 COMPRESSED_RGBA_ASTC_5x4_KHR: 0x93B1,
@@ -2981,7 +2981,7 @@ class GLCommandEncoder {
                 COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR: 0x93DD,
             };
         }
-        else if (name.indexOf('WEBGL_compressed_texture_etc') != -1 && conchConfig.getOS() == "Conch-android" && version.indexOf("OpenGL ES 3.") != -1) {
+        else if (name.indexOf('WEBGL_compressed_texture_etc') != -1 && (conchConfig.getOS() == "Conch-android" || conchConfig.getOS() == "Conch-ohos") && version.indexOf("OpenGL ES 3.") != -1) {
             return {
                 COMPRESSED_R11_EAC: 0x9270,
                 COMPRESSED_SIGNED_R11_EAC: 0x9271,

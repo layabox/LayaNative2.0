@@ -19,7 +19,7 @@ LOCAL_CFLAGS := \
   -DBT_USE_DOUBLE_PRECISION \
   -DAL_ALEXT_PROTOTYPES \
 
-LOCAL_CPPFLAGS += -std=c++11
+LOCAL_CPPFLAGS += -std=c++17
 ifeq ($(APP_PERFTEST),1)
 LOCAL_CFLAGS += -DPERFTEST 
 endif
@@ -30,6 +30,12 @@ ifeq ($(TARGET_ARCH),arm64)
    LOCAL_CFLAGS += -DV8_COMPRESS_POINTERS
    LOCAL_CPPFLAGS += -DV8_COMPRESS_POINTERS
 endif
+
+ifeq ($(TARGET_ARCH),x86_64)
+   LOCAL_CFLAGS += -DV8_COMPRESS_POINTERS
+   LOCAL_CPPFLAGS += -DV8_COMPRESS_POINTERS
+endif
+
 LOCAL_SRC_FILES := \
         ../../../../source/conch/JSWrapper/v8debug/debug-agent.cpp \
         ../../../../source/conch/JSWrapper/v8debug/V8WSSv.cpp \
@@ -88,10 +94,10 @@ LOCAL_SRC_FILES := \
 
 LOCAL_C_INCLUDES := ../../../../../ThirdParty/curl/include/android \
         ../../../../../ThirdParty/png/include/android \
-        ../../../../../ThirdParty/jpeg/include/android \
+        ../../../../../ThirdParty/jpeg-turbo/include/android \
         ../../../../../ThirdParty/freetype/include/android \
         ../../../../../ThirdParty/zip/include/android \
-        ../../../../../ThirdParty/v8_8.8/include \
+        ../../../../../ThirdParty/v8/include/android \
         ../../../../../ThirdParty/ogg/include/android \
         ../../../../../ThirdParty/websockets/include/android \
 		../../../../../ThirdParty/openssl/include/android \
@@ -107,16 +113,19 @@ ifeq ($(TARGET_ARCH),arm64)
 LOCAL_IS64:=arm64
 else ifeq ($(TARGET_ARCH),x86)
 LOCAL_IS64:=x86
+else ifeq ($(TARGET_ARCH),x86_64)
+LOCAL_IS64:=x86_64
 endif
 LOCAL_DISABLE_FATAL_LINKER_WARNINGS := true
 LOCAL_LDLIBS    := -lOpenSLES -llog -lGLESv3 -landroid -ljnigraphics -lm -lz -lc++  \
         ../../../../libs/android-$(LOCAL_IS64)/librender.a \
         ../../../../libs/android-$(LOCAL_IS64)/libcommon.a \
         ../../../../../ThirdParty/curl/lib/android-$(LOCAL_IS64)/libcurl.a \
-        ../../../../../ThirdParty/v8_8.8/lib/android-$(LOCAL_IS64)/libv8_monolith.a \
-        ../../../../../ThirdParty/v8_8.8/lib/android-$(LOCAL_IS64)/libinspector.a \
+        ../../../../../ThirdParty/v8/lib/android/$(LOCAL_IS64)/libv8_monolith.a \
+        ../../../../../ThirdParty/v8/lib/android/$(LOCAL_IS64)/libinspector.a \
         ../../../../../ThirdParty/websockets/lib/android-$(LOCAL_IS64)/libwebsockets.a \
-        ../../../../../ThirdParty/jpeg/lib/android-$(LOCAL_IS64)/libjpeg.a \
+        ../../../../../ThirdParty/jpeg-turbo/lib/android/$(LOCAL_IS64)/libjpeg.a \
+        ../../../../../ThirdParty/jpeg-turbo/lib/android/$(LOCAL_IS64)/libturbojpeg.a \
         ../../../../../ThirdParty/png/lib/android-$(LOCAL_IS64)/libpng.a \
         ../../../../../ThirdParty/freetype/lib/android-$(LOCAL_IS64)/libfreetype.a \
         ../../../../../ThirdParty/zip/lib/android-$(LOCAL_IS64)/libzip.a \

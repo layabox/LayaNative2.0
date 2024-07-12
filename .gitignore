@@ -39,3 +39,5 @@ liblaya.so
 .gradle
 *.d
 *.bc
+Conch/build/build
+

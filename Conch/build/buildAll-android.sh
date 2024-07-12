@@ -22,6 +22,10 @@ cp render/proj.android_studio/obj/local/x86/librender.a ../libs/android-x86/
 #cp common/proj.android_studio/obj/local/armeabi/libcommon.a ../libs/android-arm/
 #cp render/proj.android_studio/obj/local/armeabi/librender.a ../libs/android-arm/
 
+
+cp common/proj.android_studio/obj/local/x86_64/libcommon.a ../libs/android-x86_64/
+cp render/proj.android_studio/obj/local/x86_64/librender.a ../libs/android-x86_64/
+
 touch ../source/conch/JCConch.cpp
 cd conch/proj.android_studio/jni/
 ndk-build
@@ -29,5 +33,6 @@ cd ../../../
 cp conch/proj.android_studio/libs/arm64-v8a/liblayaair.so  conch/proj.android_studio/conch5/libs/arm64-v8a/liblayaair.so
 cp conch/proj.android_studio/libs/armeabi-v7a/liblayaair.so  conch/proj.android_studio/conch5/libs/armeabi-v7a/liblayaair.so
 cp conch/proj.android_studio/libs/x86/liblayaair.so  conch/proj.android_studio/conch5/libs/x86/liblayaair.so
+cp conch/proj.android_studio/libs/x86_64/liblayaair.so  conch/proj.android_studio/conch5/libs/x86_64/liblayaair.so
 
 cp conch/proj.android_studio/libs/  conch/proj.android_studio/conch5/ -f -R

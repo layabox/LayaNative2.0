@@ -19,6 +19,11 @@
 #ifdef ANDROID 
 #include "../../CToJavaBridge.h"
 #endif
+#ifdef OHOS 
+	#include "aki/jsbind.h"
+	#include "napi/NAPIFun.h"
+	#include "helper/NapiHelper.h"
+#endif
 #include "../../JCSystemConfig.h"
 #include "JSInput.h"
 #include "JSConchConfig.h"
@@ -160,6 +165,8 @@ namespace laya
 		CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "captureScreen", kRet);
 #elif __APPLE__
         CToObjectCCaptureScreen();
+#elif OHOS
+        NAPIFun::m_bTakeScreenshot = true;
 #endif
     }
     const char* JSRuntime::getCachePath() 
@@ -209,6 +216,8 @@ namespace laya
 #elif ANDROID
         CToJavaBridge::JavaRet kRet;
         CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "setScreenWakeLock", p_bWakeLock, kRet);
+#elif OHOS
+        NapiHelper::GetInstance()->setKeepScreenOn(p_bWakeLock);
 #elif WIN32
 
 #endif
@@ -220,6 +229,14 @@ namespace laya
 #elif ANDROID
         CToJavaBridge::JavaRet kRet;
         CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "setSensorAble", p_bSensorAble, kRet);
+#elif OHOS
+        if(p_bSensorAble) {
+            NapiHelper::GetInstance()->enableAccelerometer();
+            NapiHelper::GetInstance()->enableOrientation();
+        } else {
+            NapiHelper::GetInstance()->disableAccelerometer();
+            NapiHelper::GetInstance()->disableOrientation();
+        } 
 #elif WIN32
 
 #endif
@@ -318,7 +335,10 @@ namespace laya
         CToJavaBridge::JavaRet ret;
         CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "setExternalLink", sUrl,x,y,w,h, bCloseWebview?1:0,ret);
 #elif __APPLE__
-       CToObjectCSetExternalLink( sUrl,x,y,w,h, bCloseWebview);
+#elif OHOS
+        if(auto setExternalLink = aki::JSBind::GetJSFunction("WebUtils.createWebview")) {
+            setExternalLink->Invoke<void>(sUrl,x,y,w,h, bCloseWebview?1:0);
+        }
 #elif WIN32
 
 #endif
@@ -329,7 +349,11 @@ namespace laya
         CToJavaBridge::JavaRet ret;
         CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "setExternalLink", sUrl, 0, 0, 0, 0,1,ret);
 #elif __APPLE__
-        CToObjectCSetExternalLink(sUrl, 0, 0, 0, 0, true);
+        //CToObjectCSetExternalLink(sUrl, 0, 0, 0, 0, true);
+#elif OHOS
+        if(auto setExternalLink = aki::JSBind::GetJSFunction("WebUtils.createWebview")) {
+            setExternalLink->Invoke<void>(sUrl,0, 0, 0, 0, 1);
+        }
 #elif WIN32
 
 #endif
@@ -340,7 +364,11 @@ namespace laya
         CToJavaBridge::JavaRet ret;
         CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "closeExternalLink", ret);
 #elif __APPLE__
-        CToObjectCCloseExternalLink();
+        //CToObjectCCloseExternalLink();
+#elif OHOS
+        if(auto closeWebview = aki::JSBind::GetJSFunction("WebUtils.closeWebview")) {
+            closeWebview->Invoke<void>();
+        }
 #elif WIN32
 
 #endif
@@ -352,7 +380,10 @@ namespace laya
         CToJavaBridge::JavaRet ret;
         CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "callWebViewJS", sFunctionName, sJsonParam, sCallbackFunction, ret);
 #elif __APPLE__
-        CToObjectCCallWebviewJS(sFunctionName, sJsonParam, sCallbackFunction);
+#elif OHOS
+        if(auto callWebViewJS = aki::JSBind::GetJSFunction("WebUtils.callWebViewJS")) {
+            callWebViewJS->Invoke<void>(sFunctionName, sJsonParam, sCallbackFunction);
+        }
 #elif WIN32
 
 #endif
@@ -363,7 +394,10 @@ namespace laya
         CToJavaBridge::JavaRet ret;
         CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "hideExternalLink", ret);
 #elif __APPLE__
-        CToObjectCHideWebView();
+#elif OHOS
+        if(auto hideWebview = aki::JSBind::GetJSFunction("WebUtils.hideWebview")) {
+            hideWebview->Invoke<void>();
+        }
 #elif WIN32
         
 #endif
@@ -374,7 +408,10 @@ namespace laya
         CToJavaBridge::JavaRet ret;
         CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "showExternalLink", ret);
 #elif __APPLE__
-        CToObjectCShowWebView();
+#elif OHOS
+        if(auto showWebView = aki::JSBind::GetJSFunction("WebUtils.showWebView")) {
+            showWebView->Invoke<void>();
+        }
 #elif WIN32
         
 #endif
@@ -384,6 +421,8 @@ namespace laya
 #ifdef ANDROID
         CToJavaBridge::JavaRet ret;
         CToJavaBridge::GetInstance()->callMethod(CToJavaBridge::JavaClass.c_str(), "exit", ret);
+#elif OHOS
+        NapiHelper::GetInstance()->exitGame();
 #elif __APPLE__
 #elif WIN32
 #endif
@@ -401,6 +440,17 @@ namespace laya
     {
         return m_pScrpitRuntime->m_pJSOnUnhandledRejectionFunction.getJsObj();
     }
+#if OHOS
+    std::string JSRuntime::postMessage(const char* eventName, const char* data){
+        std::string result = NapiHelper::GetInstance()->postMessageToUIThread(eventName,data);
+        return result;
+    }
+
+    std::string JSRuntime::postSyncMessage(const char* eventName, const char* data){
+        std::string result = NapiHelper::GetInstance()->postSyncMessageToUIThread(eventName,data);
+        return result;
+    }
+#endif
     void JSRuntime::exportJS()
     {
         JSP_GLOBAL_CLASS("conch", JSRuntime, this);
@@ -441,6 +491,10 @@ namespace laya
         JSP_GLOBAL_ADD_PROPERTY(onunhandledrejection, JSRuntime, getOnUnhandledRejection, setOnUnhandledRejection);
 		//JSP_GLOBAL_ADD_METHOD("updateArrayBufferRef", JSRuntime::updateArrayBufferRef);
 		JSP_GLOBAL_ADD_METHOD("exit", JSRuntime::exit);
+        #ifdef OHOS
+        JSP_GLOBAL_ADD_METHOD("postMessage", JSRuntime::postMessage);
+		JSP_GLOBAL_ADD_METHOD("postSyncMessage", JSRuntime::postSyncMessage);
+        #endif
         JSP_INSTALL_GLOBAL_CLASS("conch", JSRuntime, this );
     }
 }
