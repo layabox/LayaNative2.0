@@ -77,18 +77,30 @@ namespace laya
                 break;
         }
     #else
-        switch (logLevel)
+         switch (logLevel)
         {
         case Warn:
+            # ifdef OHOS
+            LOGI(" %{public}s", p_sBuffer);
+            # else
             LOGI(" %s", p_sBuffer);
-            break;
+        #endif
+        break;
         case Error:
+            #ifdef OHOS
+            LOGI(" %{public}s", p_sBuffer);
+            #else
             LOGI(" %s", p_sBuffer);
+            #endif
             break;
         default:
+            #ifdef OHOS
+            LOGI(" %{public}s", p_sBuffer);
+            #else
             LOGI(" %s", p_sBuffer);
-            break;
-        }
+             #endif
+        break;
+    }
     #endif
     #ifdef JS_V8
 	    if (gLayaLogNoParam) 

@@ -157,7 +157,7 @@ namespace laya{
             LOGI("start thread:%s,%d", m_strName.c_str(), thid);
             //threadInfoLog("start thread:%s,%d", m_strName.c_str(), thid);
 		}
-#elif ANDROID || OHOS
+#elif defined(ANDROID) || defined(OHOS)
 		{
             LOGI("start thread:%s,%d", m_strName.c_str(), (int)gettidv1());
 			//threadInfoLog("start thread:%s,%ld", m_strName.c_str(), gettidv1());

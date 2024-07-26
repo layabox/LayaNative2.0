@@ -54,6 +54,7 @@ public:
     static void ConchNAPI_handleDeviceMotionEvent(float ax,float ay,float az,float agx,float agy,
                                                 float agz,float ra,float rb,float rg,float interval);
     static void ConchNAPI_handleDeviceOrientationEvent(float ra,float rb,float rg);
+    static void ConchNAPI_RunJS(const std::string &js);
 
 private:
     bool g_bEngineInited =false;

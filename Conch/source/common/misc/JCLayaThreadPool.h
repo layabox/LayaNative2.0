@@ -21,7 +21,7 @@
 
 #ifdef WIN32
 extern void SetNameInternal(unsigned int thread_id, const char* name);
-#elif ANDROID || OHOS
+#elif defined(ANDROID) || defined(OHOS)
 #include <sys/syscall.h>  
 #include <unistd.h>
 #define gettidv1() syscall(__NR_gettid)  

@@ -230,6 +230,10 @@ void NAPIFun::ConchNAPI_handleDeviceOrientationEvent(float ra, float rb, float r
     strncpy(e.type, "deviceorientation", 256);
     JCScriptRuntime::s_JSRT->dispatchInputEvent(e);
 }
+void NAPIFun::ConchNAPI_RunJS(const std::string &js)
+{
+     JCScriptRuntime::s_JSRT->callJSString(js);
+}
 JSBIND_GLOBAL()
 {
     JSBIND_FUNCTION(NAPIFun::ConchNAPI_configSetParamExt, "ConchNAPI_configSetParamExt");
@@ -252,4 +256,5 @@ JSBIND_GLOBAL()
     JSBIND_FUNCTION(NAPIFun::ConchNAPI_captureScreenCallBack, "ConchNAPI_captureScreenCallBack");
     JSBIND_FUNCTION(NAPIFun::ConchNAPI_handleDeviceMotionEvent, "ConchNAPI_handleDeviceMotionEvent");
     JSBIND_FUNCTION(NAPIFun::ConchNAPI_handleDeviceOrientationEvent, "ConchNAPI_handleDeviceOrientationEvent");
+    JSBIND_FUNCTION(NAPIFun::ConchNAPI_RunJS, "ConchNAPI_RunJS");
 }
