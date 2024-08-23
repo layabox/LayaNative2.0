@@ -90,7 +90,11 @@ namespace laya{
             unsigned char *pContentBuff = nullptr;
             size_t iContentBuffSize = 0;
             bool bBigFile = mstrLocalFile.length() > 0;
+#ifdef OHOS
+            LOGI("Download [%{public}c%{public}c]:%{public}s", mbOnlyHeader ? 'H' : ' ', bBigFile ? 'B' : ' ', mUrl.c_str());
+#else
             LOGI("Download [%c%c]:%s", mbOnlyHeader ? 'H' : ' ', bBigFile ? 'B' : ' ', mUrl.c_str());
+#endif
             // 下载文件
             JCUrl url(mUrl.c_str());
             std::string encodeUrl = mUrl;// url.encode();
@@ -122,7 +126,11 @@ namespace laya{
                 }
                 else {
                     //bool bHttpOK = pCurl->m_nResponseCode >= 200 && pCurl->m_nResponseCode < 300;
+                    #ifdef OHOS
+				    LOGI("Download end:%{public}d", pCurl->m_nResponseCode);
+        			#else
                     LOGI("Download end:%d", pCurl->m_nResponseCode);
+        			#endif
                     if (bBigFile || iContentBuffSize <= 0) {//大文件没有buffer
                         JCBuffer jb;
                         mOnEnd(jb, pCurl->m_strLocalAddr, pCurl->m_strSvAddr,
@@ -475,7 +483,11 @@ namespace laya{
 		while(left>0 && tmGetCurms()-st<3000){
 			left = m_nStopNum;
 		}
+        #ifdef OHOS
+		LOGI("stopCurTask end stopnum=%{public}d",(int)m_nStopNum);
+        #else
 		LOGI("stopCurTask end stopnum=%d",(int)m_nStopNum);
+        #endif		
 #endif
 	}
 	
@@ -529,7 +541,11 @@ namespace laya{
 			_addsplitchar(m_strStubPath);
 			_addsplitchar(m_strStubReplace);
 		}
+        #ifdef OHOS
+		LOGI("setFinalReplacePath:%{public}s,%{public}s", m_strStubPath.c_str(), m_strStubReplace.c_str());
+        #else
 		LOGI("setFinalReplacePath:%s,%s", m_strStubPath.c_str(), m_strStubReplace.c_str());
+        #endif		
 	}
 
 	void JCDownloadMgr::setDownloadTail(int type, const char* p_strTail){

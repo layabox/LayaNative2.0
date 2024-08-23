@@ -134,6 +134,7 @@ namespace laya{
         set_Visible(p_bVisible);
     }
     void JSOHOSEditBox::focus(){
+        JCScriptRuntime::s_JSRT->m_pCurEditBox=this;
         m_bVisible = true;
         aki::JSBind::GetJSFunction("EditBox.focus")->Invoke<void>(m_tag);
     }

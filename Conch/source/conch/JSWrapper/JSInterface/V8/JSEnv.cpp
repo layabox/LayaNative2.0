@@ -38,7 +38,7 @@ namespace laya
 		v8::V8::Initialize();
 		static char* flags[] =
 		{
-#if __APPLE__
+#if defined(OHOS) || defined(__APPLE__)
             " --jitless",
 #endif
 			"--expose_gc",

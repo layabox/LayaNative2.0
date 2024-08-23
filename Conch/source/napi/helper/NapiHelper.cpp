@@ -569,3 +569,68 @@ void NapiHelper::__disableOrientation()
         orientationDisable->Invoke<void>();
     }
 }
+
+std::string NapiHelper::postCmdToMain(std::string data) {
+    JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__postCmdToMain, this, data));
+    return eventResult;
+}
+
+std::string NapiHelper::__postCmdToMain(std::string data) {
+    if (auto post = aki::JSBind::GetJSFunction("HandleMessageUtils.postCmdToMain")) {
+        eventResult = post->Invoke<std::string>(data);
+    }
+    return eventResult;
+}
+
+void NapiHelper::handleCloseWebview()
+{
+    JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__handleCloseWebview, this));
+}
+
+void NapiHelper::__handleCloseWebview()
+{
+    if (auto handle = aki::JSBind::GetJSFunction("WebUtils.closeWebview")) {
+        handle->Invoke<void>();
+    }
+}
+
+void NapiHelper::handleCreateWebview(const char *sUrl, int x, int y, int w, int h, bool bCloseWebview) {
+    JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__handleCreateWebview, this, sUrl, x, y, w, h, bCloseWebview));
+}
+
+void NapiHelper::__handleCreateWebview(const char *sUrl, int x, int y, int w, int h, bool bCloseWebview) {
+    if (auto handle = aki::JSBind::GetJSFunction("WebUtils.createWebview")) {
+        handle->Invoke<void>(sUrl, x, y, w, h, bCloseWebview);
+    }
+}
+
+void NapiHelper::handleCallWebviewJS(const char *sFunctionName, const char *sJsonParam, const char *sCallbackFunction) {
+    JCConch::s_pConchRender->setInterruptFunc(
+        std::bind(&NapiHelper::__handleCallWebviewJS, this, sFunctionName, sJsonParam, sCallbackFunction));
+}
+
+void NapiHelper::__handleCallWebviewJS(const char *sFunctionName, const char *sJsonParam, const char *sCallbackFunction) {
+    if (auto handle = aki::JSBind::GetJSFunction("WebUtils.callWebViewJS")) {
+        handle->Invoke<void>(sFunctionName, sJsonParam, sCallbackFunction);
+    }
+}
+
+void NapiHelper::handleHideWebview() {
+    JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__handleHideWebview, this));
+}
+
+void NapiHelper::__handleHideWebview() {
+    if (auto handle = aki::JSBind::GetJSFunction("WebUtils.hideWebview")) {
+        handle->Invoke<void>();
+    }
+}
+
+void NapiHelper::handleShowWebview() {
+    JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__handleShowWebview, this));
+}
+
+void NapiHelper::__handleShowWebview() {
+    if (auto handle = aki::JSBind::GetJSFunction("WebUtils.showWebView")) {
+        handle->Invoke<void>();
+    }
+}

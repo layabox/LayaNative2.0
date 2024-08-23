@@ -55,6 +55,8 @@ public:
                                                 float agz,float ra,float rb,float rg,float interval);
     static void ConchNAPI_handleDeviceOrientationEvent(float ra,float rb,float rg);
     static void ConchNAPI_RunJS(const std::string &js);
+    static void ConchNAPI_onRunCmd(std::string cmd);
+    static void ConchNAPI_gameMsgHandle(std::string key, std::string value);
 
 private:
     bool g_bEngineInited =false;

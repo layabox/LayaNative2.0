@@ -23,7 +23,7 @@ namespace laya
     public:
         enum 
         {
-            onframeid, ondrawid, onresizeid, ontouchevtid,ondevicemotionevtid, onkeyevtid, onmouseevtid, oninvalidglid,onotherevtid,onnetworkevt,onbackpressed,onblurid,onfocusid, bulletsetid, bulletgetid,onunhandledrejection,
+            onframeid, ondrawid, onresizeid, ontouchevtid,ondevicemotionevtid, onkeyevtid, onmouseevtid, oninvalidglid,onotherevtid,onnetworkevt,onbackpressed,onblurid,onfocusid, bulletsetid, bulletgetid,onunhandledrejection,handJsMessage
         };
 
 	    static JsObjClassInfo JSCLSINFO;
@@ -114,6 +114,10 @@ namespace laya
         std::string postMessage(const char* eventName, const char* data);
 
         std::string postSyncMessage(const char* eventName, const char* data);
+
+#ifdef OHOS
+        void setGameJsOnMessage(JSValueAsParam p_pFunction);
+#endif
     public:
 
         JCScriptRuntime*        m_pScrpitRuntime;

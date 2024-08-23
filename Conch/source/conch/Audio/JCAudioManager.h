@@ -21,7 +21,7 @@
 #endif
 
 #ifdef OHOS
-#include "resource/Audio/JCAudioWavPlayer-openharmony.h"
+#include "resource/Audio/JCAudioWavplayer-openharmony.h"
 #else
 #include "resource/Audio/JCAudioWavPlayer.h"
 #endif

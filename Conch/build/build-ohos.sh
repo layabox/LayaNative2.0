@@ -1,6 +1,6 @@
 #!/bin/sh
-OHOS_NDK_CMAKE_PATH="E:/huawei/devecostudio-windows-5.0.3.200/sdk/WinSDK/HarmonyOS-NEXT-DP2/base/native/build-tools/cmake/bin"
-OHOS_NDK_CMAKE_TOOLCHAIN_PATH="E:/huawei/devecostudio-windows-5.0.3.200/sdk/WinSDK/HarmonyOS-NEXT-DP2/base/native/build/cmake/ohos.toolchain.cmake"
+OHOS_NDK_CMAKE_PATH="E:/huawei/OpenHarmony/SDK/sdk/HarmonyOS-NEXT-DB3/openharmony/native/build-tools/cmake/bin"
+OHOS_NDK_CMAKE_TOOLCHAIN_PATH="E:/huawei/OpenHarmony/SDK/sdk/HarmonyOS-NEXT-DB3/openharmony/native/build/cmake/ohos.toolchain.cmake"
 
 #export PATH=${OHOS_NDK_CMAKE_PATH}:$PATH
 mkdir build

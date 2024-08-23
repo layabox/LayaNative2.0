@@ -27,7 +27,11 @@ namespace laya
     }
     void JSWebSocketDelegate::onOpen(WebSocket* ws)
     {
+        #ifdef OHOS
+        LOGI("JSWebSocketDelegate::onOpen() this=%{public}x ws=%{public}x", (long)this,(long)m_js_WebSocket);
+        #else
         LOGI("JSWebSocketDelegate::onOpen() this=%x ws=%x", (long)this,(long)m_js_WebSocket);
+        #endif
         std::string p_sEvent;
         m_js_WebSocket->closeTime = 0;
         m_pCmdPoster->postToJS(std::bind(&JSWebSocket::onSocketOpenCallJSFunction, m_js_WebSocket, p_sEvent, jswsref));
@@ -40,17 +44,17 @@ namespace laya
     }
     void JSWebSocketDelegate::onClose(WebSocket* ws)
     {
-        LOGI("JSWebSocketDelegate::onClose()this=%x ws=%x", (long)this, (long)m_js_WebSocket);
+        LOGI("JSWebSocketDelegate::onClose()this=%{public}x ws=%{public}x", (long)this, (long)m_js_WebSocket);
         std::string p_sEvent = "error";
         auto pFuncation = std::bind(&JSWebSocket::onSocketCloseCallJSFunction, m_js_WebSocket, p_sEvent,tmGetCurms(), jswsref);
         m_pCmdPoster->postToJS(pFuncation);
     }
     void JSWebSocketDelegate::onError(WebSocket* ws, const WebSocket::ErrorCode& error)
     {
-        LOGW("JSWebSocketDelegate::onError( code=%d )this=%x ws=%x", error, (long)this, (long)m_js_WebSocket);
+        LOGW("JSWebSocketDelegate::onError( code=%{public}d )this=%{public}x ws=%{public}x", error, (long)this, (long)m_js_WebSocket);
         if (m_js_WebSocket->m_nWebSocketState == WSS_OPEN)
         {
-            LOGW("JSWebSocketDelegate::onError123( code=%d )this=%x ws=%x", error, (long)this, (long)m_js_WebSocket);
+            LOGW("JSWebSocketDelegate::onError123( code=%{public}d )this=%{public}x ws=%{public}x", error, (long)this, (long)m_js_WebSocket);
             std::string p_sEvent = "error";
             auto pFuncation = std::bind(&JSWebSocket::onSocketErrorCallJSFunction, m_js_WebSocket, p_sEvent, jswsref);
             m_pCmdPoster->postToJS(pFuncation);
@@ -76,7 +80,7 @@ namespace laya
         m_pWebSocket = new WebSocket();
         closeTime = 0;
         m_pWebSocketDelegate = new JSWebSocketDelegate(this);
-        LOGI("new JSWebSocket::this=%x deletgate=%x", (long)this, (long)m_pWebSocketDelegate);
+        LOGI("new JSWebSocket::this=%{public}x deletgate=%{public}x", (long)this, (long)m_pWebSocketDelegate);
         m_nBinaryType = Type_String;
         m_nWebSocketState = WSS_INIT;
         if (Init(p_sUrl))

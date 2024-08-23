@@ -390,6 +390,9 @@ namespace laya
         m_bJSBulletGetWorldTransformHandle.Reset();
         m_bJSBulletSetWorldTransformHandle.Reset();
 		m_pJSOnUnhandledRejectionFunction.Reset();
+#ifdef OHOS
+        m_pGameJsOnMessage.Reset();
+#endif
 #ifndef WIN32
         m_pCurEditBox = NULL;
 #endif
@@ -714,6 +717,19 @@ namespace laya
     {
 
     }
+
+#if OHOS
+    void JCScriptRuntime::onJsObjHandle(std::string key, std::string value)
+    {
+        std::function<void(void)> pFunction = std::bind(&JCScriptRuntime::onJsObjHandleCallJSFunction, this, key, value);
+        m_pScriptThread->post(pFunction);
+    }
+    void JCScriptRuntime::onJsObjHandleCallJSFunction(std::string key, std::string value)
+    {
+        m_pGameJsOnMessage.Call(key,value);
+    }
+#endif
+
 }
 //------------------------------------------------------------------------------
 

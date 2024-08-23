@@ -485,12 +485,15 @@ namespace laya
 	    auto pFunction = std::bind(&JSAudio::onPlayEndCallJSFunction,this, cbref);
 	    JCScriptRuntime::s_JSRT->m_pPoster->postToJS( pFunction );
     }
+
     //------------------------------------------------------------------------------
     void JSAudio::onPlayEndCallJSFunction( std::weak_ptr<int> callbackref)
     {
-	    if( !callbackref.lock())return;
-	    m_pJSFunctionAudioEnd.Call();
+        if( !callbackref.lock())
+            return;
+        m_pJSFunctionAudioEnd.Call();
     }
+
     //------------------------------------------------------------------------------
     void JSAudio::onCanplayCallJSFunction( std::weak_ptr<int> callbackref)
     {
@@ -498,11 +501,13 @@ namespace laya
             return;
         m_pJSFunctionCanPlay.Call();
     }
+
     void JSAudio::onErrorCallJSFunction(int p_nErrorCode,std::weak_ptr<int> callbackref)
     {
 	    if (!callbackref.lock())return;
 	    m_pJSFunctionError.Call(p_nErrorCode);
     }
+
     void JSAudio::exportJS() 
     {
         JSP_CLASS("ConchAudio",JSAudio);
@@ -521,6 +526,7 @@ namespace laya
 	    JSP_INSTALL_CLASS("ConchAudio", JSAudio);
     }
 }
+
 //------------------------------------------------------------------------------
 
 //-----------------------------END FILE--------------------------------

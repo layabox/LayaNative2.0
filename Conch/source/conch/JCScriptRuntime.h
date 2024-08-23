@@ -263,6 +263,9 @@ namespace laya
         JSIOSEditBox *                      m_pCurEditBox;
 #elif OHOS
         JSOHOSEditBox *                      m_pCurEditBox;
+        JsObjHandle					m_pGameJsOnMessage; // js 接受的回调
+        void onJsObjHandle(std::string key ,std::string value);
+        void onJsObjHandleCallJSFunction(std::string key ,std::string value);
 #endif
 #ifdef JS_V8
         DebuggerAgent*				        m_pDbgAgent;

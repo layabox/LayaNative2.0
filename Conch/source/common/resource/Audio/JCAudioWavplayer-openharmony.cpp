@@ -1,4 +1,4 @@
-#include "JCAudioWavPlayer-openharmony.h"
+#include "JCAudioWavplayer-openharmony.h"
 #include "../../util/JCCommonMethod.h"
 #include "../../util/Log.h"
 #include "JCWaveParser.h"
@@ -15,7 +15,22 @@ namespace laya{
         Release();
     }
     void JCAudioWavPlayer::checkWavePlayEnd(){
-
+        int m_ohAudioCount = m_pAudioRenderSource.size();
+        for (int i = 0; i < m_ohAudioCount; i++) {
+            if (m_pAudioRenderSource[i]->m_pAudio != nullptr && m_pAudioRenderSource[i]->m_bPlayOver == true) {
+                if (m_pAudioRenderSource[i]->m_bPlaying == true) {
+                    m_pAudioRenderSource[i]->m_bPlaying = false;
+                    m_pAudioRenderSource[i]->m_pAudio->onPlayEnd();
+                    m_pAudioRenderSource[i]->m_pAudio = NULL;
+                    if (m_pAudioRenderSource[i]->_audioRender != nullptr) {
+                        OH_AudioRenderer_Release(m_pAudioRenderSource[i]->_audioRender);
+                    }
+                    if (m_pAudioRenderSource[i]->_builder != nullptr) {
+                        OH_AudioStreamBuilder_Destroy(m_pAudioRenderSource[i]->_builder);
+                    }
+                }
+            }
+        }
     }
     OHAudioRenderInfo* JCAudioWavPlayer::playAudio(JCAudioInterface* p_pAudio, const std::string& p_sSrc, bool bIsOgg){
         JCWaveInfo* pInfo = NULL;
@@ -53,6 +68,7 @@ namespace laya{
         OH_AudioStream_Result ret;
         OH_AudioStream_Type type = AUDIOSTREAM_TYPE_RENDERER;
         OH_AudioStreamBuilder* _builder;
+        OH_AudioRenderer *audioRenderer;
         ret = OH_AudioStreamBuilder_Create(&_builder, type);
         if(ret != AUDIOSTREAM_SUCCESS){
             return nullptr;
@@ -74,13 +90,15 @@ namespace laya{
             nFormat = AUDIOSTREAM_SAMPLE_S16LE;
             break;
         }
-        OH_AudioStreamBuilder_SetSampleFormat(_builder, nFormat);
-        //设置低时延模式
-        OH_AudioStreamBuilder_SetLatencyMode(_builder, AUDIOSTREAM_LATENCY_MODE_FAST);
-
+        OH_AudioStreamBuilder_SetSampleFormat(_builder,nFormat);
         OH_AudioStreamBuilder_SetRendererInfo(_builder, AUDIOSTREAM_USAGE_GAME);
+        //设置低时延模式
+        OH_AudioStreamBuilder_SetLatencyMode(_builder,AUDIOSTREAM_LATENCY_MODE_FAST);
         OH_AudioRenderer_Callbacks callbacks;
         callbacks.OH_AudioRenderer_OnWriteData = AudioRendererOnWriteData;
+        callbacks.OH_AudioRenderer_OnStreamEvent = nullptr;
+        callbacks.OH_AudioRenderer_OnInterruptEvent = AudioRendererOnInterrupt;
+        callbacks.OH_AudioRenderer_OnError = nullptr;
         ret = OH_AudioStreamBuilder_SetRendererCallback(_builder, callbacks, (void *)audioRenderInfo);
         if(ret!=AUDIOSTREAM_SUCCESS){
             return nullptr;
@@ -89,11 +107,11 @@ namespace laya{
         if(ret!=AUDIOSTREAM_SUCCESS){
             return nullptr;
         } 
-
         audioRenderInfo->_audioRender=audioRenderer;
         audioRenderInfo->_builder = _builder;
         audioRenderInfo->m_pAudio = p_pAudio;
         audioRenderInfo->m_bPlaying = true;
+        audioRenderInfo->m_bPlayOver = false;
         audioRenderInfo->pcmBuffer = p_pBuffer;
         audioRenderInfo->m_pBufferSize = p_nBufferSize;
         m_pAudioRenderSource.push_back(audioRenderInfo);
@@ -109,50 +127,50 @@ namespace laya{
         }
         int32_t writeBytes = audioRenderInfo->m_pBufferSize - audioRenderInfo->writeOffset >bufferLen?bufferLen: audioRenderInfo->m_pBufferSize - audioRenderInfo->writeOffset;
         if(writeBytes<=0){
-            if(audioRenderInfo->m_bPlaying ==false){
-                return 0;
+            std::vector<char> __silenceData;
+            __silenceData.resize(bufferLen, 0x00);
+            memcpy(buffer, __silenceData.data(), bufferLen);
+            if(audioRenderInfo->m_bPlayOver == false){
+                audioRenderInfo->m_bPlayOver = true;
             }
-            if(audioRenderInfo->m_pAudio !=NULL){
-                audioRenderInfo->m_pAudio->onPlayEnd();
-                audioRenderInfo->m_pAudio=NULL;
-            }
-            if(audioRenderInfo->_audioRender!=nullptr){
-                OH_AudioRenderer_Stop(audioRenderInfo->_audioRender);
-                OH_AudioRenderer_Release(audioRenderInfo->_audioRender);
-            }
-            if(audioRenderInfo->_builder != nullptr){
-                OH_AudioStreamBuilder_Destroy(audioRenderInfo->_builder);
-            }
-            audioRenderInfo->m_pAudio = NULL;
-            audioRenderInfo->m_bPlaying = false;
             return 0;
         }
         memcpy(buffer,dataBuffer+audioRenderInfo->writeOffset,writeBytes);
         audioRenderInfo->writeOffset += writeBytes;
         return 0;
     }
+
+    int32_t JCAudioWavPlayer::AudioRendererOnInterrupt(OH_AudioRenderer *renderer, void *userData, OH_AudioInterrupt_ForceType type,
+        OH_AudioInterrupt_Hint hint) {
+        if (hint == AUDIOSTREAM_INTERRUPT_HINT_RESUME) {
+            OHAudioRenderInfo *audioRenderInfo = (OHAudioRenderInfo *)userData;
+            OH_AudioRenderer_Start(audioRenderInfo->_audioRender);
+        }
+        return 0;
+    }
+
     void JCAudioWavPlayer::stopAll(){
         int m_ohAudioCount = m_pAudioRenderSource.size();
         for (int i = 0; i < m_ohAudioCount; i++)
         {
             if(m_pAudioRenderSource[i]->m_bPlaying == true){
+                m_pAudioRenderSource[i]->m_bPlaying = false;
+                m_pAudioRenderSource[i]->m_pAudio = NULL;
                 OHAudioRenderInfo *pAudioRenderInfo = m_pAudioRenderSource[i];
                 if(pAudioRenderInfo->_audioRender != nullptr){
-                    OH_AudioRenderer_Stop(pAudioRenderInfo->_audioRender);
                     OH_AudioRenderer_Release(pAudioRenderInfo->_audioRender);
                 }
 
                 if(pAudioRenderInfo->_builder != nullptr){
                     OH_AudioStreamBuilder_Destroy(pAudioRenderInfo->_builder);
                 }
-                pAudioRenderInfo->m_bPlaying = false;
             }
         }
     }
     void JCAudioWavPlayer::pause(){
         int32_t m_ohAudioCount = m_pAudioRenderSource.size();
         for(int i=0; i< m_ohAudioCount; i++){
-            if(m_pAudioRenderSource[i]->_audioRender != nullptr){
+            if(m_pAudioRenderSource[i]->m_pAudio != nullptr){
                 OH_AudioRenderer_Pause(m_pAudioRenderSource[i]->_audioRender);
             }
         }
@@ -160,7 +178,7 @@ namespace laya{
     void JCAudioWavPlayer::resume(){
         int m_ohAudioCount = m_pAudioRenderSource.size();
         for(int i=0; i< m_ohAudioCount; i++){
-            if(m_pAudioRenderSource[i]->_audioRender != nullptr){
+            if(m_pAudioRenderSource[i]->m_pAudio != nullptr){
                 OH_AudioRenderer_Start(m_pAudioRenderSource[i]->_audioRender);
             }
         }
@@ -168,27 +186,28 @@ namespace laya{
     void JCAudioWavPlayer::setAllVolume(float p_nVolume){
         int m_ohAudioCount = m_pAudioRenderSource.size();
         for(int i=0; i< m_ohAudioCount; i++){
-            if(m_pAudioRenderSource[i]->_audioRender != nullptr){
-                //todo OHAudio设置音量接口暂不支持 后续补充
+            if(m_pAudioRenderSource[i]->m_pAudio != nullptr){
+                OH_AudioRenderer_SetVolume(m_pAudioRenderSource[i]->_audioRender, p_nVolume);
             }
         }
     }
     
     void JCAudioWavPlayer::stop(OHAudioRenderInfo * pAudioRenderInfo){
         if(pAudioRenderInfo->m_bPlaying==true){
+            pAudioRenderInfo->m_bPlaying = false;
+            pAudioRenderInfo->m_pAudio = NULL;
             if(pAudioRenderInfo->_audioRender!=nullptr){
-                OH_AudioRenderer_Stop(pAudioRenderInfo->_audioRender);
                 OH_AudioRenderer_Release(pAudioRenderInfo->_audioRender);
             }
             if(pAudioRenderInfo->_builder!=nullptr){
                 OH_AudioStreamBuilder_Destroy(pAudioRenderInfo->_builder);
             }
-            pAudioRenderInfo->m_pAudio = NULL;
-            pAudioRenderInfo->m_bPlaying = false;
         }
     }
     void JCAudioWavPlayer::setVolume(OHAudioRenderInfo * pAudioRenderInfo, float p_nVolume){
-        //todo OHAudio设置音量接口暂不支持，后续补充
+        if(pAudioRenderInfo->_audioRender != nullptr) {
+            OH_AudioRenderer_SetVolume(pAudioRenderInfo->_audioRender, p_nVolume);
+        }
     }
     void JCAudioWavPlayer::Release(){
         for(int i=0; i< m_pAudioRenderSource.size(); i++){

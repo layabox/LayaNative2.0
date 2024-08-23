@@ -1,4 +1,5 @@
 #include "./NAPIFun.h"
+#include "helper/NapiHelper.h"
 using namespace laya;
 
 NAPIFun NAPIFun::fun_;
@@ -6,6 +7,8 @@ bool NAPIFun::m_bTakeScreenshot = false;
 
 void NAPIFun::postCmdToMainThread(int p_nCmd, int p_nParam1, int p_nParam2)
 {
+    std::string data = to_string(p_nCmd);
+    NapiHelper::GetInstance()->postCmdToMain(data);
 }
 void NAPIFun::ConchNAPI_configSetParamExt(std::string p_strParamExt)
 {
@@ -234,6 +237,20 @@ void NAPIFun::ConchNAPI_RunJS(const std::string &js)
 {
      JCScriptRuntime::s_JSRT->callJSString(js);
 }
+void NAPIFun::ConchNAPI_onRunCmd(std::string cmd)
+{
+    auto func = NAPIFun::GetInstance();
+
+    if(func->g_pConch) {
+        func->g_pConch->onRunCmdInMainThread(atoi(cmd.c_str()),0,0);
+    }
+}
+
+void NAPIFun::ConchNAPI_gameMsgHandle(std::string key, std::string value)
+{
+    JCScriptRuntime::s_JSRT->onJsObjHandle(key,value);
+}
+
 JSBIND_GLOBAL()
 {
     JSBIND_FUNCTION(NAPIFun::ConchNAPI_configSetParamExt, "ConchNAPI_configSetParamExt");
@@ -257,4 +274,6 @@ JSBIND_GLOBAL()
     JSBIND_FUNCTION(NAPIFun::ConchNAPI_handleDeviceMotionEvent, "ConchNAPI_handleDeviceMotionEvent");
     JSBIND_FUNCTION(NAPIFun::ConchNAPI_handleDeviceOrientationEvent, "ConchNAPI_handleDeviceOrientationEvent");
     JSBIND_FUNCTION(NAPIFun::ConchNAPI_RunJS, "ConchNAPI_RunJS");
+    JSBIND_FUNCTION(NAPIFun::ConchNAPI_onRunCmd, "ConchNAPI_onRunCmd");
+    JSBIND_FUNCTION(NAPIFun::ConchNAPI_gameMsgHandle, "ConchNAPI_gameMsgHandle");
 }

@@ -269,10 +269,10 @@ void PluginRender::OnShowNative() {
     JCAudioManager* am = JCAudioManager::GetInstance();
     if(am->getMp3Mute() == false && am ->getMp3Stopped() == false)
     {
-        auto pFunction = std::bind(&JCAudioManager::resumeMp3,am);
-        JCScriptRuntime::s_JSRT->m_pPoster->postToJS(pFunction);
+        NapiHelper::GetInstance()->__resumeBackgroundMusic();
     }
-    laya::JCAudioManager::GetInstance()->m_pWavPlayer->resume();
+    std::function<void(void)> pFunction = std::bind(&JCAudioWavPlayer::resume, laya::JCAudioManager::GetInstance()->m_pWavPlayer);
+    JCScriptRuntime::s_JSRT->m_pPoster->postToJS(pFunction);
 }
 
 void PluginRender::OnHideNative() {
@@ -280,11 +280,10 @@ void PluginRender::OnHideNative() {
     JCAudioManager* am =JCAudioManager::GetInstance();
     if(am->getMp3Mute() == false && am->getMp3Stopped() == false)
     {
-        auto pFunction = std::bind(&JCAudioManager::pauseMp3,am);
-        JCScriptRuntime::s_JSRT->m_pPoster->postToJS( pFunction );
+        NapiHelper::GetInstance()->__pauseBackgroundMusic();
     }
-    laya::JCAudioManager::GetInstance()->m_pWavPlayer->pause();
-
+    std::function<void(void)> pFunction = std::bind(&JCAudioWavPlayer::pause, laya::JCAudioManager::GetInstance()->m_pWavPlayer);
+    JCScriptRuntime::s_JSRT->m_pPoster->postToJS(pFunction);
     if (timerInited_) {
         uv_timer_stop(&timerHandle_);
     }

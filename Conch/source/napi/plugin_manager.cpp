@@ -221,6 +221,7 @@ JSBIND_GLOBAL()
 {
     JSBIND_FUNCTION(NapiManager::GetContext, "getContext");
 }
+
 /*
  * function for module exports
  */

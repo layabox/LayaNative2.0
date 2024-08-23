@@ -82,7 +82,7 @@ namespace laya
     public:
 
 	    void onPlayEnd();
-
+    
         void onCanplayCallJSFunction(std::weak_ptr<int> callbackref);
 
 	    void onPlayEndCallJSFunction(std::weak_ptr<int> callbackref);

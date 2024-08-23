@@ -49,16 +49,22 @@ public:
     void disableOrientation();
     std::string postMessageToUIThread(std::string eventName, std::string data);
     std::string postSyncMessageToUIThread(std::string eventName, std::string data);
+    std::string postCmdToMain(std::string data);
+    void __pauseBackgroundMusic();
+    void __resumeBackgroundMusic();
+    void handleCloseWebview();
+    void handleCreateWebview(const char* sUrl,int x, int y, int w, int h, bool bCloseWebview);
+    void handleCallWebviewJS(const char* sFunctionName, const char* sJsonParam, const char* sCallbackFunction);
+    void handleHideWebview();
+    void handleShowWebview();
 
 private:
     std::string __getDeviceInfo();
     int __getNetworkType();
     void __startVibration(float duration);
     void __playBackgroundMusic(const char *p_sUrl,int p_nTimes,float nCurrentTime);
-    void __pauseBackgroundMusic();
     void __stopBackgroundMusic();
     void __setBackgroundMusicVolume(float p_nVolume);
-    void __resumeBackgroundMusic();
     void __setCurrentTime(double nCurrentTime);
     double __getCurrentTime();
     double __getDuration();
@@ -93,7 +99,12 @@ private:
     void __disableOrientation();
     std::string __postMessageToUIThread(std::string eventName, std::string data);
     std::string __postSyncMessageToUIThread(std::string eventName, std::string data);
-
+    std::string __postCmdToMain(std::string data);
+    void __handleCloseWebview();
+    void __handleCreateWebview(const char *sUrl, int x, int y, int w, int h, bool bCloseWebview);
+    void __handleCallWebviewJS(const char *sFunctionName, const char *sJsonParam, const char *sCallbackFunction);
+    void __handleHideWebview();
+    void __handleShowWebview();
     static NapiHelper help_;
 
 private:

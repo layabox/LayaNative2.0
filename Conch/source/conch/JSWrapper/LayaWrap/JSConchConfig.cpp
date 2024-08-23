@@ -378,13 +378,13 @@ namespace laya
     const char* JSConchConfig::getRuntimeVersion()
     {
 #ifdef __APPLE__
-        return "ios-conch6-release-2.13.5.1";
+        return "ios-conch6-release-2.13.6";
 #elif ANDROID
-        return "android-conch6-release-2.13.5.1";
+        return "android-conch6-release-2.13.6";
 #elif OHOS
-        return "ohos-conch6-release-2.13.5.1";
+        return "ohos-conch6-release-2.13.6";
 #elif WIN32
-        return "window-conch6-release-2.13.5.1";
+        return "window-conch6-release-2.13.6";
 #endif
     }
     const char* JSConchConfig::getAppVersion()
