@@ -29,4 +29,5 @@ export const ConchNAPI_setLocalizable: (p_bIsLocalPackage: boolean) => void;
 export const ConchNAPI_OnAppStart: () => void;
 export const ConchNAPI_handleDeviceMotionEvent: (ax: number, ay: number, az: number, agx: number, agy: number, agz: number, ra: number, rb: number, rg: number, interval: number) => void;
 export const ConchNAPI_handleDeviceOrientationEvent: (ra: number, rb: number, rg: number) => void;
-export const ConchNAPI_RunJS: (js: string) => void;
+export const ConchNAPI_inputChange:(keycode:number) => void;
+export const ConchNAPI_gameMsgHandle:(key:string, data:string) => void;

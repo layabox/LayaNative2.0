@@ -5,7 +5,7 @@ export class WorkerManager {
   private layaWorker: worker.ThreadWorker;
 
   private constructor() {
-    this.layaWorker = new worker.ThreadWorker("/entry/ets/workers/LayaWorker.ets", {
+    this.layaWorker = new worker.ThreadWorker("entry/ets/workers/LayaWorker.ets", {
       type: "classic",
       name: "LayaWorker"
     });

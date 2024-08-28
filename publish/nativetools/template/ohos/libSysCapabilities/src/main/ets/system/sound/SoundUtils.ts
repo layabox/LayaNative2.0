@@ -1,6 +1,7 @@
 import media from '@ohos.multimedia.media';
 import fs from '@ohos.file.fs';
 import laya from "liblaya.so";
+import audio from '@ohos.multimedia.audio';
 
 export default class SoundUtils {
     private static avPlayer;
@@ -25,6 +26,11 @@ export default class SoundUtils {
                     break;
                 case 'initialized': // avplayer 设置播放源后触发该状态上报
                     console.info('AVPlayer state initialized called.');
+                    let audioRendererInfo : audio.AudioRendererInfo = {
+                        usage: audio.StreamUsage.STREAM_USAGE_GAME,
+                        rendererFlags: 0
+                    }
+                    avPlayer.audioRendererInfo = audioRendererInfo;
                     avPlayer.prepare().then(() => {
                         console.info('AVPlayer prepare succeeded.');
                     }, (err) => {
@@ -57,6 +63,23 @@ export default class SoundUtils {
                     break;
                 default:
                     console.info('AVPlayer state unknown called.');
+                    break;
+            }
+        });
+
+        avPlayer.on('audioInterrupt', (interruptEvent: audio.InterruptEvent) => {
+            switch (interruptEvent.hintType) {
+                case audio.InterruptHint.INTERRUPT_HINT_PAUSE:
+                    avPlayer.pause();
+                    break;
+                case audio.InterruptHint.INTERRUPT_HINT_STOP:
+                    avPlayer.stop();
+                    break;
+                case audio.InterruptHint.INTERRUPT_HINT_RESUME:
+                    avPlayer.play();
+                    break;
+                default:
+                    console.info('Invalid interruptEvent', interruptEvent.hintType);
                     break;
             }
         });

@@ -10,7 +10,7 @@ import Orientation from '../system/sensor/OrientationUtils'
 import SoundUtils from '../system/sound/SoundUtils'
 import laya from "liblaya.so"
 import { EditBox } from '../components/EditBox'
-import HandleMessageUtils from '../event/HandleMessageUtils'
+import { HandleMessageUtils } from '../Event/HandleMessageUtils'
 
 export class NapiHelper {
   // 需要将JS代码执行在worker线程的在此处注册方法
@@ -45,6 +45,7 @@ export class NapiHelper {
     laya.JSBind.bindFunction("Accelerometer.disable", Accelerometer.disable);
     laya.JSBind.bindFunction("Orientation.enable", Orientation.enable);
     laya.JSBind.bindFunction("Orientation.disable", Orientation.disable);
+    laya.JSBind.bindFunction("HandleMessageUtils.postCmdToMain", HandleMessageUtils.postCmdToMain);
   }
 
   private static registerVideoPlay() {

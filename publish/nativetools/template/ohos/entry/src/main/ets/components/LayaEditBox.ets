@@ -1,5 +1,6 @@
 import { TextInputInfo } from '@ohos/libSysCapabilities/src/main/ets/components/EditBox'
 import { Logger } from '@ohos/libSysCapabilities'
+import laya from "liblaya.so";
 
 let log: Logger = new Logger(0x0001, "LayaEditBoxComponent");
 
@@ -30,6 +31,7 @@ export struct LayaEditBox {
           focusControl.requestFocus('TextArea' + this.textInputInfo.viewTag);
         })
         .onChange((value: string) => {
+          laya.ConchNAPI_inputChange(0);
           this.textInputInfo.value = value;
         })
     } else {
@@ -56,6 +58,7 @@ export struct LayaEditBox {
           focusControl.requestFocus('TextInput' + this.textInputInfo.viewTag);
         })
         .onChange((value: string) => {
+          laya.ConchNAPI_inputChange(0);
           this.textInputInfo.value = value;
         })
     }

@@ -3,6 +3,8 @@ import { Logger } from './Logger';
 import { handleWebViewMsg } from '../components/webview/WebViewMsg'
 import { handleDialogMsg } from '../components/dialog/DialogMsg'
 import { handleJumpManagerMsg } from '../system/appJump/JumpManagerMsg'
+import laya from "liblaya.so";
+
 import {
   BaseWorkerMsgEntity,
   DialogMsgEntity,
@@ -27,6 +29,9 @@ export class WorkerMsgUtils {
         break;
       case 'JumpManager':
         handleJumpManagerMsg(eventData as JumpMsgEntity);
+        break;
+      case 'reload':
+        laya.ConchNAPI_onRunCmd(eventData.function);
         break;
       default:
         WorkerMsgUtils.log.error('%{public}s has not implement yet', eventData.module);

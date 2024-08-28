@@ -7,6 +7,7 @@ import { JumpManager } from "@ohos/libSysCapabilities"
 import { NapiHelper } from "@ohos/libSysCapabilities/src/main/ets/napi/NapiHelper"
 import { GlobalContext, GlobalContextConstants } from "@ohos/libSysCapabilities"
 import { WorkerDataEntity } from './WorkerDataEntity';
+import { HandleMessageUtils } from "@ohos/libSysCapabilities"
 
 const appLifecycle: laya.CPPFunctions = laya.getContext(ContextType.APP_LIFECYCLE);
 const workerContext: laya.CPPFunctions = laya.getContext(ContextType.WORKER_INIT);
@@ -27,6 +28,7 @@ workerPort.onmessage = (e: MessageEvents): void => {
       Dialog.init(workerPort);
       JumpManager.init(workerPort);
       WebView.init(workerPort);
+      HandleMessageUtils.init(workerPort);
       laya.ConchNAPI_OnAppStart();
       break;
     case "abilityContextInit":
@@ -48,6 +50,7 @@ workerPort.onmessage = (e: MessageEvents): void => {
       appLifecycle.onBackPress();
       break;
     default:
+      laya.ConchNAPI_gameMsgHandle(data.type,data.text);
       console.error("laya worker: message type unknown");
   }
 }
