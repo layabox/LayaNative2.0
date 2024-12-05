@@ -7,7 +7,6 @@ set(LAYA_ROOT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../../../..)
 
 set(OHOS true)
 add_definitions(-DOHOS)
-add_definitions(-DJS_V8)
 add_definitions(-fexceptions)
 add_definitions(-DIN_LIBRARY)
 add_definitions(-D_GLIBCXX_PERMIT_BACKWARD_HASH)
@@ -18,6 +17,17 @@ add_definitions(-fno-rtti)
 add_definitions(-DBT_USE_DOUBLE_PRECISION)
 add_definitions(-DAL_ALEXT_PROTOTYPES)
 
+set(USE_JS_V8 OFF)
+set(USE_JS_JSVM ON)
+
+if (USE_JS_V8)
+    add_definitions(-DJS_V8)
+    message("USE_JS_V8")
+elseif (USE_JS_JSVM)
+    add_definitions(-DJS_JSVM)
+    message("USE_JS_JSVM")
+endif()
+
 add_subdirectory(../../common/proj.ohos common)
 add_subdirectory(../../render/proj.ohos render)
 
@@ -25,10 +35,6 @@ set(${PROJECT_NAME}_src
     ../../../source/conch/JSWrapper/v8debug/debug-agent.cpp
     ../../../source/conch/JSWrapper/v8debug/V8WSSv.cpp
     ../../../source/conch/JSWrapper/JSInterface/JSInterface.cpp
-    ../../../source/conch/JSWrapper/JSInterface/V8/JSEnv.cpp
-    ../../../source/conch/JSWrapper/JSInterface/V8/JsBinder.cpp
-    ../../../source/conch/JSWrapper/JSInterface/V8/JSArrayBuffer.cpp
-    ../../../source/conch/JSWrapper/JSInterface/V8/IsolateData.cpp
     ../../../source/conch/JSWrapper/JSInterface/JSObjBase.cpp
     ../../../source/conch/JSWrapper/LayaWrap/JSArrayBufferRef.cpp
     ../../../source/conch/JSWrapper/LayaWrap/JSOhosEditBox.cpp
@@ -76,6 +82,8 @@ set(${PROJECT_NAME}_src
     ../../../source/conch/Bridge/JCConchBridge.cpp
     
     ../../../source/napi/helper/NapiHelper.cpp
+		../../../source/conch/JSWrapper/LayaWrap/JSSensor.cpp
+    ../../../source/napi/helper/NapiValueConverter.cpp
     ../../../source/napi/plugin_manager.cpp
     ../../../source/napi/WorkerMessageQueue.cpp
     ../../../source/napi/render/plugin_render.cpp
@@ -83,6 +91,24 @@ set(${PROJECT_NAME}_src
     ../../../source/napi/modules/TouchesNapi.cpp
     ../../../source/napi/modules/VideoPlayerNapi.cpp
 )
+
+#add_library(${PROJECT_NAME} SHARED ${${PROJECT_NAME}_src})
+
+if (USE_JS_V8)
+    list(APPEND ${PROJECT_NAME}_src
+        ../../../source/conch/JSWrapper/JSInterface/V8/JSEnv.cpp
+        ../../../source/conch/JSWrapper/JSInterface/V8/JsBinder.cpp
+        ../../../source/conch/JSWrapper/JSInterface/V8/JSArrayBuffer.cpp
+        ../../../source/conch/JSWrapper/JSInterface/V8/IsolateData.cpp
+    )
+elseif (USE_JS_JSVM)
+    list(APPEND ${PROJECT_NAME}_src
+        ../../../source/conch/JSWrapper/JSInterface/JSVM/JSVMEnv.cpp
+        ../../../source/conch/JSWrapper/JSInterface/JSVM/JSVMBinder.cpp
+        ../../../source/conch/JSWrapper/JSInterface/JSVM/JSVMArrayBuffer.cpp
+        ../../../source/conch/JSWrapper/JSInterface/JSVM/IsolateData.cpp
+    )
+endif()
 add_library(${PROJECT_NAME} SHARED ${${PROJECT_NAME}_src})
 
 include_directories(${LAYA_ROOT_PATH}/Conch/source)
@@ -91,6 +117,7 @@ include_directories(${LAYA_ROOT_PATH}/Conch/source/napi)
 include_directories(${LAYA_ROOT_PATH}/Conch/source/resource)
 
 add_subdirectory(${LAYA_ROOT_PATH}/ThirdParty thirdParty)
+
 #target_link_libraries(${PROJECT_NAME} thirdParty)
 
 find_library(EGL-lib EGL)
@@ -117,7 +144,13 @@ set_property(TARGET v8_monolith
 )
 
 target_link_libraries(${PROJECT_NAME} ${EGL-lib} ${GLESv3-lib} ${hilog-lib} ${libuv-lib} ${Drawing-lib} ${libace-lib} ${libnapi-lib} ${rawfile-lib}
-    libohaudio.so libavplayer.so common render v8_monolith thirdParty) 
+    libbundle_ndk.z.so libohaudio.so libavplayer.so libnative_window.so libnative_buffer.so libohsensor.so common render thirdParty)
+
+if (USE_JS_V8)
+    target_link_libraries(${PROJECT_NAME} v8_monolith)
+elseif (USE_JS_JSVM)
+    target_link_libraries(${PROJECT_NAME} libjsvm.so)
+endif()
 
 set(LOCAL_IS64 arm64)
 

@@ -18,7 +18,8 @@ import promptAction from '@ohos.promptAction'
 import process from '@ohos.process';
 
 const nativePageLifecycle: laya.CPPFunctions = laya.getContext(ContextType.JSPAGE_LIFECYCLE);
-NapiHelper.registerUIFunctions();
+const napiContext: laya.CPPFunctions = laya.getContext(ContextType.NATIVE_API);
+NapiHelper.registerUIFunctions(napiContext.registerFunction);
 
 let layaWorker = WorkerManager.getInstance().getWorker();
 @Entry

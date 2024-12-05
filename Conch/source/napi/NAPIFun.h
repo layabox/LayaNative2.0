@@ -51,9 +51,6 @@ public:
     static void ConchNAPI_inputChange(int keycode);
     static void ConchNAPI_setLocalizable(bool p_bIsLocalPackage);
     static void ConchNAPI_captureScreenCallBack(int w,int h,std::string byteArray);
-    static void ConchNAPI_handleDeviceMotionEvent(float ax,float ay,float az,float agx,float agy,
-                                                float agz,float ra,float rb,float rg,float interval);
-    static void ConchNAPI_handleDeviceOrientationEvent(float ra,float rb,float rg);
     static void ConchNAPI_RunJS(const std::string &js);
     static void ConchNAPI_onRunCmd(std::string cmd);
     static void ConchNAPI_gameMsgHandle(std::string key, std::string value);

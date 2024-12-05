@@ -29,11 +29,7 @@
 #include "../../JCConchRender.h"
 #include "../../JCConch.h"
 #include "../../WebSocket/WebSocket.h"
-#ifdef OHOS
-#include <resource/Audio/JCAudioWavPlayer-openharmony.h>
-#else
 #include <resource/Audio/JCAudioWavPlayer.h>
-#endif
 #include "../../Audio/JCAudioManager.h"
 #include <LayaGL/JCLayaGL.h>
 #include <LayaGL/JCLayaGLDispatch.h>
@@ -378,13 +374,13 @@ namespace laya
     const char* JSConchConfig::getRuntimeVersion()
     {
 #ifdef __APPLE__
-        return "ios-conch6-release-2.13.6";
+        return "ios-conch6-release-2.13.8";
 #elif ANDROID
-        return "android-conch6-release-2.13.6";
+        return "android-conch6-release-2.13.8";
 #elif OHOS
-        return "ohos-conch6-release-2.13.6";
+        return "ohos-conch6-release-2.13.8";
 #elif WIN32
-        return "window-conch6-release-2.13.6";
+        return "window-conch6-release-2.13.8";
 #endif
     }
     const char* JSConchConfig::getAppVersion()

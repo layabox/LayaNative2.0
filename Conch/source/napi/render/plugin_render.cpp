@@ -5,6 +5,8 @@
 #include "../../napi/plugin_manager.h"
 #include "../modules/TouchesNapi.h"
 #include "../../napi/NAPIFun.cpp"
+#include "native_window/external_window.h"
+#include "native_buffer/native_buffer.h"
 
 #include <assert.h>
 #include "util/Log.h"
@@ -39,6 +41,33 @@ void OnSurfaceDestroyedCB(OH_NativeXComponent* component, void* window)
     PluginRender::GetInstance()->sendMsgToWorker(MessageType::WM_XCOMPONENT_SURFACE_DESTROY, component, window);
 }
 
+void OnSurfaceHideCB(OH_NativeXComponent* component, void* window) {
+    LOGI("OnSurfaceHideCB");
+    
+    int32_t ret;
+    char idStr[OH_XCOMPONENT_ID_LEN_MAX + 1] = {};
+    uint64_t idSize = OH_XCOMPONENT_ID_LEN_MAX + 1;
+    ret = OH_NativeXComponent_GetXComponentId(component, idStr, &idSize);
+    if (ret != OH_NATIVEXCOMPONENT_RESULT_SUCCESS) {
+        return;
+    }
+    
+    PluginRender::GetInstance()->sendMsgToWorker(MessageType::WM_XCOMPONENT_SURFACE_HIDE,component, window);
+}
+
+void OnSurfaceShowCB(OH_NativeXComponent* component, void* window) {
+    LOGI("OnSurfaceShowCB");
+    
+    int32_t ret;
+    char idStr[OH_XCOMPONENT_ID_LEN_MAX + 1] = {};
+    uint64_t idSize = OH_XCOMPONENT_ID_LEN_MAX + 1;
+    ret = OH_NativeXComponent_GetXComponentId(component, idStr, &idSize);
+    if (ret != OH_NATIVEXCOMPONENT_RESULT_SUCCESS) {
+        return;
+    }
+    
+    PluginRender::GetInstance()->sendMsgToWorker(MessageType::WM_XCOMPONENT_SURFACE_SHOW,component, window);
+}
 
 void DispatchTouchEventCB(OH_NativeXComponent* component, void* window)
 {
@@ -100,6 +129,10 @@ void PluginRender::onMessageCallback(const uv_async_t* /* req */) {
                 render->DispatchTouchEvent(nativexcomponet, msgData.window, msgData.touchEvent);
             } else if (msgData.type == MessageType::WM_XCOMPONENT_SURFACE_CHANGED) {
                 render->OnSurfaceChanged(nativexcomponet, msgData.window);
+            } else if (msgData.type == MessageType::WM_XCOMPONENT_SURFACE_HIDE) {
+                render->OnSurfaceHide();
+            } else if (msgData.type == MessageType::WM_XCOMPONENT_SURFACE_SHOW) {
+                render->OnSurfaceShow(msgData.window);
             } else if (msgData.type == MessageType::WM_XCOMPONENT_SURFACE_DESTROY) {
                 render->OnSurfaceDestroyed(nativexcomponet, msgData.window);
             } else {
@@ -142,6 +175,8 @@ void PluginRender::SetNativeXComponent(OH_NativeXComponent* component)
 {
     component_ = component;
     OH_NativeXComponent_RegisterCallback(component_, &PluginRender::callback_);
+    OH_NativeXComponent_RegisterSurfaceHideCallback(component_, OnSurfaceHideCB);
+    OH_NativeXComponent_RegisterSurfaceShowCallback(component_, OnSurfaceShowCB);
 }
 
 void PluginRender::workerInit(napi_env env, uv_loop_t* loop) {
@@ -201,6 +236,9 @@ void PluginRender::OnSurfaceCreated(OH_NativeXComponent* component, void* window
     eglCore_ = new EGLCore();
     int32_t ret = OH_NativeXComponent_GetXComponentSize(component, window, &width_, &height_);
     if (ret == OH_NATIVEXCOMPONENT_RESULT_SUCCESS) {
+        int32_t code = SET_USAGE;
+        OHNativeWindow *oHNativeWindow = static_cast<OHNativeWindow *>(window);
+        int32_t ret = OH_NativeWindow_NativeWindowHandleOpt(oHNativeWindow, code, NATIVEBUFFER_USAGE_MEM_DMA);
         eglCore_->GLContextInit(window, width_, height_);
         NAPIFun::ConchNAPI_OnGLReady(width_,height_);
     }
@@ -217,6 +255,16 @@ void PluginRender::OnSurfaceChanged(OH_NativeXComponent* component, void* window
 
 void PluginRender::OnSurfaceDestroyed(OH_NativeXComponent* component, void* window)
 {
+}
+
+void PluginRender::OnSurfaceHide()
+{
+    eglCore_->DestroySurface();
+}
+
+void PluginRender::OnSurfaceShow(void* window)
+{
+    eglCore_->CreateSurface(window);
 }
 
 void PluginRender::DispatchTouchEvent(OH_NativeXComponent* component, void* window, OH_NativeXComponent_TouchEvent* touchEvent)
@@ -271,8 +319,7 @@ void PluginRender::OnShowNative() {
     {
         NapiHelper::GetInstance()->__resumeBackgroundMusic();
     }
-    std::function<void(void)> pFunction = std::bind(&JCAudioWavPlayer::resume, laya::JCAudioManager::GetInstance()->m_pWavPlayer);
-    JCScriptRuntime::s_JSRT->m_pPoster->postToJS(pFunction);
+    laya::JCAudioManager::GetInstance()->m_pWavPlayer->resume();
 }
 
 void PluginRender::OnHideNative() {
@@ -282,8 +329,8 @@ void PluginRender::OnHideNative() {
     {
         NapiHelper::GetInstance()->__pauseBackgroundMusic();
     }
-    std::function<void(void)> pFunction = std::bind(&JCAudioWavPlayer::pause, laya::JCAudioManager::GetInstance()->m_pWavPlayer);
-    JCScriptRuntime::s_JSRT->m_pPoster->postToJS(pFunction);
+    laya::JCAudioManager::GetInstance()->m_pWavPlayer->pause();
+
     if (timerInited_) {
         uv_timer_stop(&timerHandle_);
     }

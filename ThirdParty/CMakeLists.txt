@@ -35,6 +35,7 @@ target_link_libraries(${PROJECT_NAME}
     ${LAYA_ROOT_PATH}/ThirdParty/bullet/lib/ohos/libBulletCollision.a
     ${LAYA_ROOT_PATH}/ThirdParty/bullet/lib/ohos/libLinearMath.a
     ${LAYA_ROOT_PATH}/ThirdParty/zlib/lib/ohos/libz.a
+    ${LAYA_ROOT_PATH}/ThirdParty/openal/lib/ohos/libopenal.a
     )
 
  target_include_directories(${PROJECT_NAME} PUBLIC 

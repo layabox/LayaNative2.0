@@ -6,6 +6,7 @@
 
 #include "modules/VideoPlayerNapi.h"
 #include "plugin_manager.h"
+#include "napi/helper/JSRegisterUtils.h"
 #include <aki/jsbind.h>
 #include "util/Log.h"
 
@@ -76,6 +77,7 @@ napi_value NapiManager::GetContext(long contextEnum)
         LOGI("NapiManager::GetContext NATIVE_RENDER_API");
         napi_property_descriptor desc[] = {
             DECLARE_NAPI_FUNCTION("nativeEngineStart", NapiManager::napiNativeEngineStart),
+                DECLARE_NAPI_FUNCTION("registerFunction", registerFunction),
         };
         NAPI_CALL(env, napi_define_properties(env, exports, sizeof(desc) / sizeof(desc[0]), desc));
     }

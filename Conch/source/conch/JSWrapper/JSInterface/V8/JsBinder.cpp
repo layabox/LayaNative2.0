@@ -20,7 +20,7 @@ namespace laya {
 
     JSObjBaseV8::JSObjBaseV8()
 	{
-        //·ÅÔÚ¹¹ÔìÀïÃæ£¬ÈÝÒ×µ¼ÖÂÃ»ÓÐjs»·¾³¶ø·Ç·¨¡£»¹ÊÇÍùºó·Å·Å°É¡£
+        //æ”¾åœ¨æž„é€ é‡Œé¢ï¼Œå®¹æ˜“å¯¼è‡´æ²¡æœ‰jsçŽ¯å¢ƒè€Œéžæ³•ã€‚è¿˜æ˜¯å¾€åŽæ”¾æ”¾å§ã€‚
 		m_isolate = NULL;
     }
 

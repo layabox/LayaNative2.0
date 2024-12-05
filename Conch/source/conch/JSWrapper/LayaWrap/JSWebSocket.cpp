@@ -151,6 +151,8 @@ namespace laya
         if (!cbref.lock()) return;
 #ifdef JS_V8
         v8::HandleScope scope(v8::Isolate::GetCurrent());
+#elif JS_JSVM
+        AutoHandleScope scope;
 #endif
         if (isBin)
         {

@@ -391,6 +391,36 @@ namespace laya
 			}
 			return array;
 		}
+#elif JS_JSVM
+        int size = (int)paths.size();
+		AutoHandleScope hs;
+		auto env = ENV;
+        JSVM_Status status;
+        JSVM_Value array;
+		if (0 == size){
+			JSVM_API_CALL(status, env, OH_JSVM_CreateArrayWithLength(env, 0, &array));
+			return array;
+		}
+		else {
+			AutoHandleScope hs;
+			for (int i = 0; i < size/2; i++) {
+				JSVM_Value retobj;
+                JSVM_API_CALL(status, env, OH_JSVM_CreateObject(env, &retobj));
+				std::string& path = paths[i * 2];
+				std::string& url = paths[i * 2 + 1];
+                JSVM_API_CALL(status, env, OH_JSVM_SetProperty(env,retobj,Js_Str("path"),Js_Str((const char*)path.c_str())));
+				if (url.length() > 0) {
+                    JSVM_API_CALL(status, env, OH_JSVM_SetProperty(env,retobj,Js_Str("url"),Js_Str((const char*)url.c_str())));
+                }
+				else {
+                    JSVM_Value null;
+                    JSVM_API_CALL(status, env, OH_JSVM_GetNull(env, &null));
+                    JSVM_API_CALL(status, env, OH_JSVM_SetProperty(env,retobj,Js_Str("url"),null));
+                }
+				JSVM_API_CALL(status, env, OH_JSVM_SetElement(env, array, i, retobj));
+			}
+			return array;
+		}
 #elif JS_JSC
         int size = (int)paths.size();
         JSContextRef ctx = __TlsData::GetInstance()->GetCurContext();

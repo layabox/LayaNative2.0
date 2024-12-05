@@ -89,7 +89,7 @@ namespace laya
 
         JsValue strTobufer(const char* s);
 
-        const char* callMethod(int objid,bool isSyn,const char*clsName, const char* methodName, const char* paramStr);
+        std::string callMethod(int objid,bool isSyn,const char*clsName, const char* methodName, const char* paramStr);
 
         const char* getCachePath();
 

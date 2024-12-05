@@ -1,5 +1,5 @@
 #include "NapiHelper.h"
-#include "aki/jsbind.h"
+#include "bundle/native_interface_bundle.h"
 
 using namespace laya;
 
@@ -517,57 +517,102 @@ std::string NapiHelper::__postSyncMessageToUIThread(std::string eventName, std::
     return syncEventResult;
 }
 
-
-void NapiHelper::enableAccelerometer()
+/**
+ * 调用本地方法，目前只支持调用ets/ts脚本类型中的静态方法 示例是Test.ets下的test方法
+ * @param isSyn 是否是同步方法
+ * @param clsPath 脚本路径 示例：entry/src/main/Tests/Test
+ * @param methodName 模块名称/静态方法名称 示例：entry/test(模块名称可省略，省略为clsPath第一个字符串)
+ * @param paramStr 方法入参 示例：json字符串
+ * @return 方法出参 示例：json字符串
+ */
+std::string NapiHelper::callNativeMethod(bool isSyn, const char* clsPath, const char* methodName, const char* paramStr)
 {
-    JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__enableAccelerometer, this));
+    JCConch::s_pConchRender->setInterruptFunc(
+        std::bind(&NapiHelper::__callNativeMethod, this, isSyn, clsPath, methodName, paramStr)
+    );
+    return methodResult;
 }
 
-void NapiHelper::__enableAccelerometer()
+std::string NapiHelper::__callNativeMethod(bool isSyn, const char* clsPath, const char* methodName, const char* paramStr)
 {
-    if (auto accelerometerEnable = aki::JSBind::GetJSFunction("Accelerometer.enable"))
-    {
-        accelerometerEnable->Invoke<void>();
+    const char* module_name;
+    const char* method;
+    
+    std::string methodStr = methodName;
+    std::string::size_type pos = methodStr.find("/");
+    if (pos != std::string::npos) {
+        std::string str1 = methodStr.substr(0, pos);
+        module_name = str1.c_str();
+        std::string str2 = methodStr.substr(pos + 1);
+        method = str2.c_str();
+    } else {
+        method = methodName;
+        std::string pathStr = clsPath;
+        pos = pathStr.find("/");
+        module_name = pos != std::string::npos ? pathStr.substr(0, pos).c_str() : "entry";
     }
-}
-
-void NapiHelper::disableAccelerometer()
-{
-    JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__disableAccelerometer, this));
-}
-
-void NapiHelper::__disableAccelerometer()
-{
-    if (auto accelerometerDisable = aki::JSBind::GetJSFunction("Accelerometer.disable"))
-    {
-        accelerometerDisable->Invoke<void>();
+    
+    napi_env env = aki::JSBind::GetScopedEnv();
+    
+    napi_status status;
+    napi_value result;
+    char* module_info = __getModuleInfo(module_name);
+    status = napi_load_module_with_info(env, clsPath, module_info, &result);
+    if (status != napi_ok) {
+        LOGW("callNativeMethod napi_load_module_with_info fail, status=%{public}d", status);
+        return "";
     }
-}
-
-void NapiHelper::enableOrientation()
-{
-    JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__enableOrientation, this));
-}
-
-void NapiHelper::__enableOrientation()
-{
-    if (auto orientationEnable = aki::JSBind::GetJSFunction("Orientation.enable"))
-    {
-        orientationEnable->Invoke<void>();
+    
+    napi_value func;
+    status = napi_get_named_property(env, result, method, &func);
+    if (status != napi_ok) {
+        LOGW("callNativeMethod napi_get_named_property fail, status=%{public}d", status);
+        return "";
     }
-}
-
-void NapiHelper::disableOrientation()
-{
-    JCConch::s_pConchRender->setInterruptFunc(std::bind(&NapiHelper::__disableOrientation, this));
-}
-
-void NapiHelper::__disableOrientation()
-{
-    if (auto orientationDisable = aki::JSBind::GetJSFunction("Orientation.disable"))
-    {
-        orientationDisable->Invoke<void>();
+    
+    // 同步方法直接调用napi_call_function
+    if (isSyn) {
+        napi_value jsArg = NapiValueConverter::ToNapiValue(env, paramStr);
+        napi_value return_val;
+        status = napi_call_function(env, result, func, 1, &jsArg, &return_val);
+        if (status != napi_ok) {
+            LOGW("callNativeMethod napi_call_function fail, status=%{public}d", status);
+            return "";
+        }
+            
+        if (!NapiValueConverter::ToCppValue(env, return_val, methodResult)) {
+            // Handle erroe here
+            LOGE("NapiValueConverter::ToCppValue Fail");
+        }
+        return methodResult;
     }
+    
+    std::promise<std::string> promise;
+    std::function<void(std::string)> cb = [&promise](std::string message)
+    {
+        promise.set_value(message);
+    };
+    AsyncCallParam *callParam = new AsyncCallParam{cb, paramStr, func};
+    JSFunction::getFunction("HandleMessageUtils.executeNativeMethod").invokeAsync(callParam);
+    
+    methodResult = promise.get_future().get();
+    return methodResult;
+}
+
+char* NapiHelper::__getModuleInfo(const char* module_name)
+{
+    if (bundle_name == NULL) {
+        OH_NativeBundle_ApplicationInfo info = OH_NativeBundle_GetCurrentApplicationInfo();
+        bundle_name = info.bundleName;
+    }
+    
+    char* module_info = (char*)malloc((strlen(bundle_name) + strlen(module_name) + 1) * sizeof(char*));
+    strcpy(module_info, "");
+    strcat(module_info, bundle_name);
+    strcat(module_info, "/");
+    strcat(module_info, module_name);
+    
+    return module_info;
 }
 
 std::string NapiHelper::postCmdToMain(std::string data) {
@@ -634,3 +679,5 @@ void NapiHelper::__handleShowWebview() {
         handle->Invoke<void>();
     }
 }
+
+std::unordered_map<std::string, JSFunction> JSFunction::FUNCTION_MAP;

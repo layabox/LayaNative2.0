@@ -12,6 +12,8 @@ public:
     EGLCore() {};
     void GLContextInit(void* window, int w, int h);
     void Update();
+    void DestroySurface();
+    void CreateSurface(void* window);
 
 public:
     int width_;

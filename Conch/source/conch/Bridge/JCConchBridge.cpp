@@ -21,6 +21,8 @@ namespace laya
                 {
 #ifdef JS_V8
                     v8::HandleScope scope(v8::Isolate::GetCurrent());
+#elif JS_JSVM
+                    AutoHandleScope scope;
 #endif
                     JsValue ab = createJSAB((char*)pPixels, nSize);
                     pCallbackObj->callJS(funcID, ab);

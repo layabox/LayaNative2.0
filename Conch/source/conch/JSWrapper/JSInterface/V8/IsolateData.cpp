@@ -1,3 +1,4 @@
+#ifdef JS_V8
 #include "IsolateData.h"
 namespace laya
 {
@@ -28,4 +29,4 @@ namespace laya
 	}
 
 }
-
+#endif

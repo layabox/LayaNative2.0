@@ -48,6 +48,10 @@ public:
     void OnSurfaceChanged(OH_NativeXComponent* component, void* window);
 
     void OnSurfaceDestroyed(OH_NativeXComponent* component, void* window);
+    
+    void OnSurfaceHide();
+    
+    void OnSurfaceShow(void* window);
 
     void DispatchTouchEvent(OH_NativeXComponent* component, void* window, OH_NativeXComponent_TouchEvent* touchEvent);
 

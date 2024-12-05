@@ -28,6 +28,8 @@
 #include "JSWrapper/LayaWrap/JSPromiseRejectionEvent.h"
 #ifdef JS_V8
     #include "JSWrapper/v8debug/debug-agent.h"
+#elif JS_JSVM
+    #include "JSWrapper/v8debug/debug-agent.h"
 #endif
 //#include "btBulletDynamicsCommon.h"
 
@@ -145,6 +147,8 @@ namespace laya
         m_dbLastUsedVsync = 0;
         m_dbCurVsync = 0;
 #ifdef JS_V8
+        m_pDbgAgent = nullptr;
+#elif JS_JSVM
         m_pDbgAgent = nullptr;  
 #endif
 #ifndef WIN32
@@ -214,6 +218,12 @@ namespace laya
         event->setReason(pReason);
         event->setType(type);
         JCScriptRuntime::s_JSRT->m_pJSOnUnhandledRejectionFunction.Call(JSP_TO_JS(JSPromiseRejectionEvent*, event));
+#elif JS_JSVM
+        JSPromiseRejectionEvent* event = new JSPromiseRejectionEvent;
+        event->setPromise(pPromise);
+        event->setReason(pReason);
+        event->setType(type);
+        JCScriptRuntime::s_JSRT->m_pJSOnUnhandledRejectionFunction.Call(JSP_TO_JS(JSPromiseRejectionEvent*, event));
 #endif
     }
     void JCScriptRuntime::start(const char* pStartJS) 
@@ -221,6 +231,8 @@ namespace laya
         LOGI("Start js %s", pStartJS);
         if (pStartJS)m_strStartJS = pStartJS;
 #ifdef JS_V8
+        m_pScriptThread->initialize(JCConch::s_pConch->m_nJSDebugPort, std::bind(&onUnhandledRejection, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+#elif JS_JSVM
         m_pScriptThread->initialize(JCConch::s_pConch->m_nJSDebugPort, std::bind(&onUnhandledRejection, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
 #else
         m_pScriptThread->initialize(JCConch::s_pConch->m_nJSDebugPort);
@@ -299,6 +311,8 @@ namespace laya
         JCPerfHUD::resetFrame();
 #ifdef JS_V8
         JSObjNode::s_pListJSObj = new JCSimpList();
+#elif JS_JSVM
+        JSObjNode::s_pListJSObj = new JCSimpList();
 #ifdef JS_V8_DEBUGGER
         if (m_pDbgAgent) 
         {
@@ -333,7 +347,11 @@ namespace laya
             int nSize = 0;
             if (m_pAssetsRes->loadFileContent("scripts/runtimeInit.js", sJSRuntime, nSize))
             {
-                JSP_RUN_SCRIPT(sJSRuntime);
+//#ifdef JS_V8
+//                JSP_RUN_SCRIPT(sJSRuntime);
+//#elif JS_JSVM
+                JSP_RUN_SCRIPT(sJSRuntime, "scripts/runtimeInit.js");
+//#endif
                 delete[] sJSRuntime;
             }
         }
@@ -348,13 +366,17 @@ namespace laya
                 v8::Isolate* isolate = v8::Isolate::GetCurrent();
                 v8::HandleScope handle_scope(isolate);
                 v8::TryCatch try_catch(isolate);
-                JSP_RUN_SCRIPT(kBuf.c_str());
+                JSP_RUN_SCRIPT(kBuf.c_str(), NULL);
                 if (try_catch.HasCaught())
                 {
                     __JSRun::ReportException(isolate, &try_catch);
                 }
             #else
-                JSP_RUN_SCRIPT(kBuf.c_str());
+//#ifdef JS_V8
+//                JSP_RUN_SCRIPT(kBuf.c_str());
+//#elif JS_JSVM
+                JSP_RUN_SCRIPT(kBuf.c_str(),nullptr);
+//#endif
             #endif	
             delete[] sJCBuffer;
             sJCBuffer = NULL;
@@ -365,7 +387,11 @@ namespace laya
             m_pScriptThread->post(std::bind(&JCScriptRuntime::onUpdate, this));
         }
 #endif
-        JSP_RUN_SCRIPT("gc();gc();gc();");
+//#ifdef JS_V8
+//                JSP_RUN_SCRIPT("gc();gc();gc();");
+//#elif JS_JSVM
+                JSP_RUN_SCRIPT("gc();gc();gc();",nullptr);
+//#endif
     }
     void JCScriptRuntime::onThreadExit(JCEventEmitter::evtPtr evt)
     {
@@ -413,6 +439,23 @@ namespace laya
             delete JSObjNode::s_pListJSObj;
             JSObjNode::s_pListJSObj = nullptr;
         }
+#elif JS_JSVM
+        JSObjBaseJSVM::restarting = true;
+        JSObjBaseJSVM::resetBaseSet();
+        JCSimpList* pNodeLists = JSObjNode::s_pListJSObj;
+        if (pNodeLists != NULL)
+        {
+            JCListNode* pCur = pNodeLists->begin();
+            JCListNode* pEnd = pNodeLists->end();
+            while (pCur != pEnd)
+            {
+                JSObjNode* pJsCur = (JSObjNode*)pCur;
+                pCur = pNodeLists->delNode(pCur);
+                delete pJsCur;
+            }
+            delete JSObjNode::s_pListJSObj;
+            JSObjNode::s_pListJSObj = nullptr;
+        }
 #ifdef JS_V8_DEBUGGER
         if (m_pDbgAgent)
         {
@@ -434,6 +477,8 @@ namespace laya
     {
         PERF_INITVAR(nBenginTime);
 #ifdef JS_V8
+        m_pScriptThread->runDbgFuncs();
+#elif JS_JSVM
         m_pScriptThread->runDbgFuncs();
 #endif
         m_nUpdateCount++;
@@ -618,7 +663,11 @@ namespace laya
     }
     void JCScriptRuntime::jsGCCallJSFunction()
     {
-        JSP_RUN_SCRIPT("gc()");
+//#ifdef JS_V8
+//        JSP_RUN_SCRIPT("gc()");
+//#elif JS_JSVM
+        JSP_RUN_SCRIPT("gc()",nullptr);
+//#endif
     }
     void JCScriptRuntime::callJC(std::string sFunctionName, std::string sJsonParam, std::string sCallbackFunction)
     {
@@ -632,7 +681,11 @@ namespace laya
     }
     void JCScriptRuntime::callJSStringFunction( std::string sBuffer )
     {
-        JSP_RUN_SCRIPT(sBuffer.c_str());
+//#ifdef JS_V8
+//        JSP_RUN_SCRIPT(sBuffer.c_str());
+//#elif JS_JSVM
+        JSP_RUN_SCRIPT(sBuffer.c_str(),nullptr);
+//#endif
     }
     void JCScriptRuntime::callJSFuncton(std::string sFunctionName, std::string sJsonParam, std::string sCallbackFunction)
     {
@@ -643,7 +696,11 @@ namespace laya
         sBuffer += sCallbackFunction;
         sBuffer += "\");";
         LOGI("JCScriptRuntime::callJSFuncton buffer=%s",sBuffer.c_str() );
-        JSP_RUN_SCRIPT( sBuffer.c_str() );
+//#ifdef JS_V8
+//        JSP_RUN_SCRIPT( sBuffer.c_str() );
+//#elif JS_JSVM
+        JSP_RUN_SCRIPT( sBuffer.c_str(),nullptr);
+//#endif
     }
     void JCScriptRuntime::restoreAudio()
     {
@@ -664,7 +721,11 @@ namespace laya
     }
     void JCScriptRuntime::jsReloadUrlJSFunction()
     {
-        JSP_RUN_SCRIPT("reloadJS(true)");
+//#ifdef JS_V8
+//        JSP_RUN_SCRIPT("reloadJS(true)");
+//#elif JS_JSVM
+        JSP_RUN_SCRIPT("reloadJS(true)",nullptr);
+//#endif
     }
     void JCScriptRuntime::jsUrlback()
     {
@@ -673,7 +734,11 @@ namespace laya
     }
     void JCScriptRuntime::jsUrlbackJSFunction()
     {
-        JSP_RUN_SCRIPT("history.back()");
+//#ifdef JS_V8
+//        JSP_RUN_SCRIPT("history.back()");
+//#elif JS_JSVM
+        JSP_RUN_SCRIPT("history.back()",nullptr);
+//#endif
     }
     void JCScriptRuntime::startScriptOnRenderThread()
     {

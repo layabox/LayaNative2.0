@@ -161,6 +161,12 @@ namespace laya
 				if (!pObj->IsFunction())return;
 				v8::Local<v8::Function> jsfun = v8::Local<v8::Function>::Cast(pObj);
 				callJsFunc(jsfun, i, sb.name, bDir, sb.size);
+#elif JS_JSVM
+				JSVM_Status status;
+                bool result;
+                JSVM_API_CALL(status, ENV, OH_JSVM_IsFunction(ENV, pObj, &result));
+                if (!result) return;
+				callJsFunc(pObj, i, sb.name, bDir, sb.size);
 #elif JS_JSC
                 JSContextRef ctx = laya::__TlsData::GetInstance()->GetCurContext();
                 if (!JSValueIsObject(ctx, pObj))return;

@@ -104,6 +104,8 @@ namespace laya
         JS_DEBUG_MODE                           m_nJSDebugMode;
     #ifdef JS_V8
         DebuggerAgent*			                m_pDbgAgent;
+    #elif JS_JSVM
+        DebuggerAgent*			                m_pDbgAgent;
     #endif
         JCFileResManager*	                    m_pFileResMgr;
     protected:

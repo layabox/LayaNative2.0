@@ -115,6 +115,8 @@ namespace laya
     };
 #ifdef JS_V8
     class DebuggerAgent;
+#elif JS_JSVM
+    class DebuggerAgent;
 #endif
     class JSLayaGL;
     class JCFileResManager;
@@ -268,6 +270,8 @@ namespace laya
         void onJsObjHandleCallJSFunction(std::string key ,std::string value);
 #endif
 #ifdef JS_V8
+        DebuggerAgent*				        m_pDbgAgent;
+#elif JS_JSVM
         DebuggerAgent*				        m_pDbgAgent;
 #endif
     private:

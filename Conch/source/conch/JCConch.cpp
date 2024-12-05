@@ -25,6 +25,8 @@
 #include <webglplus/JCWebGLPlus.h>
 #ifdef JS_V8
     #include "JSWrapper/v8debug/debug-agent.h"
+#elif JS_JSVM
+    #include "JSWrapper/v8debug/debug-agent.h"
 #endif
 #ifdef ANDROID
     #include "WebSocket/WebSocket.h"

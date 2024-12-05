@@ -5,8 +5,6 @@ import { NetworkUtils } from '../system/device/NetworkUtils'
 import ApplicationManager from '../system/application/ApplicationManager'
 import { WebView } from '../components/webview/WebView'
 import { VideoPlayer }  from '../components/videoplayer/VideoPlayer'
-import Accelerometer from '../system/sensor/AccelerometerUtils'
-import Orientation from '../system/sensor/OrientationUtils'
 import SoundUtils from '../system/sound/SoundUtils'
 import laya from "liblaya.so"
 import { EditBox } from '../components/EditBox'
@@ -21,7 +19,7 @@ export class NapiHelper {
   }
 
   // 需要将JS代码执行在UI线程的在此处注册方法
-  static registerUIFunctions() {
+  static registerUIFunctions(registerFunction: Function) {
     NapiHelper.registerEditBox();
     NapiHelper.registerVideoPlay();
     laya.JSBind.bindFunction("DeviceUtils.getScreenInch", DeviceUtils.getScreenInch);
@@ -30,6 +28,7 @@ export class NapiHelper {
     laya.JSBind.bindFunction("ApplicationManager.exit", ApplicationManager.exit);
     laya.JSBind.bindFunction("HandleMessageUtils.handleMessage", HandleMessageUtils.handleMessage);
     laya.JSBind.bindFunction("HandleMessageUtils.handleSyncMessage", HandleMessageUtils.handleSyncMessage);
+    registerFunction("HandleMessageUtils.executeNativeMethod", HandleMessageUtils.executeNativeMethod);
   }
 
   private static registerLayaWorkerFunc() {
@@ -41,10 +40,6 @@ export class NapiHelper {
     laya.JSBind.bindFunction("DeviceUtils.getAvalidMem", DeviceUtils.getAvalidMem);
     laya.JSBind.bindFunction('Dialog.showDialog', Dialog.showDialog);
     laya.JSBind.bindFunction("NetworkUtils.getNetworkType", NetworkUtils.getNetworkType);
-    laya.JSBind.bindFunction("Accelerometer.enable", Accelerometer.enable);
-    laya.JSBind.bindFunction("Accelerometer.disable", Accelerometer.disable);
-    laya.JSBind.bindFunction("Orientation.enable", Orientation.enable);
-    laya.JSBind.bindFunction("Orientation.disable", Orientation.disable);
     laya.JSBind.bindFunction("HandleMessageUtils.postCmdToMain", HandleMessageUtils.postCmdToMain);
   }
 

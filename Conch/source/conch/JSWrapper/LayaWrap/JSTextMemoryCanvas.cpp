@@ -163,7 +163,7 @@ namespace laya
         m_pFreeTypeRender->measureChar(unicode, m_pCurrentFontInfo, width, height);
         JSObjectSetProperty(ctx, obj, JSStringCreateWithUTF8CString("width"), JSValueMakeNumber(ctx, width), kJSPropertyAttributeNone, nullptr);
         JSObjectSetProperty(ctx, obj, JSStringCreateWithUTF8CString("height"), JSValueMakeNumber(ctx, height), kJSPropertyAttributeNone, nullptr);
-#else
+#elif JS_V8
         Isolate* iso = Isolate::GetCurrent();
         Local<Context> context = iso->GetCurrentContext();
         Local<Object> obj = Local<Object>::New(iso, Object::New(iso));
@@ -178,6 +178,27 @@ namespace laya
         m_pFreeTypeRender->measureChar(unicode, m_pCurrentFontInfo, width, height);
         obj->Set(context, String::NewFromUtf8(iso, "width").ToLocalChecked(), Number::New(iso, width));
         obj->Set(context, String::NewFromUtf8(iso, "height").ToLocalChecked(), Number::New(iso, height));
+#elif JS_JSVM
+        AutoHandleScope scope;
+        JSVM_Value obj;
+        JSVM_Status status;
+        auto env = ENV;
+        JSVM_API_CALL(status, env, OH_JSVM_CreateObject(env, &obj));
+    
+        JSVM_Value js_width;
+        JSVM_Value js_height;
+        if (m_pCurrentFontInfo == NULL)
+        {
+            LOGW("JSMemoryCanvas::measureText 没有设置FontInfo");
+            JSVM_API_CALL(status, env, OH_JSVM_CreateUint32(env, 0, &js_width));
+            JSVM_API_CALL(status, env, OH_JSVM_CreateUint32(env, 0, &js_height));
+        } else {
+            m_pFreeTypeRender->measureChar(unicode, m_pCurrentFontInfo, width, height);
+            JSVM_API_CALL(status, env, OH_JSVM_CreateUint32(env, width, &js_width));
+            JSVM_API_CALL(status, env, OH_JSVM_CreateUint32(env, height, &js_height));
+        }
+        JSVM_API_CALL(status, env, OH_JSVM_SetNamedProperty(env, obj, "width", js_width));
+        JSVM_API_CALL(status, env, OH_JSVM_SetNamedProperty(env, obj, "height", js_height));
 #endif
         return obj;
     }

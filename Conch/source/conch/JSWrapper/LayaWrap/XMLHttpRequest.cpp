@@ -176,7 +176,7 @@ namespace laya
     {
         if (!cbref.lock())
             return;       
-        //¼ì²éÒ»ÏÂjs»·¾³
+        //ï¿½ï¿½ï¿½Ò»ï¿½ï¿½jsï¿½ï¿½ï¿½ï¿½
         if (!pxhr->IsMyJsEnv())
             return;
         if (p_Buff) 
@@ -185,6 +185,8 @@ namespace laya
             {
 #ifdef JS_V8
                 v8::HandleScope scope(v8::Isolate::GetCurrent());
+#elif JS_JSVM
+                AutoHandleScope scope;
 #endif
                 JsValue ab = createJSAB(p_Buff, p_nLen);
                 pxhr->m_jsfunPostComplete.Call(ab, p_Buff);
@@ -235,10 +237,10 @@ namespace laya
         char* pBuff = new char[p_Buff.m_nLen + 1];//(bin?0:1)];
         memcpy(pBuff, p_Buff.m_pPtr, p_Buff.m_nLen);
         //if(!bin){
-        pBuff[p_Buff.m_nLen] = 0;	//²»¹ÜÊÇ²»ÊÇ¶þ½øÖÆ¶¼±£»¤Ò»ÏÂ
+        pBuff[p_Buff.m_nLen] = 0;	//ï¿½ï¿½ï¿½ï¿½ï¿½Ç²ï¿½ï¿½Ç¶ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½
         if (curlr != 0 || httpr<200 || httpr>300) 
         {
-            //´íÎó
+            //ï¿½ï¿½ï¿½ï¿½
             pPoster->postToJS(std::bind(_onPostError_JSThread, pxhr, curlr, httpr, callbackref));
         }
         else
@@ -254,7 +256,7 @@ namespace laya
         bool isfunc = pObj->IsFunction();
         //v8::Persistent<v8::Function>* pFunc = new v8::Persistent<v8::Function>(pIso, v8::Local<v8::Function>::Cast(pObj));
         v8::Persistent<v8::Object>* ppf = weakHoldJsObj(v8::Local<v8::Object>::Cast(pObj));
-        mpJsOnReadyStateChange = (JsFunction*) ppf; //ÊÇ·ñÎ£ÏÕ£¬ÐèÒª²âÊÔ // v8::Persistent<v8::Function>::Cast(*ppf);
+        mpJsOnReadyStateChange = (JsFunction*) ppf; //ï¿½Ç·ï¿½Î£ï¿½Õ£ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ // v8::Persistent<v8::Function>::Cast(*ppf);
     }
     */
     /*
@@ -336,7 +338,7 @@ namespace laya
                 while (it != m_requestHeaders.end())
                 {
                     std::string head = (*it).first;
-                    head += ": ";//±ê×¼ÊÇ¿ÉÒÔÓÐÈÎÒâ¸ö¿Õ¸ñ
+                    head += ": ";//ï¿½ï¿½×¼ï¿½Ç¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ¸ï¿½
                     head += (*it).second;
                     headers.push_back(head);
                     it++;
@@ -364,7 +366,7 @@ namespace laya
             while (it != m_requestHeaders.end()) 
             {
                 std::string head = (*it).first;
-                head += ": ";//±ê×¼ÊÇ¿ÉÒÔÓÐÈÎÒâ¸ö¿Õ¸ñ
+                head += ": ";//ï¿½ï¿½×¼ï¿½Ç¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ¸ï¿½
                 head += (*it).second;
                 headers.push_back(head);
                 it++;
@@ -384,7 +386,7 @@ namespace laya
         }
         else
         {
-            //ÅÐ¶ÏÊÇ·ñÎªstringÀàÐÍ
+            //ï¿½Ð¶ï¿½ï¿½Ç·ï¿½Îªstringï¿½ï¿½ï¿½ï¿½
             if (__TransferToCpp<char *>::is(arg1))
             {
                 pData = JS_TO_CPP(char*, arg1);
@@ -401,7 +403,7 @@ namespace laya
                 if (bisab)
                 {
                     postData(pdmgr, p_sUrl, pData, nDataLen);
-                    // m_responseTypeCode = ResponseTypeArrayBuffer; ²»ÄÜ¸ù¾ÝÕâ¸öÀ´¾ø¶Ô·µ»ØÀàÐÍ
+                    // m_responseTypeCode = ResponseTypeArrayBuffer; ï¿½ï¿½ï¿½Ü¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
                 }
                 else
                 {

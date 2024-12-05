@@ -80,12 +80,12 @@ namespace laya
         {
             JCScriptRuntime::s_JSRT->m_pJSTouchEvtFunction.Call(e.nTouchType, e.id, e.type, e.posX, e.posY);
         }
-        //Êó±ê
+        //ï¿½ï¿½ï¿½
         else if (e.nType >= E_ONMOUSEDOWN && e.nType <= E_ONRIGHTMOUSEUP)
         {
             JCScriptRuntime::s_JSRT->m_pJSMouseEvtFunction.Call(e.nTouchType, e.type, e.posX, e.posY, e.nWheel);
         }
-        //¼üÅÌ
+        //ï¿½ï¿½ï¿½ï¿½
         else if (e.nType >= E_ONKEYDOWN && e.nType <= E_ONKEYUP)
         {
             int bAlt = e.bAlt ? 1 : 0;
@@ -125,7 +125,7 @@ namespace laya
                 if (JCConch::s_pConchRender)
                     JCConch::s_pConchRender->onTouchStart(fTime);
 #elif ANDROID  
-				//ÈçºÎ×ªµ½äÖÈ¾Ïß³Ì£¿ÓÐÏß³ÌÎÊÌâµ«Ó¦¸ÃÓ°Ïì²»´ó
+				//ï¿½ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½È¾ï¿½ß³Ì£ï¿½ï¿½ï¿½ï¿½ß³ï¿½ï¿½ï¿½ï¿½âµ«Ó¦ï¿½ï¿½Ó°ï¿½ì²»ï¿½ï¿½
 				if (JCConch::s_pConchRender)
                     JCConch::s_pConchRender->onTouchStart(fTime);
 #elif WIN32
@@ -172,6 +172,8 @@ namespace laya
     {
 #ifdef JS_V8
         v8::HandleScope scope(v8::Isolate::GetCurrent());
+#elif JS_JSVM
+        AutoHandleScope scope;
 #endif
         JsValue ab = createJSAB(p_pBuffer, p_nlen);
 		delete[] p_pBuffer;

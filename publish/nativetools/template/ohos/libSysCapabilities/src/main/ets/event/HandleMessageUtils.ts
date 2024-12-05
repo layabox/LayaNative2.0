@@ -39,4 +39,14 @@ export class HandleMessageUtils {
     static handleSyncMessage(eventName: string, data: string, cb: Function): void {
         cb("");
     }
+
+    /**
+     * aki执行本地自定义异步方法
+     * @param nativeFunc 本地自定义异步方法
+     * @param funcData 传输数据
+     * @param funcCb 异步方法回调
+     */
+    static executeNativeMethod(nativeFunc: Function, funcData: string, funcCb: Function): void {
+        nativeFunc && nativeFunc(funcData, funcCb);
+    }
 }

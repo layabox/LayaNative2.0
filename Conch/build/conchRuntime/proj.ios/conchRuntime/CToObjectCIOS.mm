@@ -856,7 +856,7 @@ std::string CToObjectCCallMethod(int objid,bool isSync, const char*clsName, cons
 void reflectionCallback(const std::string& jsonret)
 {
     std::string script = "conch.platCallBack(" + jsonret + ")";
-    JSP_RUN_SCRIPT(script.c_str());
+    JSP_RUN_SCRIPT(script.c_str(), NULL);
     NSLog(@"%@", [[NSString alloc] initWithUTF8String:jsonret.c_str()]);
 }
 
@@ -893,7 +893,7 @@ void CToObjectCOnFocus()
 }
 void CToObjectCRunJS(const std::string& script)
 {
-    JSP_RUN_SCRIPT(script.c_str());
+    JSP_RUN_SCRIPT(script.c_str(), NULL);
 }
 void CToObjectCCaptureScreen()
 {

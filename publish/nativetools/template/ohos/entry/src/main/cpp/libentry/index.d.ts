@@ -13,6 +13,7 @@ export interface CPPFunctions {
   writablePathInit: (writePath: string) => void;
   workerInit: () => void;
   nativeEngineStart: () => void;
+  registerFunction: () => void;
   onVideoCallBack: (viewTag: number, event: number) => void;
   onDurationBack: (viewTag: number, duration: number) => void;
   onCurrentTimeBack: (viewTag: number, currentTime: number) => void;
@@ -27,7 +28,5 @@ export const ConchNAPI_configSetIsPlug: (v: boolean) => void;
 export const ConchNAPI_SetLocalStoragePath:(p_strLocalStorage: string) => void;
 export const ConchNAPI_setLocalizable: (p_bIsLocalPackage: boolean) => void;
 export const ConchNAPI_OnAppStart: () => void;
-export const ConchNAPI_handleDeviceMotionEvent: (ax: number, ay: number, az: number, agx: number, agy: number, agz: number, ra: number, rb: number, rg: number, interval: number) => void;
-export const ConchNAPI_handleDeviceOrientationEvent: (ra: number, rb: number, rg: number) => void;
 export const ConchNAPI_inputChange:(keycode:number) => void;
 export const ConchNAPI_gameMsgHandle:(key:string, data:string) => void;

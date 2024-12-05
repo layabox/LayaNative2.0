@@ -79,6 +79,31 @@ void EGLCore::Update()
     eglSwapBuffers(mEGLDisplay, mEGLSurface);
 }
 
+void EGLCore::DestroySurface()
+{
+    if (!eglMakeCurrent(mEGLDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT)) {
+//         LOGE("EGL eglMakeCurrent error = %{public}d", eglGetError());
+    }
+    eglDestroySurface(mEGLDisplay, mEGLSurface);
+    mEGLSurface = nullptr;
+}
+
+void EGLCore::CreateSurface(void* window)
+{
+    mEglWindow = (EGLNativeWindowType)(window);
+    if (mEglWindow) {
+        mEGLSurface = eglCreateWindowSurface(mEGLDisplay, mEGLConfig, mEglWindow, NULL);
+        if (mEGLSurface == nullptr) {
+//             LOGE("EGL eglCreateWindowSurface eglSurface is null")
+            return;
+        }
+    }
+    if (!eglMakeCurrent(mEGLDisplay, mEGLSurface, mEGLSurface, mEGLContext)) {
+//         LOGE("EGL eglMakeCurrent error = %{public}d", eglGetError());
+    }
+    return;
+}
+
 bool EGLCore::checkGlError(const char* op)
 {
     // OHOS_LOGE("EGL ERROR CODE = %{public}x", eglGetError());

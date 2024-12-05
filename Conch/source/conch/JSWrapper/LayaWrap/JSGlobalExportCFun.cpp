@@ -224,7 +224,11 @@ namespace laya
 
     void evalJS(const char* p_sSource)
     {
-        JSP_RUN_SCRIPT(p_sSource);
+//#ifdef JS_V8    
+//        JSP_RUN_SCRIPT(p_sSource);
+//#elif JS_JSVM
+        JSP_RUN_SCRIPT(p_sSource,nullptr);
+//#endif
     }
     void JSPrint(const char* p_sBuffer)
     {
@@ -443,6 +447,14 @@ namespace laya
         return toBase64(type, encoderOptions, ab, w, h, false);
     }
 
+#ifdef JS_JSVM
+    void gc() {
+        auto env = ENV;
+        JSVM_Status status;
+        JSVM_API_CALL(status, env, OH_JSVM_MemoryPressureNotification(env, JSVM_MEMORY_PRESSURE_LEVEL_CRITICAL));
+    }
+#endif
+
 	void JSGlobalExportC()	
     {
 		JSP_GLOBAL_START1();
@@ -487,13 +499,15 @@ namespace laya
 		JSWebGLPlus::getInstance()->exportJS();
 #ifdef JS_JSC
         JSContextRef ctx = laya::__TlsData::GetInstance()->GetCurContext();
-#else 
+#elif  JS_V8
         v8::Isolate* isolate = v8::Isolate::GetCurrent();
         v8::Local<v8::Context> context = isolate->GetCurrentContext(); 
         //v8::Local<v8::Object> object = v8::Object::New(isolate);
         //context->Global()->Set(v8::String::NewFromUtf8(isolate, "qq"), object);
         //v8::Local<v8::Object> object = context->Global();
         //JCWebGLPlus::getInstance()->exportJS((void*)NULL, &object);
+#elif JS_JSVM
+        JSP_ADD_GLOBAL_FUNCTION(gc, gc);
 #endif
 		JSVideo::exportJS();
        

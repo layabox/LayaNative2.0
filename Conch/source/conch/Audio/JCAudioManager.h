@@ -20,11 +20,7 @@
     #include "ohos/JCAudioMp3Player.h"
 #endif
 
-#ifdef OHOS
-#include "resource/Audio/JCAudioWavplayer-openharmony.h"
-#else
 #include "resource/Audio/JCAudioWavPlayer.h"
-#endif
 #include <map>
 #include <vector>
 #include "resource/Audio/JCWaveInfo.h"
@@ -96,13 +92,6 @@ namespace laya
 	    */
 	    bool ClearAllAudioBufferPlay( void );
 
-		#ifdef OHOS
-        OHAudioRenderInfo* playWav(JCAudioInterface* p_pAudio, const std::string& p_sUrl,bool bIsOgg);
-
-	    void setWavVolume(OHAudioRenderInfo* audioRenderInfo,float nVolume );
-
-        void stopWav(OHAudioRenderInfo* audioRenderInfo );
-		#else
         /** @brief 播放声音
          *  @param[in] 声音interface
         */
@@ -111,7 +100,6 @@ namespace laya
 	    void setWavVolume(OpenALSourceInfo* pOpenALInfo,float nVolume );
 
         void stopWav(OpenALSourceInfo* pOpenALInfo );
-		#endif
 
         /** @brief 删除wav
          *  @param[in] 声音的interface

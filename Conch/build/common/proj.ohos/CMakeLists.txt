@@ -38,7 +38,7 @@ set(common_src
     ../../../source/common/math/JCBoundingSphere.cpp
     ../../../source/common/math/JCPlane.cpp
     ../../../source/common/webglplus/JCWebGLPlus.cpp
-    ../../../source/common/resource/Audio/JCAudioWavplayer-openharmony.cpp
+    ../../../source/common/resource/Audio/JCAudioWavplayer.cpp
     ../../../source/common/resource/Audio/JCOggParser.cpp
     ../../../source/common/resource/Audio/JCWaveInfo.cpp
     ../../../source/common/resource/Audio/JCWaveParser.cpp

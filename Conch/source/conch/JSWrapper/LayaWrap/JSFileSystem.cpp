@@ -108,6 +108,25 @@ namespace laya
 			retobj->Set(context, Js_Str(pIso, "size"), v8::Number::New(pIso, sz));
 			retobj->Set(context, Js_Str(pIso, "mtime"), v8::Date::New(context, (double)(wtime*1000)).ToLocalChecked());
 			return retobj;
+#elif JS_JSVM
+			AutoHandleScope scope;
+			JSVM_Value retobj;
+            JSVM_Status status;
+            auto env = ENV;
+			JSVM_API_CALL(status, env, OH_JSVM_CreateObject(env, &retobj));
+			JSVM_Value js_isDir;
+			JSVM_API_CALL(status, env, OH_JSVM_GetBoolean(env, isDir, &js_isDir));
+            JSVM_API_CALL(status, env, OH_JSVM_SetNamedProperty(env, retobj, "isDirectory", js_isDir));
+			JSVM_Value js_isFile;
+			JSVM_API_CALL(status, env, OH_JSVM_GetBoolean(env, isFile, &js_isFile));
+            JSVM_API_CALL(status, env, OH_JSVM_SetNamedProperty(env, retobj, "isFile", js_isFile));
+			JSVM_Value js_sz;
+			JSVM_API_CALL(status, env, OH_JSVM_CreateUint32(env, sz, &js_sz));
+            JSVM_API_CALL(status, env, OH_JSVM_SetNamedProperty(env, retobj, "size", js_sz));
+			JSVM_Value js_time;
+			JSVM_API_CALL(status, env, OH_JSVM_CreateDate(env, (double)(wtime*1000), &js_time));
+            JSVM_API_CALL(status, env, OH_JSVM_SetNamedProperty(env, retobj, "mtime", js_time));
+			return retobj;
 #elif JS_JSC
             JSContextRef ctx = laya::__TlsData::GetInstance()->GetCurContext();
 			JSObjectRef retobj = JSObjectMake(ctx, nullptr, nullptr);

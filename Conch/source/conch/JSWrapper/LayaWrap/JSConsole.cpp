@@ -129,6 +129,8 @@ namespace laya
 		    }
 		    //gLayaLog(Info,
 	    }
+    #elif JS_JSVM
+        //TODO 待确认是否需要实现同v8
     #endif
     }
     void JSConsole::exportJS() 

@@ -20,6 +20,9 @@
     #include "V8/JSEnv.h"
     #include "V8/JSArrayBuffer.h"
     #include "V8/JsBinder.h"
+#elif JS_JSVM
+    #include "JSVM/JSVMEnv.h"
+    #include "JSVM/JSVMBinder.h"
 #endif
 
 namespace laya
@@ -36,7 +39,7 @@ namespace laya
     #define JSP_TO_JS_NULL  JSP_TO_JS(void,1)
     #define JSP_TO_JS_UNDEFINE  JSP_TO_JS(void,0)
     #define JSP_THROW(str) (laya::__JsThrow::GetInstance()->RuntimeThrow(str))
-    #define JSP_RUN_SCRIPT(script) (laya::__JSRun::Run(script))
+    #define JSP_RUN_SCRIPT(script,fileName) (laya::__JSRun::Run(script))
     #define JSP_TO_JS_STR(str) (laya::__TransferToJs<const char*>::ToJs(str))
     class JsObjBase : public JSObjBaseJSC {};
     #define JS_TRY
@@ -47,7 +50,7 @@ namespace laya
     };
     #define JSValueAsParam  JsValue
     #define JSP_THROW(str) 	__JsThrow::	Throw(str);
-    #define JSP_RUN_SCRIPT(script)   laya::__JSRun::Run(script);
+    #define JSP_RUN_SCRIPT(script,fileName)   laya::__JSRun::Run(script);
     #define JSP_TO_JS_NULL	((v8::Null(v8::Isolate::GetCurrent())))
     #define JSP_TO_JS_UNDEFINE ((v8::Undefined(v8::Isolate::GetCurrent())))
     #include "V8/JSCProxyTrnasfer.h"
@@ -65,6 +68,36 @@ namespace laya
 	        LOGE("JS onFrame error\n");\
 	        __JSRun::ReportException(isolate, &try_catch);\
 	    }
+#elif JS_JSVM
+    class JsObjBase :public JSObjBaseJSVM
+    {
+        public:
+        static JsValue getNull(){
+            auto env = ENV;
+            JSVM_Value result;
+            JSVM_Status status;
+            JSVM_API_CALL(status, env, OH_JSVM_GetNull(env, &result));
+            return result;
+        }
+        static JsValue getUndefined(){
+            auto env = ENV;
+            JSVM_Value result;
+            JSVM_Status status;
+            JSVM_API_CALL(status, env, OH_JSVM_GetUndefined(env, &result));
+            return result;
+        }
+    };
+    #define JSValueAsParam  JsValue
+    #define JSP_THROW(str) 	__JsThrow::	Throw(str);
+    #define JSP_RUN_SCRIPT(script,fileName)   laya::__JSRun::Run(script,fileName);
+    #define JSP_TO_JS_NULL	JsObjBase::getNull();
+    #define JSP_TO_JS_UNDEFINE JsObjBase::getUndefined();
+    #include "JSVM/JSVMProxyTransfer.h"
+    #define JSP_TO_JS(tp,v) (__TransferToJs<tp>::ToJs(v))
+    #define JS_TO_CPP(tp,v) (__TransferToCpp<tp>::ToCpp(v))
+    #define JSP_TO_JS_STR(str) Js_Str(str)
+    #define JS_TRY
+    #define JS_CATCH
 #endif
     void AdjustAmountOfExternalAllocatedMemory(int p_nMemorySize);
     JsValue getNativeObj(JSValueAsParam p_pJsObj, char* p_strName);

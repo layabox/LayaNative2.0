@@ -92,22 +92,7 @@ LOCAL_SRC_FILES := \
         ../../../../source/conch/JSWrapper/LayaWrap/Video/JSVideo_AndroidImpl.cpp \
         ../../../../source/conch/JSWrapper/LayaWrap/Video/VideoCache.cpp \
 
-LOCAL_C_INCLUDES := ../../../../../ThirdParty/curl/include/android \
-        ../../../../../ThirdParty/png/include/android \
-        ../../../../../ThirdParty/jpeg-turbo/include/android \
-        ../../../../../ThirdParty/freetype/include/android \
-        ../../../../../ThirdParty/zip/include/android \
-        ../../../../../ThirdParty/v8/include/android \
-        ../../../../../ThirdParty/ogg/include/android \
-        ../../../../../ThirdParty/websockets/include/android \
-		../../../../../ThirdParty/openssl/include/android \
-		../../../../../ThirdParty/openal/include/android \
-        ../../../../include/common \
-        ../../../../include/render \
-		../../../../include/webglPlus \
-        ../../../../include/msgpack/include \
-        ../../../../../ThirdParty/bullet/include \
-        
+
 LOCAL_IS64:=armv7
 ifeq ($(TARGET_ARCH),arm64)
 LOCAL_IS64:=arm64
@@ -116,6 +101,25 @@ LOCAL_IS64:=x86
 else ifeq ($(TARGET_ARCH),x86_64)
 LOCAL_IS64:=x86_64
 endif
+
+
+LOCAL_C_INCLUDES := ../../../../../ThirdParty/curl/include/android \
+        ../../../../../ThirdParty/png/include/android \
+        ../../../../../ThirdParty/jpeg-turbo/include/android \
+        ../../../../../ThirdParty/freetype/include/android \
+        ../../../../../ThirdParty/zip/include/android \
+        ../../../../../ThirdParty/v8/include/android \
+        ../../../../../ThirdParty/ogg/include/android \
+        ../../../../../ThirdParty/websockets/include/android \
+		../../../../../ThirdParty/openssl/include/android-$(LOCAL_IS64) \
+		../../../../../ThirdParty/openal/include/android \
+        ../../../../include/common \
+        ../../../../include/render \
+		../../../../include/webglPlus \
+        ../../../../include/msgpack/include \
+        ../../../../../ThirdParty/bullet/include \
+        
+
 LOCAL_DISABLE_FATAL_LINKER_WARNINGS := true
 LOCAL_LDLIBS    := -lOpenSLES -llog -lGLESv3 -landroid -ljnigraphics -lm -lz -lc++  \
         ../../../../libs/android-$(LOCAL_IS64)/librender.a \
@@ -138,6 +142,7 @@ LOCAL_LDLIBS    := -lOpenSLES -llog -lGLESv3 -landroid -ljnigraphics -lm -lz -lc
         ../../../../../ThirdParty/bullet/lib/android-$(LOCAL_IS64)/libBulletCollision.a \
 		../../../../../ThirdParty/bullet/lib/android-$(LOCAL_IS64)/libLinearMath.a \
 		../../../../../ThirdParty/openal/lib/android-$(LOCAL_IS64)/libopenal.a \
+        -latomic \
 #        ../../../../../ThirdParty/bullet/lib/android-$(LOCAL_IS64)/libBullet2FileLoader.a \
 #        ../../../../../ThirdParty/bullet/lib/android-$(LOCAL_IS64)/libBullet3Collision.a \
 #        ../../../../../ThirdParty/bullet/lib/android-$(LOCAL_IS64)/libBullet3Common.a \
