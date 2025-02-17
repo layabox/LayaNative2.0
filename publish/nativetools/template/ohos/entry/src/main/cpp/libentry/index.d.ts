@@ -30,3 +30,4 @@ export const ConchNAPI_setLocalizable: (p_bIsLocalPackage: boolean) => void;
 export const ConchNAPI_OnAppStart: () => void;
 export const ConchNAPI_inputChange:(keycode:number) => void;
 export const ConchNAPI_gameMsgHandle:(key:string, data:string) => void;
+export const ConchNAPI_RunJS:(jsstr:string) => void;

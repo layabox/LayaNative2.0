@@ -41,12 +41,37 @@ export class HandleMessageUtils {
     }
 
     /**
-     * aki执行本地自定义异步方法
-     * @param nativeFunc 本地自定义异步方法
-     * @param funcData 传输数据
-     * @param funcCb 异步方法回调
+     * 游戏侧通过PlatformClass反射调用本地自定义方法
+     * @param isSyn 是否同步方法
+     * @param cName 脚本文件路径
+     * @param mName 方法名称
+     * @param nativeFunc 本地自定义方法
+     * @param paramStr 传输数据
      */
-    static executeNativeMethod(nativeFunc: Function, funcData: string, funcCb: Function): void {
-        nativeFunc && nativeFunc(funcData, funcCb);
+    static executeNativeMethod(isSyn: boolean, cName: string, mName: string, nativeFunc: Function, paramStr: string): string {
+
+        let jParam = JSON.parse(paramStr || "[]");
+
+        let result = null;
+        if (isSyn) {
+            result = nativeFunc && nativeFunc.apply(this, jParam);
+        } else {
+            let paramCb = (call_re: string) => {
+                let rsJson = {
+                    objId: -1,
+                    cName: cName,
+                    mName: mName,
+                    v: call_re
+                }
+                laya.ConchNAPI_RunJS("conch.platCallBack(" + JSON.stringify(rsJson) + ")");
+            };
+            jParam[jParam.length] = paramCb;
+            result = nativeFunc && nativeFunc.apply(this, jParam);
+        }
+
+        let rsJson = {
+            v: result
+        }
+        return JSON.stringify(rsJson);
     }
 }

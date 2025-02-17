@@ -30,6 +30,7 @@
     #include "JSWrapper/v8debug/debug-agent.h"
 #elif JS_JSVM
     #include "JSWrapper/v8debug/debug-agent.h"
+    #include "ark_runtime/jsvm.h"
 #endif
 //#include "btBulletDynamicsCommon.h"
 
@@ -311,8 +312,6 @@ namespace laya
         JCPerfHUD::resetFrame();
 #ifdef JS_V8
         JSObjNode::s_pListJSObj = new JCSimpList();
-#elif JS_JSVM
-        JSObjNode::s_pListJSObj = new JCSimpList();
 #ifdef JS_V8_DEBUGGER
         if (m_pDbgAgent) 
         {
@@ -324,6 +323,18 @@ namespace laya
             LOGI("js debug closed");
         }
 #endif
+#elif JS_JSVM
+        JSObjNode::s_pListJSObj = new JCSimpList();
+//#ifdef JS_V8_DEBUGGER
+        auto env = ENV;
+        if (JCConch::s_pConch->m_nJSDebugMode != JS_DEBUG_MODE_OFF)
+        {
+            OH_JSVM_OpenInspector(env, "localhost", JCConch::s_pConch->m_nJSDebugPort);
+            if (JCConch::s_pConch->m_nJSDebugMode == JS_DEBUG_MODE_WAIT) {
+                OH_JSVM_WaitForDebugger(env, true);
+            }
+        }
+//#endif
 #endif
         JCConch::s_pConchRender->m_pImageManager->resetJSThread();
 
@@ -439,6 +450,12 @@ namespace laya
             delete JSObjNode::s_pListJSObj;
             JSObjNode::s_pListJSObj = nullptr;
         }
+#ifdef JS_V8_DEBUGGER
+        if (m_pDbgAgent)
+        {
+            m_pDbgAgent->onJSExit();
+        }
+#endif
 #elif JS_JSVM
         JSObjBaseJSVM::restarting = true;
         JSObjBaseJSVM::resetBaseSet();
@@ -456,12 +473,13 @@ namespace laya
             delete JSObjNode::s_pListJSObj;
             JSObjNode::s_pListJSObj = nullptr;
         }
-#ifdef JS_V8_DEBUGGER
-        if (m_pDbgAgent)
+//#ifdef JS_V8_DEBUGGER
+        auto env = ENV;
+        if (JCConch::s_pConch->m_nJSDebugMode != JS_DEBUG_MODE_OFF)
         {
-            m_pDbgAgent->onJSExit();
+            OH_JSVM_CloseInspector(env);
         }
-#endif
+//#endif
 #elif JS_JSC
         JSP_RESET_GLOBAL_FUNCTION;
 #endif

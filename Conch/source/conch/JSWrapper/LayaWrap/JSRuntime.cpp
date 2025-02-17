@@ -274,7 +274,9 @@ namespace laya
         return m_strReturn.c_str();
 #elif OHOS
         // 暂不支持调用非静态方法
-        return NapiHelper::GetInstance()->callNativeMethod(isSyn, clsName, methodName, paramStr);
+        m_strReturn = NapiHelper::GetInstance()->callNativeMethod(isSyn, clsName, methodName, paramStr);
+        LOGI("JSRuntime::callMethod %s", m_strReturn.c_str());
+        return m_strReturn.c_str();
 #endif
         return "";
     }

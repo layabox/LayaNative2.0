@@ -82,9 +82,9 @@ set(${PROJECT_NAME}_src
     ../../../source/conch/Bridge/JCConchBridge.cpp
     
     ../../../source/napi/helper/NapiHelper.cpp
-		../../../source/conch/JSWrapper/LayaWrap/JSSensor.cpp
-    ../../../source/napi/helper/NapiValueConverter.cpp
+    ../../../source/conch/JSWrapper/LayaWrap/JSSensor.cpp
     ../../../source/napi/plugin_manager.cpp
+    ../../../source/napi/helper/NapiValueConverter.cpp
     ../../../source/napi/WorkerMessageQueue.cpp
     ../../../source/napi/render/plugin_render.cpp
     ../../../source/napi/render/egl_core.cpp

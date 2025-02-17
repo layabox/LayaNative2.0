@@ -88,9 +88,10 @@ extern void reflectionCallback(const std::string& jsonret);
     const char* methodReturnType = signature.methodReturnType;
     if (!strcmp(methodReturnType, "@")) {
         NSLog(@"method return type %s",methodReturnType);
-        id returnValue;
+        id __unsafe_unretained returnValue;
         [invocation getReturnValue:&returnValue];
-        NSDictionary* dic = [NSDictionary dictionaryWithObjectsAndKeys:returnValue, @"v",nil];
+        id strongValue = returnValue;
+        NSDictionary* dic = [NSDictionary dictionaryWithObjectsAndKeys:strongValue, @"v",nil];
         NSError* pError = nil;
         NSData* pJsonData = [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:&pError];
         if (pError) {

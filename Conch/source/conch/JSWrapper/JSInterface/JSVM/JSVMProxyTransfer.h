@@ -84,20 +84,73 @@ public:
     }
 };
 
+
+inline int64_t getInt64Noloss(JSVM_Value value)
+{
+    int64_t result;
+    JSVM_Status status;
+    bool lossless;
+    status = OH_JSVM_GetValueBigintInt64(ENV, value, &result, &lossless);
+    //DEBUG_CHECK(lossless == true);
+    //DEBUG_CHECK(status == jsvm_status::jsvm_ok);
+    return result;
+}
+inline JSVM_Value makeInt64Noloss(int64_t value)
+{
+    JSVM_Value result;
+    JSVM_Status status;
+    status = OH_JSVM_CreateBigintInt64(ENV, value, &result);
+    return result;
+}
+inline uint64_t getUint64Noloss(JSVM_Value value)
+{
+    uint64_t result;
+    JSVM_Status status;
+    bool lossless;
+    status = OH_JSVM_GetValueBigintUint64(ENV, value, &result, &lossless);
+    //DEBUG_CHECK(lossless == true);
+    //DEBUG_CHECK(status == jsvm_status::jsvm_ok);
+    return result;
+}
+inline JSVM_Value makeUint64Noloss(uint64_t value)
+{
+    JSVM_Value result;
+    JSVM_Status status;
+    status = OH_JSVM_CreateBigintUint64(ENV, value, &result);
+    return result;
+}
+inline bool isBigInt(JSVM_Value value)
+{
+    JSVM_ValueType valueType;
+    JSVM_Status status = OH_JSVM_Typeof(ENV, value, &valueType);
+    //DEBUG_CHECK(status == jsvm_status::jsvm_ok);
+    return valueType == JSVM_ValueType::JSVM_BIGINT;
+}
+// 用bigint 保证精度不丢失,可以用于bullet对象指针
 template <> class __TransferToCpp<int64_t> {
 public:
     static int64_t ToCpp(JSVM_Value p_vl) {
-        JSVM_Status status;
-        int64_t result;
-        JSVM_API_CALL(status, ENV, OH_JSVM_GetValueInt64(ENV, p_vl, &result));
-        return result;
+        //JSVM_Status status;
+        //int64_t result;
+        //JSVM_API_CALL(status, ENV, OH_JSVM_GetValueInt64(ENV, p_vl, &result));
+        //return result;
+
+        JSVM_ValueType valueType;
+        JSVM_Status status = OH_JSVM_Typeof(ENV, p_vl, &valueType);
+        //DEBUG_CHECK(status == JSVM_OK);
+        if (valueType == JSVM_ValueType::JSVM_NULL || valueType == JSVM_ValueType::JSVM_UNDEFINED)
+        {
+            return 0;
+        }
+        return getInt64Noloss(p_vl);
     }
 
     static bool is(JSVM_Value p_vl) {
-        JSVM_Status status;
-        bool is_number;
-        JSVM_API_CALL(status, ENV, OH_JSVM_IsNumber(ENV, p_vl, &is_number));
-        return is_number;
+        //JSVM_Status status;
+        //bool is_number;
+        //JSVM_API_CALL(status, ENV, OH_JSVM_IsNumber(ENV, p_vl, &is_number));
+        //return is_number;
+        return isBigInt(p_vl);
     }
 };
 
@@ -121,17 +174,19 @@ public:
 template <> class __TransferToCpp<uint64_t> {
 public:
     static uint64_t ToCpp(JSVM_Value p_vl) { 
-        JSVM_Status status;
-        int64_t result;
-        JSVM_API_CALL(status, ENV, OH_JSVM_GetValueInt64(ENV, p_vl, &result));
-        return *reinterpret_cast<uint64_t *>(&result);
+        //JSVM_Status status;
+        //int64_t result;
+        //JSVM_API_CALL(status, ENV, OH_JSVM_GetValueInt64(ENV, p_vl, &result));
+        //return *reinterpret_cast<uint64_t *>(&result);
+        return getUint64Noloss(p_vl);
     }
 
     static bool is(JSVM_Value p_vl) {
-        JSVM_Status status;
-        bool is_number;
-        JSVM_API_CALL(status, ENV, OH_JSVM_IsNumber(ENV, p_vl, &is_number));
-        return is_number;
+        //JSVM_Status status;
+        //bool is_number;
+        //JSVM_API_CALL(status, ENV, OH_JSVM_IsNumber(ENV, p_vl, &is_number));
+        //return is_number;
+        return isBigInt(p_vl);
     }
 };
 
@@ -410,10 +465,11 @@ public:
 template <> class __TransferToJs<int64_t> {
 public:
     static JSVM_Value ToJs(int64_t p_vl) {
-        JSVM_Status status;
-        JSVM_Value result;
-        JSVM_API_CALL(status, ENV, OH_JSVM_CreateInt64(ENV, p_vl, &result));
-        return result;
+        //JSVM_Status status;
+        //JSVM_Value result;
+        //JSVM_API_CALL(status, ENV, OH_JSVM_CreateInt64(ENV, p_vl, &result));
+        //return result;
+        return makeInt64Noloss(p_vl);
     }
 
     static JSVM_Value ToJsDate(int64_t p_vl) {
@@ -444,10 +500,11 @@ public:
 template <> class __TransferToJs<uint64_t> {
 public:
     static JSVM_Value ToJs(uint64_t p_vl) {
-        JSVM_Status status;
-        JSVM_Value result;
-        JSVM_API_CALL(status, ENV, OH_JSVM_CreateInt64(ENV, p_vl, &result));
-        return result;
+        //JSVM_Status status;
+        //JSVM_Value result;
+        //JSVM_API_CALL(status, ENV, OH_JSVM_CreateInt64(ENV, p_vl, &result));
+        //return result;
+        return makeUint64Noloss(p_vl);
     }
 
     static JSVM_Value ToJsDate(uint64_t p_vl) {

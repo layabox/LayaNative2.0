@@ -535,82 +535,43 @@ std::string NapiHelper::callNativeMethod(bool isSyn, const char* clsPath, const 
 
 std::string NapiHelper::__callNativeMethod(bool isSyn, const char* clsPath, const char* methodName, const char* paramStr)
 {
-    const char* module_name;
-    const char* method;
+    std::string module_name;
+    std::string method;
     
     std::string methodStr = methodName;
     std::string::size_type pos = methodStr.find("/");
     if (pos != std::string::npos) {
-        std::string str1 = methodStr.substr(0, pos);
-        module_name = str1.c_str();
-        std::string str2 = methodStr.substr(pos + 1);
-        method = str2.c_str();
+        module_name = methodStr.substr(0, pos);
+        method = methodStr.substr(pos + 1);
     } else {
         method = methodName;
         std::string pathStr = clsPath;
         pos = pathStr.find("/");
-        module_name = pos != std::string::npos ? pathStr.substr(0, pos).c_str() : "entry";
+        module_name = pos != std::string::npos ? pathStr.substr(0, pos) : "entry";
     }
     
-    napi_env env = aki::JSBind::GetScopedEnv();
-    
-    napi_status status;
-    napi_value result;
-    char* module_info = __getModuleInfo(module_name);
-    status = napi_load_module_with_info(env, clsPath, module_info, &result);
-    if (status != napi_ok) {
-        LOGW("callNativeMethod napi_load_module_with_info fail, status=%{public}d", status);
-        return "";
-    }
-    
-    napi_value func;
-    status = napi_get_named_property(env, result, method, &func);
-    if (status != napi_ok) {
-        LOGW("callNativeMethod napi_get_named_property fail, status=%{public}d", status);
-        return "";
-    }
-    
-    // 同步方法直接调用napi_call_function
-    if (isSyn) {
-        napi_value jsArg = NapiValueConverter::ToNapiValue(env, paramStr);
-        napi_value return_val;
-        status = napi_call_function(env, result, func, 1, &jsArg, &return_val);
-        if (status != napi_ok) {
-            LOGW("callNativeMethod napi_call_function fail, status=%{public}d", status);
-            return "";
-        }
-            
-        if (!NapiValueConverter::ToCppValue(env, return_val, methodResult)) {
-            // Handle erroe here
-            LOGE("NapiValueConverter::ToCppValue Fail");
-        }
-        return methodResult;
-    }
+    std::string module_info = __getModuleInfo(module_name.c_str());
     
     std::promise<std::string> promise;
     std::function<void(std::string)> cb = [&promise](std::string message)
     {
         promise.set_value(message);
     };
-    AsyncCallParam *callParam = new AsyncCallParam{cb, paramStr, func};
+    AsyncCallParam *callParam = new AsyncCallParam{cb, paramStr, isSyn, clsPath, methodName, method, module_info};
     JSFunction::getFunction("HandleMessageUtils.executeNativeMethod").invokeAsync(callParam);
     
     methodResult = promise.get_future().get();
     return methodResult;
 }
 
-char* NapiHelper::__getModuleInfo(const char* module_name)
+std::string NapiHelper::__getModuleInfo(const char* module_name)
 {
-    if (bundle_name == NULL) {
+    if (bundle_name.empty()) {
         OH_NativeBundle_ApplicationInfo info = OH_NativeBundle_GetCurrentApplicationInfo();
         bundle_name = info.bundleName;
     }
     
-    char* module_info = (char*)malloc((strlen(bundle_name) + strlen(module_name) + 1) * sizeof(char*));
-    strcpy(module_info, "");
-    strcat(module_info, bundle_name);
-    strcat(module_info, "/");
-    strcat(module_info, module_name);
+    std::string module_info = bundle_name + "/" + module_name;
     
     return module_info;
 }
@@ -680,4 +641,4 @@ void NapiHelper::__handleShowWebview() {
     }
 }
 
-std::unordered_map<std::string, JSFunction> JSFunction::FUNCTION_MAP;
+std::unordered_map<std::string, JSFunction> JSFunction::FUNCTION_MAP;  
