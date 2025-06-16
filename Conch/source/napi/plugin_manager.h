@@ -43,6 +43,8 @@ public:
     static napi_value napiNativeEngineStart(napi_env env, napi_callback_info info);
     static napi_value napiWritablePathInit(napi_env env, napi_callback_info info);
 
+    static napi_value napiOnMouseWheel(napi_env env, napi_callback_info info);
+    
     OH_NativeXComponent* GetNativeXComponent();
     void SetNativeXComponent(OH_NativeXComponent* nativeXComponent);
 

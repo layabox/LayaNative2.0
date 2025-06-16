@@ -43,16 +43,23 @@ napi_value registerFunction(napi_env env, napi_callback_info info) {
 	if (functionType != napi_function) {
 		napi_throw_type_error(env, NULL, "Wrong arguments");
 		return nullptr;
-	}    
-
-    napi_ref fucRef;
-    napi_create_reference(env, args[1], 1, &fucRef);
+	}
     
-    char* name = new char[functionName.length() + 1];
-    strcpy(name, functionName.c_str());
-    JSFunction* jsFunction = new JSFunction(name, env, fucRef);
-
-    JSFunction::addFunction(name, jsFunction);
+    napi_value workName;
+    status = napi_create_string_utf8(env, "Thread-safe call from async work", NAPI_AUTO_LENGTH, &workName);
+    if (status != napi_ok) {
+        LOGW("registerFunction napi_create_string_utf8 fail,status=%{public}d", status);
+    }
+    
+    napi_threadsafe_function save_func;
+    status = napi_create_threadsafe_function(env, args[1], nullptr, workName, 0, 1, nullptr, 
+    [](napi_env env, void *raw, void *hint) {}, NULL, JSFunction::CallJS, &save_func);
+    if (status != napi_ok) {
+        LOGW("registerFunction napi_create_threadsafe_function fail,status=%{public}d", status);
+    }
+    
+    JSFunction jsFunction(env, save_func);
+    JSFunction::addFunction(functionName, jsFunction);
        
     LOGI("begin to return!");
     return nullptr;

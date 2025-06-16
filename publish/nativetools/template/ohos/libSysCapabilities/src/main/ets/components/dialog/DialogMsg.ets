@@ -16,21 +16,23 @@ export function handleDialogMsg(eventData: DialogMsgEntity): void {
       break;
     }
     case "showTextInputDialog": {
-      let tempShowMessage: TextInputDialogEntity = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_SHOW_MESSAGE);
+      let tempShowMessage = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_SHOW_MESSAGE) as TextInputDialogEntity;
       tempShowMessage.message = eventData.message;
-      GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_DIALOG_CONTROLLER).open();
+      let controller = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_DIALOG_CONTROLLER) as CustomDialogController;
+      controller.open();
       break;
     }
     case "hideTextInputDialog": {
-      let tempShowMessage: TextInputDialogEntity = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_SHOW_MESSAGE);
+      let tempShowMessage = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_SHOW_MESSAGE) as TextInputDialogEntity;
       tempShowMessage.message = '';
-      GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_DIALOG_CONTROLLER).close();
+      let controller = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_DIALOG_CONTROLLER) as CustomDialogController;
+      controller.close();
       break;
     }
   }
 }
 
-function showDialog(dialogTitle: string, dialogMessage: string) {
+function showDialog(dialogTitle: string | undefined, dialogMessage: string | undefined) {
   prompt.showDialog({
     title: dialogTitle,
     message: dialogMessage,
@@ -40,7 +42,7 @@ function showDialog(dialogTitle: string, dialogMessage: string) {
         color: '#000000'
       },
     ],
-    success: function (data) {
+    success: (data) => {
       log.debug("handling callback, data:%{public}s", data);
     }
   });

@@ -54,7 +54,7 @@ namespace laya
 {
 
 #define FALSE_RET(v,msg,...) {if(!(v)){ /*LOGE(msg,__VA_ARGS__);*/ return false;}}
-#define FALSE_RET0(v,msg) {if(!(v)){ LOGE(msg); return false;}}  
+#define FALSE_RET0(v,msg) {if(!(v)){ return false;}}  
     JCServerFileCache::SessionFileCacheType JCServerFileCache::s_bSessionCacheType =
         JCServerFileCache::CT_ValidInCurProcess;
 

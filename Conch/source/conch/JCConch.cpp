@@ -87,7 +87,7 @@ namespace laya
         //void *libhandle = dlopen("libGLESv2.so", RTLD_LAZY);
 #endif
         m_nUrlHistoryPos = -1;
-        m_sCachePath = gRedistPath + "/appCache";
+        m_sCachePath = gRedistPath + "appCache";
         g_DecThread = new JCWorkerThread(true);
         g_DecThread->setThreadName("image decode");
         JCDownloadMgr* pdmgr = JCDownloadMgr::getInstance();
@@ -176,7 +176,7 @@ namespace laya
 	}
 	void JCConch::onAppStart() 
     {
-        m_strLocalStoragePath = gRedistPath + "/localstorage/";
+        m_strLocalStoragePath = gRedistPath + "localstorage/";
         try
         {
             fs::create_directories(m_strLocalStoragePath);

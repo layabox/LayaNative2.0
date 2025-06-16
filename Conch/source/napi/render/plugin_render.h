@@ -21,11 +21,13 @@ public:
     static void timerCb(uv_timer_t* handle);
 
     void SetNativeXComponent(OH_NativeXComponent* component);
+    
+    void dispatchMouseWheelCB(std:: string eventType, float localX, float localY, float offsetY);
 
     void workerInit(napi_env env, uv_loop_t* loop);
 
     void sendMsgToWorker(const MessageType& type, OH_NativeXComponent* component, void* window); 
-    void sendMsgToWorker(const MessageType& type, OH_NativeXComponent* component, void* window, OH_NativeXComponent_TouchEvent* touchEvent);
+    void sendMsgToWorker(const MessageType& type, OH_NativeXComponent* component, void* window, void* eventData);
     void enqueue(const WorkerMessageData& data);
     bool dequeue(WorkerMessageData* data);
     void triggerMessageSignal();
@@ -54,6 +56,8 @@ public:
     void OnSurfaceShow(void* window);
 
     void DispatchTouchEvent(OH_NativeXComponent* component, void* window, OH_NativeXComponent_TouchEvent* touchEvent);
+    void DispatchKeyEvent(OH_NativeXComponent* component, void* window);
+    void DispatchMouseEvent(OH_NativeXComponent* component, void* window, OH_NativeXComponent_MouseEvent* mouseEvent);
 
     void OnCreateNative(napi_env env, uv_loop_t* loop);
     void OnShowNative();
@@ -65,8 +69,10 @@ public:
     static OH_NativeXComponent_Callback callback_;
 
     OH_NativeXComponent* component_{nullptr};
+    OH_NativeXComponent_MouseEvent_Callback _mouseCallback;
     uv_timer_t timerHandle_;
     bool timerInited_{false};
+    bool isMouseLeftActive{false};
     uv_loop_t* workerLoop_{nullptr};
     uv_async_t messageSignal_{};
     WorkerMessageQueue messageQueue_;
@@ -77,6 +83,7 @@ public:
 
     double x_;
     double y_;
+    float scrollDistance = 0.0;
 
     static uint64_t animationInterval_;
     static uint64_t lastTime;

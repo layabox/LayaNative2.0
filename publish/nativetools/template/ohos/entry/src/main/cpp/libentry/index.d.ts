@@ -18,6 +18,7 @@ export interface CPPFunctions {
   onDurationBack: (viewTag: number, duration: number) => void;
   onCurrentTimeBack: (viewTag: number, currentTime: number) => void;
   loadedmetadata: (viewTag: number) => void;
+  onMouseWheel: (type: string, x: number, y: number, offsetY: number) => void;
 }
 
 export const getContext: (a: number) => CPPFunctions;

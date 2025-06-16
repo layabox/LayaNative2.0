@@ -975,6 +975,8 @@ class Navigator {
             return "LayaBox(iPhone; CPU iPhone OS Mac OS X)";
         else if (os == "android")
             return "LayaBox Android";
+        else if (os == "OpenHarmony")
+            return "LayaBox OpenHarmony";
         else
             return 'LayaBox/2.1';
     }
@@ -1624,7 +1626,7 @@ class XMLHttpRequest extends EventTarget {
         var onPostError = function (e1, e2) {
             var _t = this._t;
             _t._readyState = 4;
-            _t._status = 404;
+            _t._status = e2;
             _t.xhr._changeState(4);
             if (_t.onerror) {
                 var ev = new _lbEvent("error");
@@ -7040,11 +7042,6 @@ var clearTimeout = window.clearTimeout = _window.clearTimeout;
 var setInterval = window.setInterval = _window.setInterval;
 var setTimeout = window.setTimeout = _window.setTimeout;
 Object.defineProperty(window, 'runtime', { get: function () { return true; } });
-window.postMessage = function (data, d) {
-    if (typeof (data) == "object")
-        data = JSON.stringify(data);
-    conch.callWebviewJS("window.__getMessemage", encodeURIComponent(data), "");
-};
 window.postRuntimeMessage = function (d) {
     if (typeof (d) == "object")
         d = JSON.stringify(d);
@@ -7110,14 +7107,5 @@ window.performance = new Performance();
     class AppInfo {
     }
     ;
-    var appobj = null;
-    try {
-        appobj = JSON.parse(conch.readFileFromAsset('app.json', 'utf8'));
-        if (appobj) {
-            require(appobj.mainjs);
-        }
-    }
-    catch (e) {
-        require('index');
-    }
+    require('index.js');
 })();

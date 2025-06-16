@@ -1,0 +1,32 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "73A753F6B6B82ECF363DE4C3B91DD4B7F1E9400B",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+    "89833343-0185-407b-b536-d375878c54a6++6425" : {
+
+    }
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "89833343-0185-407b-b536-d375878c54a6++6425" : 0,
+    "73A753F6B6B82ECF363DE4C3B91DD4B7F1E9400B" : 9223372036854775807
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "0FCF5F03-5E64-4C6F-A062-20CB36C066F9",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "89833343-0185-407b-b536-d375878c54a6++6425" : "Trunk\/",
+    "73A753F6B6B82ECF363DE4C3B91DD4B7F1E9400B" : "Conch5Git\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "LayaBox",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "IOS-SDK\/LayaBox\/LayaBox.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "192.168.0.166:\/home\/gituser\/gitrepo\/conch5.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "73A753F6B6B82ECF363DE4C3B91DD4B7F1E9400B"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "http:\/\/192.168.0.166\/svn\/conch5",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Subversion",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "89833343-0185-407b-b536-d375878c54a6++6425"
+    }
+  ]
+}

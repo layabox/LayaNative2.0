@@ -1,5 +1,4 @@
 import { Dialog } from '../components/dialog/DialogWorker'
-import { JumpManager } from '../system/appJump/JumpManager'
 import { DeviceUtils } from '../system/device/DeviceUtils'
 import { NetworkUtils } from '../system/device/NetworkUtils'
 import ApplicationManager from '../system/application/ApplicationManager'

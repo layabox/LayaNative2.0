@@ -16,7 +16,7 @@ export class WebViewInfo {
   public w: number = 0;
   public h: number = 0;
   // url
-  public url: string = '';
+  public url?: string = '';
   public isUrl: boolean = true;
   public viewTag: number = 0
   public zoomAccess: boolean = true
@@ -46,40 +46,45 @@ export function handleWebViewMsg(eventData: WebViewMsgEntity) {
   switch (eventData.function) {
     case "createWebview": {
       let view = new WebViewInfo(0, 0, 0, 0, 0);
-      GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_WEB_VIEW_ARRAY).push(view);
-      GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_WEB_VIEW_ARRAY)[0].url = eventData.url;
-      GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_WEB_VIEW_ARRAY)[0].isUrl = true;
+      let arr = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_WEB_VIEW_ARRAY) as WebViewInfo[];
+      arr.push(view);
+      arr[0].url = eventData.url;
+      arr[0].isUrl = true;
       waitUtilControllerAttached().then(() => {
-        GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_WEB_VIEW_ARRAY)[0].controller.loadUrl(eventData.url);
+        arr[0].controller.loadUrl(eventData.url);
       })
 
-      GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_WEB_VIEW_ARRAY)[0].x = px2vp(eventData.viewRect.x);
-      GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_WEB_VIEW_ARRAY)[0].y = px2vp(eventData.viewRect.y);
-      GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_WEB_VIEW_ARRAY)[0].w = px2vp(eventData.viewRect.w);
-      GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_WEB_VIEW_ARRAY)[0].h = px2vp(eventData.viewRect.h);
+      arr[0].x = px2vp(eventData.viewRect!.x);
+      arr[0].y = px2vp(eventData.viewRect!.y);
+      arr[0].w = px2vp(eventData.viewRect!.w);
+      arr[0].h = px2vp(eventData.viewRect!.h);
       break;
     }
     case "removeWebView": {
-      if (GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_WEB_VIEW_ARRAY).length > 0) {
-        GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_WEB_VIEW_ARRAY).splice(0, 1);
+      let arr = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_WEB_VIEW_ARRAY) as WebViewInfo[];
+      if (arr.length > 0) {
+        arr.splice(0, 1);
       }
       break;
     }
     case "showWebView": {
-      if (GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_WEB_VIEW_ARRAY).length > 0) {
-        GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_WEB_VIEW_ARRAY)[0].visible = true;
+      let arr = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_WEB_VIEW_ARRAY) as WebViewInfo[];
+      if (arr.length > 0) {
+        arr[0].visible = true;
       }
       break;
     }
     case "hideWebView": {
-      if (GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_WEB_VIEW_ARRAY).length > 0) {
-        GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_WEB_VIEW_ARRAY)[0].visible = false;
+      let arr = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_WEB_VIEW_ARRAY) as WebViewInfo[];
+      if (arr.length > 0) {
+        arr[0].visible = false;
       }
       break;
     }
     case "callWebviewJS": {
-      if (GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_WEB_VIEW_ARRAY).length > 0) {
-        GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_WEB_VIEW_ARRAY)[0]
+      let arr = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_WEB_VIEW_ARRAY) as WebViewInfo[];
+      if (arr.length > 0) {
+        arr[0]
           .controller
           .runJavaScript(eventData.js, (error: BusinessError, result: string) => {
             if (error) {

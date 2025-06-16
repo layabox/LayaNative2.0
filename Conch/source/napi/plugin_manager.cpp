@@ -17,6 +17,7 @@ enum ContextType
     WORKER_INIT,
     NATIVE_API,
     VIDEOPLAYER_NAPI,
+    MOUSE_WHEEL_NAPI,
 };
 
 JSBIND_ENUM(ContextType)
@@ -26,6 +27,7 @@ JSBIND_ENUM(ContextType)
     JSBIND_ENUM_VALUE(WORKER_INIT);
     JSBIND_ENUM_VALUE(NATIVE_API);
     JSBIND_ENUM_VALUE(VIDEOPLAYER_NAPI);
+    JSBIND_ENUM_VALUE(MOUSE_WHEEL_NAPI);
 }
 
 NapiManager NapiManager::manager_;
@@ -89,6 +91,14 @@ napi_value NapiManager::GetContext(long contextEnum)
             DECLARE_NAPI_FUNCTION("loadedmetadata", VideoPlayerNapi::loadedmetadata),
             DECLARE_NAPI_FUNCTION("onDurationBack", VideoPlayerNapi::onDurationBack),
             DECLARE_NAPI_FUNCTION("onCurrentTimeBack", VideoPlayerNapi::onCurrentTimeBack),
+        };
+        NAPI_CALL(env, napi_define_properties(env, exports, sizeof(desc) / sizeof(desc[0]), desc));
+    }
+    break;
+    case MOUSE_WHEEL_NAPI:
+    {
+        napi_property_descriptor desc[] = {
+            DECLARE_NAPI_FUNCTION("onMouseWheel", NapiManager::napiOnMouseWheel),
         };
         NAPI_CALL(env, napi_define_properties(env, exports, sizeof(desc) / sizeof(desc[0]), desc));
     }
@@ -217,6 +227,35 @@ void NapiManager::OnPageShowNative()
 void NapiManager::OnPageHideNative()
 {
     LOGI("NapiManager::OnPageHideNative");
+}
+
+napi_value NapiManager::napiOnMouseWheel(napi_env env, napi_callback_info info)
+{
+    size_t argc = 4;
+    napi_value args[4] = {nullptr};
+    NAPI_CALL(env, napi_get_cb_info(env, info, &argc, args, nullptr, nullptr));
+    if (argc != 4)
+    {
+        napi_throw_type_error(env, NULL, "Wrong number of arguments");
+        return nullptr;
+    }
+    
+    char buf[256];
+    size_t length;
+    napi_get_value_string_utf8(env, args[0], buf, sizeof(buf), &length);
+    std::string eventType = buf;
+    
+    double localX;
+    napi_get_value_double(env, args[1], &localX);
+    
+    double localY;
+    napi_get_value_double(env, args[2], &localY);
+    
+    double offsetY;
+    napi_get_value_double(env, args[3], &offsetY);
+    
+    PluginRender::GetInstance()->dispatchMouseWheelCB(eventType, localX, localY, offsetY);
+    return nullptr;
 }
 
 JSBIND_GLOBAL()

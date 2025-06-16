@@ -75,6 +75,8 @@ class Navigator implements NavigatorID, NavigatorOnLine, NavigatorGeolocation {
         return "LayaBox(iPhone; CPU iPhone OS Mac OS X)";
         else if(os=="android")
         return "LayaBox Android";
+        else if (os == "OpenHarmony")
+            return "LayaBox OpenHarmony";
         else
         return 'LayaBox/2.1';
     };

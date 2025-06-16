@@ -4,7 +4,9 @@ import deviceInfo from '@ohos.deviceInfo'
 import hidebug from '@ohos.hidebug';
 import window from '@ohos.window';
 import { GlobalContext, GlobalContextConstants } from '../../common/GlobalContext';
-import hilog from '@ohos.hilog'
+import hilog from '@ohos.hilog';
+import type common from '@ohos.app.ability.common';
+import { BusinessError } from '@ohos.base';
 
 export class DeviceUtils {
   static MODULE_NAME: string = 'DeviceUtils';
@@ -31,8 +33,8 @@ export class DeviceUtils {
   static getDeviceInfo(): string {
     // TBD 鸿蒙系统字段和安卓系统字段非一一对应关系，可根据应用业务场景做字段选择，
     // 字段可参考：https://docs.openharmony.cn/pages/v4.0/zh-cn/application-dev/reference/apis/js-apis-device-info.md/
-    var displayObj = display.getDefaultDisplaySync();
-    const deviceInfoJsonStr: { [key: string]: any } = {
+    let displayObj = display.getDefaultDisplaySync();
+    return JSON.stringify({
       "dpi":displayObj?.densityDPI,
       "resolution":displayObj?.width + "*" + displayObj?.height,
       "guid":"",
@@ -41,23 +43,20 @@ export class DeviceUtils {
       "os":"OpenHarmony",
       "osversion":deviceInfo.sdkApiVersion,
       "phonemodel":deviceInfo.softwareModel
-    };
-    return JSON.stringify(deviceInfoJsonStr);
+    });
   }
 
   // 获取窗口尺寸
-  static getScreenInch(cb) {
-    var displayObj = display.getDefaultDisplaySync();
-    let windowClass = null;
+  static getScreenInch(cb: Function) {
+    let displayObj = display.getDefaultDisplaySync();
     try {
-      let context = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_ABILITY_CONTEXT);
-      window.getLastWindow(context, (err, data) => { //获取窗口实例
+      let context = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_ABILITY_CONTEXT) as common.UIAbilityContext;
+      window.getLastWindow(context, (err, windowClass) => { //获取窗口实例
         if (err.code) {
           hilog.error(0x0001, "DeviceUtils", 'Failed to obtain last window when initScreenInfo. Cause:%{public}s', JSON.stringify(err));
           cb(0);
           return;
         }
-        windowClass = data;
         let windowProperties: window.WindowProperties = windowClass.getWindowProperties();
         let rect: window.Rect = windowProperties.windowRect;
         let nWidth = rect.width;
@@ -88,20 +87,18 @@ export class DeviceUtils {
 
   // 设置屏幕常亮
   static setKeepScreenOn(value: boolean) {
-    let windowClass = null;
     try {
-      let context = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_ABILITY_CONTEXT);
-      window.getLastWindow(context, (err, data) => { //获取窗口实例
+      let context = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_ABILITY_CONTEXT) as common.UIAbilityContext;
+      window.getLastWindow(context, (err, windowClass) => { //获取窗口实例
         if (err.code) {
           hilog.error(0x0001, "DeviceUtils", 'Failed to obtain last window when setKeepScreenOn. Cause:%{public}s', JSON.stringify(err));
           return;
         }
-        windowClass = data;
         // Sets whether the screen is always on.
         let keepScreenOnPromise = windowClass.setWindowKeepScreenOn(value);
         Promise.all([keepScreenOnPromise]).then(() => {
           hilog.info(0x0001, "DeviceUtils", 'Succeeded in setKeepScreenOn, value:%{public}s', value);
-        }).catch((err) => {
+        }).catch((err: BusinessError) => {
           hilog.error(0x0001, "DeviceUtils", 'Failed to setKeepScreenOn, cause:%{public}s', JSON.stringify(err));
         });
       });
@@ -111,15 +108,13 @@ export class DeviceUtils {
   }
 
   static setPreferredOrientation(orientatio: number) {
-    let windowClass = null;
     try {
-      let context = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_ABILITY_CONTEXT);
-      window.getLastWindow(context, (err, data) => { //获取窗口实例
+      let context = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_ABILITY_CONTEXT) as common.UIAbilityContext;
+      window.getLastWindow(context, (err, windowClass) => { //获取窗口实例
         if (err.code) {
           hilog.error(0x0001, "DeviceUtils", 'Failed to obtain last window when setPreferredOrientation. Cause:%{public}s', JSON.stringify(err));
           return;
         }
-        windowClass = data;
         windowClass.setPreferredOrientation(orientatio, (err) => {
           if (err.code) {
             hilog.error(0x0001, "DeviceUtils", 'Failed to set window orientation. Cause: ' + JSON.stringify(err));

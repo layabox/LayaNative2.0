@@ -38,9 +38,9 @@ export class BaseWorkerMsgEntity {
 }
 
 export class DialogMsgEntity extends BaseWorkerMsgEntity {
-  title: string;
+  title?: string;
 
-  message: string;
+  message?: string;
 
   type?:number;
 
@@ -50,26 +50,26 @@ export class DialogMsgEntity extends BaseWorkerMsgEntity {
 }
 
 export class WebViewMsgEntity extends BaseWorkerMsgEntity {
-  viewTag: number
+  viewTag?: number;
 
-  data: string
-  mimeType: string
-  encoding: string
-  baseURL: string
+  data?: string;
+  mimeType?: string;
+  encoding?: string;
+  baseURL?: string;
 
-  url: string
+  url?: string;
 
-  filePath: string
+  filePath?: string;
 
-  viewRect: ViewRect
+  viewRect?: ViewRect;
 
-  visible: boolean
+  visible?: boolean;
 
-  opacity: number
+  opacity?: number;
 
-  js: string
+  js?: string;
 
-  scalesPageToFit: boolean
+  scalesPageToFit?: boolean;
 
   constructor(module: string, func: string) {
     super(module, func);
@@ -77,7 +77,7 @@ export class WebViewMsgEntity extends BaseWorkerMsgEntity {
 }
 
 export class JumpMsgEntity extends BaseWorkerMsgEntity {
-  url: string;
+  url?: string;
 
   constructor(module: string, func: string) {
     super(module, func);

@@ -1,5 +1,5 @@
 export class TextInputDialogEntity {
-  message: string;
+  message?: string;
 
   constructor(msg: string) {
     this.message = msg;

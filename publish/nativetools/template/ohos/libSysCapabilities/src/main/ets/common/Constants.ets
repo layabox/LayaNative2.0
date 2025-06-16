@@ -4,6 +4,7 @@ export enum ContextType {
   WORKER_INIT,
   NATIVE_API,
   VIDEOPLAYER_NAPI,
+  MOUSE_WHEEL_NAPI,
 }
 
 export class Constants {

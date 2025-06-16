@@ -2,10 +2,10 @@ import window from '@ohos.window';
 import UIAbility from '@ohos.app.ability.UIAbility';
 import web_webview from '@ohos.web.webview';
 import laya from "liblaya.so";
-import { ContextType } from "@ohos/libSysCapabilities"
 import { BusinessError } from '@ohos.base';
-import { GlobalContext, GlobalContextConstants } from "@ohos/libSysCapabilities"
+import { GlobalContext, GlobalContextConstants, ContextType } from "@ohos/libSysCapabilities"
 import buffer from '@ohos.buffer';
+import { Want, AbilityConstant } from '@kit.AbilityKit';
 
 const nativeAppLifecycle: laya.CPPFunctions = laya.getContext(ContextType.APP_LIFECYCLE);
 
@@ -17,7 +17,7 @@ interface config {
 }
 
 export default class MainAbility extends UIAbility {
-  onCreate(want, launchParam) {
+  onCreate(want: Want, launchParam: AbilityConstant.LaunchParam) {
     nativeAppLifecycle.onCreate();
     GlobalContext.storeGlobalThis(GlobalContextConstants.LAYA_ABILITY_CONTEXT, this.context);
     // Initializes the webView kernel of the system. This parameter is optional if it is not used.
@@ -48,7 +48,7 @@ export default class MainAbility extends UIAbility {
       let keepScreenOnPromise = windowIns.setWindowKeepScreenOn(true);
       Promise.all([systemBarPromise, fullScreenPromise, keepScreenOnPromise]).then(() => {
         console.info('Succeeded in setting the window');
-      }).catch((err) => {
+      }).catch((err: BusinessError) => {
         console.error('Failed to set the window, cause ' + JSON.stringify(err));
       });
     })
@@ -86,7 +86,7 @@ export default class MainAbility extends UIAbility {
     nativeAppLifecycle.onHide();
   }
 
-  initConfig(fileName): config {
+  initConfig(fileName: string): config | undefined {
     try {
       let var1: Uint8Array = this.context.resourceManager.getRawFileContentSync(fileName);
       let bf = new Uint8Array(var1).buffer;
@@ -97,6 +97,7 @@ export default class MainAbility extends UIAbility {
       let message = (error as BusinessError).message;
       console.error(`getRawFileContentSync failed, error code: ${code}, message: ${message}.`);
     }
+    return undefined;
   }
 
   initEngine() {
@@ -106,6 +107,9 @@ export default class MainAbility extends UIAbility {
     laya.ConchNAPI_SetLocalStoragePath(var1 + "/localstorage");
     laya.ConchNAPI_setLocalizable(false);
     let config = this.initConfig("config.json");
+    if (config === undefined) {
+      return;
+    }
     laya.ConchNAPI_InitDLib(this.context.resourceManager, 3, "cache", var1, config.ThreadMode, config.JSDebugMode, config.JSDebugPort);
   }
 };

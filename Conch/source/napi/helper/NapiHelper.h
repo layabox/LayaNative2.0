@@ -14,7 +14,6 @@ struct AsyncCallParam {
     const char* methodName;
     std::string method;
     std::string module_info;
-    napi_ref executeFuncRef;// 安全函数调用方法的指针
 };
 
 class NapiHelper{
@@ -135,97 +134,28 @@ private:
 
 class JSFunction {
 public:
-    napi_ref funcRef;
+    napi_threadsafe_function save_func = nullptr;
     napi_env env;
-    char* name = nullptr;
 
 public: 
     static std::unordered_map<std::string, JSFunction> FUNCTION_MAP;  
 
-    explicit JSFunction(char* name, napi_env env, napi_ref funcRef)
-        : name(name), env(env), funcRef(funcRef){}
-    
-    explicit JSFunction(char* name, napi_env env)
-        : name(name), env(env){} 
-
-    explicit JSFunction(char* name)
-        : name(name){} 
+    explicit JSFunction(napi_env env, napi_threadsafe_function save_func)
+        : env(env), save_func(save_func){} 
 
     static JSFunction getFunction(std::string functionName)
     {
         return FUNCTION_MAP.at(functionName);
     }
 
-    static void addFunction(std::string name, JSFunction* jsFunction) {
-        FUNCTION_MAP.emplace(name, *jsFunction);
-    }
-
-    template<typename ReturnType, typename... Args>
-    typename std::enable_if<!std::is_same<ReturnType, void>::value, ReturnType>::type
-    invoke(Args... args) {
-        LOGI("=========cocos-[NApiHelper]=========JSFunction::invoke =========");
-        napi_value global;
-        napi_status status = napi_get_global(env, &global);
-        //if (status != napi_ok) return;
-        
-        napi_value func;
-        status = napi_get_reference_value(env, funcRef, &func);
-        
-        napi_value jsArgs[sizeof...(Args)] = {NapiValueConverter::ToNapiValue(env, args)...};
-        napi_value return_val;
-        status = napi_call_function(env, global, func, sizeof...(Args), jsArgs, &return_val);
-        
-        ReturnType value;
-        if (!NapiValueConverter::ToCppValue(env, return_val, value)) {
-            // Handle error here
-        }
-        return value;
-    }
-    
-    template<typename ReturnType, typename... Args>
-    typename std::enable_if<std::is_same<ReturnType, void>::value, void>::type
-    invoke(Args... args) {
-        LOGI("=========cocos-[NApiHelper]=========JSFunction::invoke =========");
-        napi_value global;
-        napi_status status = napi_get_global(env, &global);
-        if (status != napi_ok) return;
-        
-        napi_value func;
-        status = napi_get_reference_value(env, funcRef, &func);
-        
-        napi_value jsArgs[sizeof...(Args)] = {NapiValueConverter::ToNapiValue(env, args)...};
-        napi_value return_val;
-        status = napi_call_function(env, global, func, sizeof...(Args), jsArgs, &return_val);
+    static void addFunction(std::string name, JSFunction jsFunction) {
+        FUNCTION_MAP.emplace(name, jsFunction);
     }
     
     void invokeAsync(AsyncCallParam *callParam) {
         LOGI("=========cocos-[NApiHelper]=========JSFunction::invokeAsync =========");
         
-        // 传入执行方法的指针
-        callParam->executeFuncRef = funcRef;
-        
         napi_status status;
-        napi_value func;
-        status = napi_get_reference_value(env, funcRef, &func);
-        if (status != napi_ok) {
-            LOGW("invokeAsync napi_get_reference_value fail,status=%{public}d", status);
-            return callParam->cb("napi_error");
-        }
-        
-        napi_value workName;
-        status = napi_create_string_utf8(env, "Thread-safe call from async work", NAPI_AUTO_LENGTH, &workName);
-        if (status != napi_ok) {
-            LOGW("invokeAsync napi_create_string_utf8 fail,status=%{public}d", status);
-            return callParam->cb("napi_error");
-        }
-        
-        napi_threadsafe_function save_func;
-        status = napi_create_threadsafe_function(env, func, nullptr, workName, 0, 1, nullptr, 
-        [](napi_env env, void *raw, void *hint) {}, callParam, CallJS, &save_func);
-        if (status != napi_ok) {
-            LOGW("invokeAsync napi_create_threadsafe_function fail,status=%{public}d", status);
-            return callParam->cb("napi_error");
-        }
         
         status = napi_acquire_threadsafe_function(save_func);
         if (status != napi_ok) {
@@ -233,7 +163,7 @@ public:
             return callParam->cb("napi_error");
         }
         
-        status = napi_call_threadsafe_function(save_func, NULL, napi_tsfn_blocking);
+        status = napi_call_threadsafe_function(save_func, callParam, napi_tsfn_blocking);
         if (status != napi_ok) {
             LOGW("invokeAsync napi_call_threadsafe_function fail,status=%{public}d", status);
             return callParam->cb("napi_error");
@@ -243,19 +173,13 @@ public:
     static void CallJS(napi_env env, napi_value js_cb, void *context, void *data) {
         LOGI("napi_call_threadsafe_function CallJS");
         
-        AsyncCallParam *callParam = (AsyncCallParam*) (context);
+        AsyncCallParam *callParam = (AsyncCallParam*) (data);
         if (callParam == nullptr) {
             LOGW("CallJS AsyncCallParam callParam is null");
             return callParam->cb("napi_error");
         }
         
         napi_status status;
-        status = napi_get_reference_value(env, callParam->executeFuncRef, &js_cb);
-        if (status != napi_ok) {
-            LOGW("CallJS napi_get_reference_value fail,status=%{public}d", status);
-            return callParam->cb("napi_error");
-        }
-        
         napi_value result;
         status = napi_load_module_with_info(env, callParam->clsPath, callParam->module_info.c_str(), &result);
         if (status != napi_ok) {

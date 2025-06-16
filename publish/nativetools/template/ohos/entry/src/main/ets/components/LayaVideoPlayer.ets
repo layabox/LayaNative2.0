@@ -1,9 +1,6 @@
 import { WorkerManager } from '../workers/WorkerManager'
-import {
-  VideoPlayerInfo,
-  VideoEvent
-} from '@ohos/libSysCapabilities/src/main/ets/components/videoplayer/VideoPlayer';
 import worker from '@ohos.worker';
+import { VideoPlayerInfo, VideoEvent } from '@ohos/libSysCapabilities';
 
 @Component
 export struct LayaVideoPlayer {

@@ -8,6 +8,8 @@
 enum class MessageType {
     WM_XCOMPONENT_SURFACE_CREATED = 0,
     WM_XCOMPONENT_TOUCH_EVENT,
+    WM_XCOMPONENT_MOUSE_EVENT,
+    WM_XCOMPONENT_KEY_EVENT,
     WM_XCOMPONENT_SURFACE_CHANGED,
     WM_XCOMPONENT_SURFACE_HIDE,
     WM_XCOMPONENT_SURFACE_SHOW,
@@ -22,7 +24,7 @@ struct WorkerMessageData {
     MessageType type;
     void* data;
     void* window;
-    OH_NativeXComponent_TouchEvent* touchEvent;
+    void* eventData;
 };
 
 class WorkerMessageQueue final {

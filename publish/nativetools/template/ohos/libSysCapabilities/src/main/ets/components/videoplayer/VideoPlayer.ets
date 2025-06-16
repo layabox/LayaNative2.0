@@ -61,94 +61,109 @@ export  class VideoPlayer{
 
   static  createVideoPlayer(viewTag: number) : void {
     let newVideoPlayerInfo = new VideoPlayerInfo(0, 0, 0, 0, viewTag);
-    GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_VIDEO_PLAYER_ARRAY).push(newVideoPlayerInfo);
-    GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_VIDEO_PLAYER_INDEX_MAP).set(viewTag, newVideoPlayerInfo);
+    let arr = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_VIDEO_PLAYER_ARRAY) as VideoPlayerInfo[];
+    arr.push(newVideoPlayerInfo);
+    let map = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_VIDEO_PLAYER_INDEX_MAP) as Map<number, VideoPlayerInfo>;
+    map.set(viewTag, newVideoPlayerInfo);
   }
   static removeVideoPlayer(viewTag: number) : void {
     let removeIndex = -1;
-    GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_VIDEO_PLAYER_ARRAY).forEach((item:VideoPlayerInfo,index:number) => {
+    let arr = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_VIDEO_PLAYER_ARRAY) as VideoPlayerInfo[];
+    arr.forEach((item:VideoPlayerInfo,index:number) => {
       if (item.viewTag == viewTag) {
         removeIndex = index;
       }
     });
-    GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_VIDEO_PLAYER_INDEX_MAP).get(viewTag).controller.requestFullscreen(false); //4.x已修复
-    GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_VIDEO_PLAYER_ARRAY).splice(removeIndex, 1);
-    GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_VIDEO_PLAYER_INDEX_MAP).delete(viewTag);
+    let map = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_VIDEO_PLAYER_INDEX_MAP) as Map<number, VideoPlayerInfo>;
+    map.get(viewTag)!.controller.requestFullscreen(false); //4.x已修复
+    arr.splice(removeIndex, 1);
+    map.delete(viewTag);
   }
 
   static setURL(viewTag: number, url: string, isUrl: number) : void {
-    let videoPlayInfo:VideoPlayerInfo = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_VIDEO_PLAYER_INDEX_MAP).get(viewTag);
+    let map = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_VIDEO_PLAYER_INDEX_MAP) as Map<number, VideoPlayerInfo>;
+    let videoPlayInfo = map.get(viewTag);
     if(isUrl == 0) {
-      videoPlayInfo.isUrl = false;
-      videoPlayInfo.rawfile = $rawfile(url) ;//$rawfile("video1.mp4");
+      videoPlayInfo!.isUrl = false;
+      videoPlayInfo!.rawfile = $rawfile(url) ;//$rawfile("video1.mp4");
     } else {
-      videoPlayInfo.isUrl = true;
-      videoPlayInfo.url = url;
+      videoPlayInfo!.isUrl = true;
+      videoPlayInfo!.url = url;
     }
   }
   static  play(viewTag: number) : void {
-    let videoPlayInfo :VideoPlayerInfo = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_VIDEO_PLAYER_INDEX_MAP).get(viewTag);
-    videoPlayInfo.controller.start();
-    videoPlayInfo.isPlay = true;
+    let map = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_VIDEO_PLAYER_INDEX_MAP) as Map<number, VideoPlayerInfo>;
+    let videoPlayInfo = map.get(viewTag);
+    videoPlayInfo!.controller.start();
+    videoPlayInfo!.isPlay = true;
   }
   static  pause(viewTag: number) : void {
-    let videoPlayInfo:VideoPlayerInfo = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_VIDEO_PLAYER_INDEX_MAP).get(viewTag);
-    videoPlayInfo.controller.pause();
-    videoPlayInfo.isPlay = false;
+    let map = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_VIDEO_PLAYER_INDEX_MAP) as Map<number, VideoPlayerInfo>;
+    let videoPlayInfo = map.get(viewTag);
+    videoPlayInfo!.controller.pause();
+    videoPlayInfo!.isPlay = false;
   }
   static  stop(viewTag: number) : void {
-    let videoPlayInfo:VideoPlayerInfo = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_VIDEO_PLAYER_INDEX_MAP).get(viewTag);
-    videoPlayInfo.controller.stop();
-    videoPlayInfo.isPlay = false;
+    let map = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_VIDEO_PLAYER_INDEX_MAP) as Map<number, VideoPlayerInfo>;
+    let videoPlayInfo = map.get(viewTag);
+    videoPlayInfo!.controller.stop();
+    videoPlayInfo!.isPlay = false;
   }
   static  setLooping(viewTag: number, isLoop: boolean) :void {
-    let videoPlayInfo: VideoPlayerInfo = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_VIDEO_PLAYER_INDEX_MAP).get(viewTag);
-    videoPlayInfo.isLoop = isLoop;
+    let map = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_VIDEO_PLAYER_INDEX_MAP) as Map<number, VideoPlayerInfo>;
+    let videoPlayInfo = map.get(viewTag);
+    videoPlayInfo!.isLoop = isLoop;
   }
   static  setAutoplay(viewTag: number, autoPlay: boolean) :void {
-    let videoPlayInfo: VideoPlayerInfo = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_VIDEO_PLAYER_INDEX_MAP).get(viewTag);
-    videoPlayInfo.autoPlay = autoPlay;
+    let map = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_VIDEO_PLAYER_INDEX_MAP) as Map<number, VideoPlayerInfo>;
+    let videoPlayInfo = map.get(viewTag);
+    videoPlayInfo!.autoPlay = autoPlay;
 
   }
   static  setX(viewTag: number, val: number) :void {
-    let videoPlayInfo:VideoPlayerInfo = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_VIDEO_PLAYER_INDEX_MAP).get(viewTag);
+    let map = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_VIDEO_PLAYER_INDEX_MAP) as Map<number, VideoPlayerInfo>;
+    let videoPlayInfo = map.get(viewTag);
     try {
-      videoPlayInfo.x = val;
+      videoPlayInfo!.x = val;
     } catch (error) {
       let e: BusinessError = error as BusinessError;
       log.error('videoPlayerInfo  ErrorCode: %{public}d,  Message: %{public}s', e.code, e.message);
     }
   }
   static  setY(viewTag: number, val: number) :void {
-    let videoPlayInfo:VideoPlayerInfo = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_VIDEO_PLAYER_INDEX_MAP).get(viewTag);
+    let map = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_VIDEO_PLAYER_INDEX_MAP) as Map<number, VideoPlayerInfo>;
+    let videoPlayInfo = map.get(viewTag);
     try {
-      videoPlayInfo.y = val;
+      videoPlayInfo!.y = val;
     } catch (error) {
       let e: BusinessError = error as BusinessError;
       log.error('videoPlayerInfo  ErrorCode: %{public}d,  Message: %{public}s', e.code, e.message);
     }
   }
   static  setWidth(viewTag: number, val: number) : void {
-    let videoPlayInfo:VideoPlayerInfo = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_VIDEO_PLAYER_INDEX_MAP).get(viewTag);
+    let map = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_VIDEO_PLAYER_INDEX_MAP) as Map<number, VideoPlayerInfo>;
+    let videoPlayInfo = map.get(viewTag);
     try {
-      videoPlayInfo.w = val;
+      videoPlayInfo!.w = val;
     } catch (error) {
       let e: BusinessError = error as BusinessError;
       log.error('videoPlayerInfo  ErrorCode: %{public}d,  Message: %{public}s', e.code, e.message);
     }
   }
   static  setHeight(viewTag: number, val: number) : void {
-    let videoPlayInfo:VideoPlayerInfo = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_VIDEO_PLAYER_INDEX_MAP).get(viewTag);
+    let map = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_VIDEO_PLAYER_INDEX_MAP) as Map<number, VideoPlayerInfo>;
+    let videoPlayInfo = map.get(viewTag);
     try {
-      videoPlayInfo.h = val;
+      videoPlayInfo!.h = val;
     } catch (error) {
       let e: BusinessError = error as BusinessError;
       log.error('videoPlayerInfo  ErrorCode: %{public}d,  Message: %{public}s', e.code, e.message);
     }
   }
   static  setCurrentTime(viewTag: number, val: number) : void {
-    let videoPlayInfo:VideoPlayerInfo = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_VIDEO_PLAYER_INDEX_MAP).get(viewTag);
-    videoPlayInfo.controller.setCurrentTime(val)
+    let map = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_VIDEO_PLAYER_INDEX_MAP) as Map<number, VideoPlayerInfo>;
+    let videoPlayInfo = map.get(viewTag);
+    videoPlayInfo!.controller.setCurrentTime(val)
   }
   static  getVolume(viewTag: number) : number {
     let audioManager = audio.getAudioManager();

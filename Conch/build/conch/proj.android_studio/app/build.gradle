@@ -10,7 +10,6 @@ android {
         }
     }
     compileSdkVersion 28
-    buildToolsVersion "30.0.3"
     useLibrary 'org.apache.http.legacy'
 
     defaultConfig {

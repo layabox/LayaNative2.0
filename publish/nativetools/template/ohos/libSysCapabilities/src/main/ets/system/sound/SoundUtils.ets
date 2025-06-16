@@ -2,11 +2,11 @@ import media from '@ohos.multimedia.media';
 import fs from '@ohos.file.fs';
 import laya from "liblaya.so";
 import audio from '@ohos.multimedia.audio';
+import { BusinessError } from '@ohos.base';
 
 export default class SoundUtils {
-    private static avPlayer;
-    private static mLeftVolume = 0.5;
-    private static mRightVolume = 0.5;
+    private static avPlayer: media.AVPlayer;
+    private static mVolume = 0.5;
     private static mPaused = false;
 
     static async playBackgroundMusic(p_sFilePath: string, p_nTimes: number, nCurrentTime: number) {
@@ -33,7 +33,7 @@ export default class SoundUtils {
                     avPlayer.audioRendererInfo = audioRendererInfo;
                     avPlayer.prepare().then(() => {
                         console.info('AVPlayer prepare succeeded.');
-                    }, (err) => {
+                    }, (err: BusinessError) => {
                         console.error(`Invoke prepare failed, code is ${err.code}, message is ${err.message}`);
                     });
                     break;
@@ -41,7 +41,7 @@ export default class SoundUtils {
                     console.info('AVPlayer state prepared called.');
                     let bLoop = (p_nTimes == -1);
                     avPlayer.loop = bLoop;
-                    avPlayer.setVolume(SoundUtils.mLeftVolume, SoundUtils.mRightVolume);
+                    avPlayer.setVolume(SoundUtils.mVolume);
                     avPlayer.play(); // 调用播放接口开始播放
                     break;
                 case 'playing': // play成功调用后触发该状态机上报
@@ -114,9 +114,9 @@ export default class SoundUtils {
         if (p_fVolume > 1.0) {
             p_fVolume = 1.0;
         }
-        SoundUtils.mLeftVolume = SoundUtils.mRightVolume = p_fVolume;
+        SoundUtils.mVolume = p_fVolume;
         if (SoundUtils.avPlayer != null) {
-            SoundUtils.avPlayer.setVolume(SoundUtils.mLeftVolume, SoundUtils.mRightVolume);
+            SoundUtils.avPlayer.setVolume(SoundUtils.mVolume);
         }
     }
 
@@ -133,7 +133,7 @@ export default class SoundUtils {
         return 0.0;
     }
 
-    static getDuration() {
+    static getDuration(): number {
         if (SoundUtils.avPlayer != null) {
             return SoundUtils.avPlayer.duration;
         }

@@ -1,4 +1,4 @@
-import proguard.gradle.ProGuardTask
+//import proguard.gradle.ProGuardTask
 
 apply plugin: 'com.android.library'
 
@@ -46,7 +46,7 @@ task deleteBuild(type: Delete) {
     delete fromJar
 }
 
-
+/*
 task conchUglify(type: ProGuardTask, dependsOn: "build") {
 // 未混淆的jar
     injars fromJar
@@ -55,7 +55,7 @@ task conchUglify(type: ProGuardTask, dependsOn: "build") {
 // 具体需要keep住的类
     configuration 'proguard-rules.pro'
 }
-
+*/
 
 task conchMakeJar(type: Jar) {
     from zipTree(zipFile)

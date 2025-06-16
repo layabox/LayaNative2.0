@@ -17,23 +17,23 @@ export class Logger {
     this.prefix = prefix
   }
 
-  debug(format: string, ...args: any[]) {
+  debug(format: string, ...args: Object[]) {
     this.log(LogLevel.DEBUG, format, ...args);
   }
 
-  info(format: string, ...args: any[]) {
+  info(format: string, ...args: Object[]) {
     this.log(LogLevel.INFO, format, ...args);
   }
 
-  warn(format: string, ...args: any[]) {
+  warn(format: string, ...args: Object[]) {
     this.log(LogLevel.WARN, format, ...args);
   }
 
-  error(format: string, ...args: any[]) {
+  error(format: string, ...args: Object[]) {
     this.log(LogLevel.ERROR, format, ...args);
   }
 
-  log(logLevel: LogLevel, format: string, ...args: any[]) {
+  log(logLevel: LogLevel, format: string, ...args: Object[]) {
     switch (logLevel) {
       case LogLevel.DEBUG:
         if (this.printLevel > LogLevel.DEBUG) {

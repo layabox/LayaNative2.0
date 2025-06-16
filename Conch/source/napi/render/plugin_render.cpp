@@ -1,3 +1,4 @@
+#include <ace/xcomponent/native_xcomponent_key_event.h>
 #include <stdint.h>
 #include <unistd.h>
 
@@ -5,6 +6,7 @@
 #include "../../napi/plugin_manager.h"
 #include "../modules/TouchesNapi.h"
 #include "../../napi/NAPIFun.cpp"
+#include "../modules/KeyNapi.h"
 #include "native_window/external_window.h"
 #include "native_buffer/native_buffer.h"
 
@@ -84,6 +86,27 @@ void DispatchTouchEventCB(OH_NativeXComponent* component, void* window)
     }
 }
 
+void dispatchKeyEventCB(OH_NativeXComponent* component, void* window) {
+    OH_NativeXComponent_KeyEvent* keyEvent;
+    if (OH_NativeXComponent_GetKeyEvent(component, &keyEvent) >= 0) {
+        PluginRender::GetInstance()->sendMsgToWorker(MessageType::WM_XCOMPONENT_KEY_EVENT, component, window);
+    } else {
+        // OpenHarmonyPlatform::getKeyEventError
+    }
+}
+
+void dispatchMouseEventCB(OH_NativeXComponent* component, void* window) {
+    OH_NativeXComponent_MouseEvent* mouseEvent = new(std::nothrow) OH_NativeXComponent_MouseEvent();
+    int32_t ret = OH_NativeXComponent_GetMouseEvent(component, window, mouseEvent);
+    if (ret == OH_NATIVEXCOMPONENT_RESULT_SUCCESS) {
+        PluginRender::GetInstance()->sendMsgToWorker(MessageType::WM_XCOMPONENT_MOUSE_EVENT, component, window, mouseEvent);
+    }
+}
+
+void dispatchHoverEventCB(OH_NativeXComponent* component, bool isHover) {
+    // OpenHarmonyPlatform::DispatchHoverEventCB
+}
+
 PluginRender::PluginRender() : component_(nullptr)
 {
     auto renderCallback = PluginRender::GetNXComponentCallback();
@@ -126,7 +149,13 @@ void PluginRender::onMessageCallback(const uv_async_t* /* req */) {
             if (msgData.type == MessageType::WM_XCOMPONENT_SURFACE_CREATED) {
                 render->OnSurfaceCreated(nativexcomponet, msgData.window);
             } else if (msgData.type == MessageType::WM_XCOMPONENT_TOUCH_EVENT) {
-                render->DispatchTouchEvent(nativexcomponet, msgData.window, msgData.touchEvent);
+                OH_NativeXComponent_TouchEvent* touchEvent = reinterpret_cast<OH_NativeXComponent_TouchEvent*>(msgData.eventData);
+                render->DispatchTouchEvent(nativexcomponet, msgData.window, touchEvent);
+            } else if (msgData.type == MessageType::WM_XCOMPONENT_KEY_EVENT) {
+                render->DispatchKeyEvent(nativexcomponet, msgData.window);
+            } else if (msgData.type == MessageType::WM_XCOMPONENT_MOUSE_EVENT) {
+                OH_NativeXComponent_MouseEvent* mouseEvent = reinterpret_cast<OH_NativeXComponent_MouseEvent*>(msgData.eventData);
+                render->DispatchMouseEvent(nativexcomponet, msgData.window, mouseEvent);
             } else if (msgData.type == MessageType::WM_XCOMPONENT_SURFACE_CHANGED) {
                 render->OnSurfaceChanged(nativexcomponet, msgData.window);
             } else if (msgData.type == MessageType::WM_XCOMPONENT_SURFACE_HIDE) {
@@ -177,6 +206,33 @@ void PluginRender::SetNativeXComponent(OH_NativeXComponent* component)
     OH_NativeXComponent_RegisterCallback(component_, &PluginRender::callback_);
     OH_NativeXComponent_RegisterSurfaceHideCallback(component_, OnSurfaceHideCB);
     OH_NativeXComponent_RegisterSurfaceShowCallback(component_, OnSurfaceShowCB);
+    
+    // register keyEvent
+    OH_NativeXComponent_RegisterKeyEventCallback(component_, dispatchKeyEventCB);
+    // register mouseEvent
+    _mouseCallback.DispatchMouseEvent = dispatchMouseEventCB;
+    _mouseCallback.DispatchHoverEvent = dispatchHoverEventCB;
+    OH_NativeXComponent_RegisterMouseEventCallback(component_, &_mouseCallback);
+}
+
+void PluginRender::dispatchMouseWheelCB(std::string eventType, float localX, float localY, float offsetY) {
+    if (PluginRender::GetInstance()->isMouseLeftActive) {
+        return;
+    }
+    if (eventType == "actionUpdate") {
+        float moveScrollY = offsetY - scrollDistance;
+        scrollDistance = offsetY;
+        inputEvent e;
+        e.nTouchType = e.nType = E_ONMOUSEWHEEL;
+        strncpy(e.type, "mousewheel", 256);
+        e.posX = localX;
+        e.posY = localY;
+        e.nWheel = moveScrollY;
+        if (!e.nWheel) return;
+        JCScriptRuntime::s_JSRT->dispatchInputEvent(e);
+    } else {
+        scrollDistance = 0;
+    }
 }
 
 void PluginRender::workerInit(napi_env env, uv_loop_t* loop) {
@@ -196,8 +252,8 @@ void PluginRender::sendMsgToWorker(const MessageType& type, OH_NativeXComponent*
     enqueue(data);
 }
 
-void PluginRender::sendMsgToWorker(const MessageType& type, OH_NativeXComponent* component, void* window, OH_NativeXComponent_TouchEvent* touchEvent) {
-    WorkerMessageData data{type, static_cast<void*>(component), window, touchEvent};
+void PluginRender::sendMsgToWorker(const MessageType& type, OH_NativeXComponent* component, void* window, void* eventData) {
+    WorkerMessageData data{type, static_cast<void*>(component), window, eventData};
     enqueue(data);
 }
 
@@ -255,6 +311,8 @@ void PluginRender::OnSurfaceChanged(OH_NativeXComponent* component, void* window
 
 void PluginRender::OnSurfaceDestroyed(OH_NativeXComponent* component, void* window)
 {
+    delete eglCore_;
+    eglCore_ = nullptr;
 }
 
 void PluginRender::OnSurfaceHide()
@@ -303,6 +361,67 @@ void PluginRender::DispatchTouchEvent(OH_NativeXComponent* component, void* wind
             break;
     }
     delete touchEvent;
+}
+
+void PluginRender::DispatchKeyEvent(OH_NativeXComponent* component, void* window)
+{
+    OH_NativeXComponent_KeyEvent* keyEvent;
+    if (OH_NativeXComponent_GetKeyEvent(component, &keyEvent) >= 0) {
+        static const int keyCodeUnknownInOH = -1;
+        static const int keyActionUnknownInOH = -1;
+        OH_NativeXComponent_KeyAction action;
+        OH_NativeXComponent_GetKeyEventAction(keyEvent, &action);
+        OH_NativeXComponent_KeyCode code;
+        OH_NativeXComponent_GetKeyEventCode(keyEvent, &code);
+        if (code == keyCodeUnknownInOH || action == keyActionUnknownInOH) {
+            // "unknown code and action dont't callback"
+            return;
+        }
+        nativeHandleKey(action, code);
+    } else {
+        // OpenHarmonyPlatform::getKeyEventError
+    }
+}
+
+void PluginRender::DispatchMouseEvent(OH_NativeXComponent* component, void* window, OH_NativeXComponent_MouseEvent* mouseEvent)
+{
+    inputEvent e;
+    e.posX = mouseEvent->x;
+    e.posY = mouseEvent->y;
+    
+    if (mouseEvent->action == OH_NativeXComponent_MouseEventAction::OH_NATIVEXCOMPONENT_MOUSE_PRESS) {
+        if (mouseEvent->button == OH_NativeXComponent_MouseEventButton::OH_NATIVEXCOMPONENT_LEFT_BUTTON) {
+            PluginRender::GetInstance()->isMouseLeftActive = true;
+            e.nTouchType = e.nType = E_ONMOUSEDOWN;
+            strncpy(e.type, "mousedown", 256);
+        }
+        else if(mouseEvent->button == OH_NativeXComponent_MouseEventButton::OH_NATIVEXCOMPONENT_RIGHT_BUTTON) {
+            e.nTouchType = e.nType = E_ONRIGHTMOUSEDOWN;
+            strncpy(e.type, "rightmousedown", 256);
+        }
+    }
+    else if (mouseEvent->action == OH_NativeXComponent_MouseEventAction::OH_NATIVEXCOMPONENT_MOUSE_RELEASE) {
+        if (mouseEvent->button == OH_NativeXComponent_MouseEventButton::OH_NATIVEXCOMPONENT_LEFT_BUTTON) {
+            PluginRender::GetInstance()->isMouseLeftActive = false;
+            e.nTouchType = e.nType = E_ONMOUSEUP;
+            strncpy(e.type, "mouseup", 256);
+        }
+        else if(mouseEvent->button == OH_NativeXComponent_MouseEventButton::OH_NATIVEXCOMPONENT_RIGHT_BUTTON) {
+            e.nTouchType = e.nType = E_ONRIGHTMOUSEUP;
+            strncpy(e.type, "rightmouseup", 256);
+        }
+    }
+    else if (mouseEvent->action == OH_NativeXComponent_MouseEventAction::OH_NATIVEXCOMPONENT_MOUSE_MOVE) {
+        e.nTouchType = e.nType = E_ONMOUSEMOVE;
+        strncpy(e.type, "mousemove", 256);
+    }
+    else {
+        return;
+    }
+    e.nWheel = 0;
+    
+    JCScriptRuntime::s_JSRT->dispatchInputEvent(e);
+    delete mouseEvent;
 }
 
 void PluginRender::OnCreateNative(napi_env env, uv_loop_t* loop) {

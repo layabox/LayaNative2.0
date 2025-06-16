@@ -89,6 +89,7 @@ set(${PROJECT_NAME}_src
     ../../../source/napi/render/plugin_render.cpp
     ../../../source/napi/render/egl_core.cpp
     ../../../source/napi/modules/TouchesNapi.cpp
+    ../../../source/napi/modules/KeyNapi.cpp
     ../../../source/napi/modules/VideoPlayerNapi.cpp
 )
 

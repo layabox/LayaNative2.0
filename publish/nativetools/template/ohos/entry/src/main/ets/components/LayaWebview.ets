@@ -1,7 +1,6 @@
-import { WebViewInfo } from "@ohos/libSysCapabilities/src/main/ets/components/webview/WebViewMsg"
 import worker from '@ohos.worker';
 import { WorkerManager } from '../workers/WorkerManager';
-import { Logger } from '@ohos/libSysCapabilities'
+import { Logger, WebViewInfo } from '@ohos/libSysCapabilities'
 
 let log: Logger = new Logger(0x0001, "LayaWebViewComponent");
 @Component
@@ -27,5 +26,10 @@ export struct LayaWebview {
       .visibility(this.viewInfo.visible ? Visibility.Visible : Visibility.None)
       .opacity(this.viewInfo.opacity)
       .backgroundColor(this.viewInfo.backgroundColor)
+      .onControllerAttached(() => {
+        if (this.viewInfo.url != '') {
+          this.viewInfo.controller.loadUrl(this.viewInfo.url);
+        }
+      })
   }
 }

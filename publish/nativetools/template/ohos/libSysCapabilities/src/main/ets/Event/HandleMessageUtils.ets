@@ -1,15 +1,17 @@
 import { GlobalContext, GlobalContextConstants } from "../common/GlobalContext";
+import { ThreadWorkerGlobalScope } from "@ohos.worker";
 import laya from "liblaya.so";
 
 export class HandleMessageUtils {
     private static context = GlobalContext.loadGlobalThis(GlobalContextConstants.LAYA_ABILITY_CONTEXT);
-	private static workerPort;
+	private static workerPort: ThreadWorkerGlobalScope;
     static RunJS(data: string): void {
         laya.ConchNAPI_RunJS(data);
     }
     
 
-    static init(workerPort): void {
+    
+    static init(workerPort: ThreadWorkerGlobalScope): void {
         HandleMessageUtils.workerPort = workerPort;
     }
 
@@ -50,28 +52,25 @@ export class HandleMessageUtils {
      */
     static executeNativeMethod(isSyn: boolean, cName: string, mName: string, nativeFunc: Function, paramStr: string): string {
 
-        let jParam = JSON.parse(paramStr || "[]");
+        let jParam: Array<Object> = JSON.parse(paramStr || "[]");
 
         let result = null;
         if (isSyn) {
-            result = nativeFunc && nativeFunc.apply(this, jParam);
+            result = nativeFunc && nativeFunc(...jParam);
         } else {
             let paramCb = (call_re: string) => {
-                let rsJson = {
+                let rsJson = JSON.stringify({
                     objId: -1,
                     cName: cName,
                     mName: mName,
                     v: call_re
-                }
-                laya.ConchNAPI_RunJS("conch.platCallBack(" + JSON.stringify(rsJson) + ")");
+                });
+                laya.ConchNAPI_RunJS("conch.platCallBack(" + rsJson + ")");
             };
             jParam[jParam.length] = paramCb;
-            result = nativeFunc && nativeFunc.apply(this, jParam);
+            result = nativeFunc && nativeFunc(...jParam);
         }
 
-        let rsJson = {
-            v: result
-        }
-        return JSON.stringify(rsJson);
+        return JSON.stringify({v: result});
     }
 }

@@ -1,6 +1,5 @@
 'use strict';
 require("webglPlus.js");
-
 conch["platCallBack"] = function (ret) {
     var objid, m, rs, c, rJSON;
     if (ret == null)
@@ -481,10 +480,10 @@ class MouseEvent extends UIEvent {
 }
 var _lbMouseEvent = window['MouseEvent'] = MouseEvent;
 class MouseWheelEvent extends MouseEvent {
-    initMouseWheelEvent(typeArg, canBubbleArg, cancelableArg, viewArg, detailArg, screenXArg, screenYArg, clientXArg, clientYArg, buttonArg, relatedTargetArg, modifiersListArg, wheelDeltaArg) {
-    }
     constructor() {
         super("mousewheel");
+    }
+    initMouseWheelEvent(typeArg, canBubbleArg, cancelableArg, viewArg, detailArg, screenXArg, screenYArg, clientXArg, clientYArg, buttonArg, relatedTargetArg, modifiersListArg, wheelDeltaArg) {
     }
 }
 class WheelEvent extends MouseEvent {
@@ -620,7 +619,6 @@ class Storage {
         else {
             this.fileNamePre = this.storagePath + '/' + url.split('/')[2].replace(':', '_');
         }
-
         this.filename = this.fileNamePre + '.txt';
         var strdb = readFileSync(this.filename, 'utf8') || '{}';
         var db = JSON.parse(strdb);
@@ -964,6 +962,8 @@ var _lbKeyboardEvent = window["KeyboardEvent"] = KeyboardEvent;
     });
 })(window.document);
 class Navigator {
+    constructor() {
+    }
     get appName() { return 'Netscape'; }
     get appVersion() { return this.userAgent; }
     ;
@@ -994,8 +994,6 @@ class Navigator {
     get language() { return 'zh-CN'; }
     ;
     get userLanguage() { return 'zh-CN'; }
-    constructor() {
-    }
     getGamepads() {
         return null;
     }
@@ -1628,7 +1626,7 @@ class XMLHttpRequest extends EventTarget {
         var onPostError = function (e1, e2) {
             var _t = this._t;
             _t._readyState = 4;
-            _t._status = 404;
+            _t._status = e2;
             _t.xhr._changeState(4);
             if (_t.onerror) {
                 var ev = new _lbEvent("error");
@@ -6314,6 +6312,10 @@ class HTMLMediaElement extends HTMLElement {
     }
 }
 class HTMLMetaElement extends HTMLElement {
+    constructor() {
+        super();
+        this.tagName = "META";
+    }
     get httpEquiv() {
         return this["http-equiv"];
     }
@@ -6324,10 +6326,6 @@ class HTMLMetaElement extends HTMLElement {
     }
     get name() {
         return this._name;
-    }
-    constructor() {
-        super();
-        this.tagName = "META";
     }
 }
 class HTMLAudioElement extends HTMLMediaElement {
@@ -6899,9 +6897,6 @@ class _jsXmlAttr {
     }
 }
 class _jsXmlNode extends _jsXmlAttr {
-    get firstChild() {
-        return this.childNodes ? this.childNodes[0] : null;
-    }
     constructor() {
         super("", "");
         this.childNodes = [];
@@ -6909,6 +6904,9 @@ class _jsXmlNode extends _jsXmlAttr {
             return this[i];
         };
         this.attributes = [];
+    }
+    get firstChild() {
+        return this.childNodes ? this.childNodes[0] : null;
     }
     getElementsByTagName(name) {
         var result = [];
@@ -7044,11 +7042,6 @@ var clearTimeout = window.clearTimeout = _window.clearTimeout;
 var setInterval = window.setInterval = _window.setInterval;
 var setTimeout = window.setTimeout = _window.setTimeout;
 Object.defineProperty(window, 'runtime', { get: function () { return true; } });
-window.postMessage = function (data, d) {
-    if (typeof (data) == "object")
-        data = JSON.stringify(data);
-    conch.callWebviewJS("window.__getMessemage", encodeURIComponent(data), "");
-};
 window.postRuntimeMessage = function (d) {
     if (typeof (d) == "object")
         d = JSON.stringify(d);
@@ -7114,15 +7107,5 @@ window.performance = new Performance();
     class AppInfo {
     }
     ;
-    var appobj = null;
-    try {
-        // appobj = JSON.parse(conch.readFileFromAsset('app.json', 'utf8'));
-        // if (appobj) {
-            // require(appobj.mainjs);
-        require('scripts/index.js');
-        // }
-    }
-    catch (e) {
-        require('index');
-    }
+    require('index.js');
 })();

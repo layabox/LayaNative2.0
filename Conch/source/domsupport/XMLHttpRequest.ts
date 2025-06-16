@@ -213,7 +213,7 @@ class XMLHttpRequest extends EventTarget{
         var onPostError:any=function(e1:number, e2:number){
             var _t=this._t;//不用this是因为jsc有泄露
             _t._readyState = 4;
-            _t._status = 404;//e; 目前好像只有200和404
+            _t._status = e2;
             _t.xhr._changeState(4);
             if(_t.onerror)
             {

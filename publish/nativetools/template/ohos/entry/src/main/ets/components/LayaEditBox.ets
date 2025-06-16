@@ -1,5 +1,4 @@
-import { TextInputInfo } from '@ohos/libSysCapabilities/src/main/ets/components/EditBox'
-import { Logger } from '@ohos/libSysCapabilities'
+import { Logger , TextInputInfo } from '@ohos/libSysCapabilities'
 import laya from "liblaya.so";
 
 let log: Logger = new Logger(0x0001, "LayaEditBoxComponent");

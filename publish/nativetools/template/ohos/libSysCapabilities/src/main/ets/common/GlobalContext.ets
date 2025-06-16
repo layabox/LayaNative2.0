@@ -1,10 +1,22 @@
 export class GlobalContext {
-  public static loadGlobalThis(name: string) {
-    return globalThis[name]
+  private static instance: GlobalContext;
+  private propMap = new Map<string, Object>();
+
+  private static getInstance(): GlobalContext {
+    if (!GlobalContext.instance) {
+      GlobalContext.instance = new GlobalContext();
+    }
+    return GlobalContext.instance;
+  }
+
+  public static loadGlobalThis(name: string): Object {
+    let ins = GlobalContext.getInstance();
+    return ins.propMap.get(name)!;
   }
 
   public static storeGlobalThis(name: string, obj: Object) {
-    globalThis[name] = obj
+    let ins = GlobalContext.getInstance();
+    ins.propMap.set(name, obj);
   }
 }
 

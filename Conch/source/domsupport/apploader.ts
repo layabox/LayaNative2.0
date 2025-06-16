@@ -12,7 +12,8 @@
         DomJS: string;
         mainjs: string;
     };
-    var appobj:AppInfo = null;
+    require('index.js');
+    /*var appobj:AppInfo = null;
     try {
         appobj = <AppInfo>JSON.parse(<string>conch.readFileFromAsset('app.json', 'utf8'));
         if(appobj){
@@ -20,5 +21,5 @@
         }
     } catch (e) {
         require('index');
-    }
+    }*/
 })();
