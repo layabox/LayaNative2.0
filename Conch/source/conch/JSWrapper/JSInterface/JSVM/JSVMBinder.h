@@ -37,7 +37,9 @@ namespace laya {
         IsolateData::getInstance()->_setNeedCallConstructor(true);
 		cobj->initialize(obj);
 		cobj->makeWeak();
-        return obj;
+        JSVM_Value newIns;
+        JSVM_API_CALL(status, env, OH_JSVM_EscapeHandle(env, esc.getScope(), obj, &newIns));
+        return newIns;
     }
 
     typedef JSVM_Value JsValue;
@@ -341,7 +343,9 @@ namespace laya {
             JSVM_Value result;
             JSVM_API_CALL(status, _env, 
                 OH_JSVM_CallFunction(_env, jthis, func, argc, argv, &result));
-            return result;
+            JSVM_Value newIns;
+            JSVM_API_CALL(status, _env, OH_JSVM_EscapeHandle(_env, esc.getScope(), result, &newIns));
+            return newIns;
         }
 
         JsValue callJsFunc(JsFunction& func);

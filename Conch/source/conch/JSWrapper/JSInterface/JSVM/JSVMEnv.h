@@ -23,6 +23,9 @@ namespace laya
         public:
             AutoEscHandleScope();
             ~AutoEscHandleScope();
+            EscapableHandleScope getScope() {
+                return _escapableHandleScope;
+            }
     
         private:
         EscapableHandleScope _escapableHandleScope;
