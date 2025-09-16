@@ -375,7 +375,64 @@ int WebSocket::onSubThreadLoop()
 
 	return 0;
 }
+#if defined(ANDROID) || defined(__APPLE__)
+	void WebSocket::onSubThreadStarted() {
 
+
+	lws_context_creation_info info = createContextCreationInfo(m_wsProtocols, true);
+	m_wsContext = lws_create_context(&info);
+	if (nullptr != m_wsContext)
+	{
+
+		static const struct lws_extension EXTENSIONS[] =
+		{
+			{"permessage-deflate",
+			 lws_extension_callback_pm_deflate,
+			 // client_no_context_takeover extension is not supported in the current version, it will cause connection fail
+			 // It may be a bug of lib websocket build
+			 //            "permessage-deflate; client_no_context_takeover; client_max_window_bits"
+			 "permessage-deflate; client_max_window_bits"},
+			{"deflate-frame",
+			 lws_extension_callback_pm_deflate,
+			 "deflate_frame"},
+			{nullptr, nullptr, nullptr /* terminator */} };
+
+		m_readyState = State::CONNECTING;
+
+		struct lws_vhost* vhost = nullptr;
+
+		vhost = createVhost(m_wsProtocols, m_SSLConnection);
+
+		if (s_strProxy.length() > 0)
+		{
+			lws_set_proxy(vhost, s_strProxy.c_str());
+		}
+
+		struct lws_client_connect_info connectInfo;
+		memset(&connectInfo, 0, sizeof(connectInfo));
+		connectInfo.context = m_wsContext;
+		connectInfo.address = m_host.c_str();
+		connectInfo.port = m_port;
+		connectInfo.ssl_connection = m_SSLConnection;
+		connectInfo.path = m_path.c_str();
+		connectInfo.host = m_host.c_str();
+		connectInfo.origin = m_origin.c_str();
+		connectInfo.protocol = m_supportedProtocols.empty() ? nullptr : m_supportedProtocols.c_str();
+		connectInfo.ietf_version_or_minus_one = -1;
+		connectInfo.userdata = this;
+		connectInfo.client_exts = EXTENSIONS;
+		connectInfo.vhost = vhost;
+
+		m_wsInstance = lws_client_connect_via_info(&connectInfo);
+
+		if (m_wsInstance == nullptr)
+		{
+			//connection Error();
+			return;
+		}
+	}
+}
+#else
 void WebSocket::onSubThreadStarted(){
 
     lws_context_creation_info info = createContextCreationInfo(m_wsProtocols, true);
@@ -405,7 +462,7 @@ void WebSocket::onSubThreadStarted(){
 
 	}
 }
-
+#endif
 void WebSocket::onSubThreadEnded()
 {
 

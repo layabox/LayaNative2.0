@@ -33,29 +33,25 @@ namespace laya
         m_nListenPort = 0;
 
 
+		
+		std::string flags;
+#if defined(OHOS) || defined(__APPLE__)
+        flags.append(" --jitless ");
+#endif
+        flags.append(" --expose-gc ");
+        flags.append(" --no-flush-bytecode ");
+        flags.append(" --no-lazy ");
+        v8::V8::SetFlagsFromString(flags.c_str(), (size_t)flags.length());
 		m_pPlatform = v8::platform::NewDefaultPlatform().release();
 		v8::V8::InitializePlatform(m_pPlatform);
-		v8::V8::Initialize();
-		static char* flags[] =
-		{
-#if defined(OHOS) || defined(__APPLE__)
-            " --jitless",
-#endif
-			"--expose_gc",
-			"--no-flush-bytecode",
-			"--no-lazy",
-		};
-		for (auto f : flags)
-		{
-			v8::V8::SetFlagsFromString(f, strlen(f));
-		}
+		v8::V8::Initialize();	
 		
 	}
 	Javascript::~Javascript()
 	{
 
 		v8::V8::Dispose();
-		v8::V8::ShutdownPlatform();
+		//v8::V8::ShutdownPlatform();
 		delete m_pPlatform;
 	}
 	void Javascript::init(int nPort, std::function<void(v8::Local<v8::Value>, v8::Local<v8::Value>, const char*)> func)

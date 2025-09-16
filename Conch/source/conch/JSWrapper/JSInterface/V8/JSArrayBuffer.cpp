@@ -214,8 +214,8 @@ namespace laya{
             int start = message->GetStartColumn(ctx).FromMaybe(0);
             int end = message->GetEndColumn(ctx).FromMaybe(0);
             v8::ScriptOrigin origin = message->GetScriptOrigin();
-            int lineoff = origin.ResourceLineOffset()->Value();
-            int startcol = origin.ResourceColumnOffset()->Value();
+            int lineoff = origin.LineOffset();
+            int startcol = origin.ColumnOffset();
             if (start > startcol) {
                 start -= startcol;
                 end -= startcol;

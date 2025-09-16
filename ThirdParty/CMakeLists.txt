@@ -12,11 +12,11 @@ target_link_libraries(${PROJECT_NAME}
 )
 
 #    ------------------------------ V8
-add_library(v8_monolith STATIC IMPORTED GLOBAL)
-set_target_properties(v8_monolith PROPERTIES
-  IMPORTED_LOCATION ${LAYA_ROOT_PATH}/ThirdParty/v8_9.1/lib/ohos/libv8_monolith.a
-  INTERFACE_INCLUDE_DIRECTORIES ${LAYA_ROOT_PATH}/ThirdParty/v8_9.1/include
-)
+#add_library(v8_monolith STATIC IMPORTED GLOBAL)
+#set_target_properties(v8_monolith PROPERTIES
+#  IMPORTED_LOCATION ${LAYA_ROOT_PATH}/ThirdParty/v8_9.1/lib/ohos/libv8_monolith.a
+#  INTERFACE_INCLUDE_DIRECTORIES ${LAYA_ROOT_PATH}/ThirdParty/v8_9.1/include
+#)
 
 target_link_libraries(${PROJECT_NAME}
     ${LAYA_ROOT_PATH}/ThirdParty/curl/lib/ohos/libcurl.a
@@ -49,7 +49,7 @@ target_link_libraries(${PROJECT_NAME}
     ${LAYA_ROOT_PATH}/ThirdParty/websockets/include/ohos
     ${LAYA_ROOT_PATH}/ThirdParty/openssl/include/ohos
     ${LAYA_ROOT_PATH}/ThirdParty/openal/include/ohos
-    ${LAYA_ROOT_PATH}/ThirdParty/bullet/include/ohos/bullet
+    ${LAYA_ROOT_PATH}/ThirdParty/bullet/include
 )
 
 # put "thirdParty" into External folder, too

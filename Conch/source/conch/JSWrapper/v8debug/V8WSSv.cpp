@@ -16,8 +16,8 @@ namespace laya {
     };
 
     /*
-    ²ÎÕÕ https://github.com/warmcat/libwebsockets/tree/master/minimal-examples/ws-server/minimal-ws-server-echo
-    ĞèÒªÇĞ»»°æ±¾¡£
+    ï¿½ï¿½ï¿½ï¿½ https://github.com/warmcat/libwebsockets/tree/master/minimal-examples/ws-server/minimal-ws-server-echo
+    ï¿½ï¿½Òªï¿½Ğ»ï¿½ï¿½æ±¾ï¿½ï¿½
     */
 
     per_session_data__v8dbg* pCurPss = nullptr;
@@ -33,7 +33,7 @@ namespace laya {
         switch (reason) {
         case LWS_CALLBACK_PROTOCOL_INIT:
             break;
-        case LWS_CALLBACK_ESTABLISHED:  //ÓĞÈËÁ¬½øÀ´ÁË
+        case LWS_CALLBACK_ESTABLISHED:  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             printf("connection established\n");
             pss->pRecvBuff = nullptr;
             pss->index = 0;
@@ -46,11 +46,11 @@ namespace laya {
             pCurPss = pss;
             break;
 
-        case LWS_CALLBACK_SERVER_WRITEABLE: //¿ÉÒÔ·¢ËÍÁË
-            //È±Ê¡µÄÊÇ¼ÌĞø·¢ËÍ¡£ÀıÈçÉÏÒ»´Î¿ÉÄÜÖ»·¢ËÍÁËÒ»²¿·Ö
+        case LWS_CALLBACK_SERVER_WRITEABLE: //ï¿½ï¿½ï¿½Ô·ï¿½ï¿½ï¿½ï¿½ï¿½
+            //È±Ê¡ï¿½ï¿½ï¿½Ç¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½Î¿ï¿½ï¿½ï¿½Ö»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½
             n = LWS_WRITE_CONTINUATION;
             if (!pss->continuation) {
-                //Èç¹ûÊÇĞÂµÄÈÎÎñ£¬¾ÍÉèÖÃÎÄ±¾»òÕß¶ş½øÖÆ¡£
+                //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Âµï¿½ï¿½ï¿½ï¿½ñ£¬¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä±ï¿½ï¿½ï¿½ï¿½ß¶ï¿½ï¿½ï¿½ï¿½Æ¡ï¿½
                 if (pss->binary)
                     n = LWS_WRITE_BINARY;
                 else
@@ -62,7 +62,7 @@ namespace laya {
 
             //pss->tx += pss->len;
             pss->pTaskLock.lock();
-            //Ò»´Î´¦ÀíÒ»¸ö
+            //Ò»ï¿½Î´ï¿½ï¿½ï¿½Ò»ï¿½ï¿½
             if (pss->pSendTask.size() > 0) {
                 std::string& t1 = pss->pSendTask.front();
                 //printf("send:%s\n", t1.substr(0,200).c_str());
@@ -72,7 +72,7 @@ namespace laya {
                 }
                 pss->pSendBuff = new unsigned char[sendMsgLen + LWS_PRE];
                 memcpy(pss->pSendBuff + LWS_PRE, t1.c_str(), sendMsgLen);
-                //É¾µôµÚÒ»¸ö
+                //É¾ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½
                 pss->pSendTask.pop_front();
             }
             pss->pTaskLock.unlock();
@@ -84,23 +84,23 @@ namespace laya {
                 }
                 if (n < (int)sendMsgLen) {
                     lwsl_err("Partial write\n");
-                    //ÕâÀï²»ÖªµÀÔõÃ´´¦Àí£¬°´ÀíËµ²¿·Ö·¢ËÍµÄÇé¿ö²»ÓÃ¹Ü¡£ÏÂ´ÎLWS_CALLBACK_SERVER_WRITEABLEµÄÊ±ºòÓ¦¸ÃÒÑ¾­È«²¿·¢ËÍÁË¡£
-                    //ËùÒÔpss->continuationÓ¦¸Ã»¹ÊÇ=0
-                    //ÕâÀïÖ±½Ó·µ»Ø£¬ÕâÑùpss->continuation¾ÍÊÇ1ÁË£¬ÊÇ¹ÊÒâµÄÃ´
+                    //ï¿½ï¿½ï¿½ï²»Öªï¿½ï¿½ï¿½ï¿½Ã´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ëµï¿½ï¿½ï¿½Ö·ï¿½ï¿½Íµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã¹Ü¡ï¿½ï¿½Â´ï¿½LWS_CALLBACK_SERVER_WRITEABLEï¿½ï¿½Ê±ï¿½ï¿½Ó¦ï¿½ï¿½ï¿½Ñ¾ï¿½È«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë¡ï¿½
+                    //ï¿½ï¿½ï¿½ï¿½pss->continuationÓ¦ï¿½Ã»ï¿½ï¿½ï¿½=0
+                    //ï¿½ï¿½ï¿½ï¿½Ö±ï¿½Ó·ï¿½ï¿½Ø£ï¿½ï¿½ï¿½ï¿½ï¿½pss->continuationï¿½ï¿½ï¿½ï¿½1ï¿½Ë£ï¿½ï¿½Ç¹ï¿½ï¿½ï¿½ï¿½Ã´
                     return -1;
                 }
             }
             if (pss->final)
                 pss->continuation = 0;
-            /* Õâ»áµ¼ÖÂwebsocket±¨´í£¬Ğ´·µ»Ø-1
-            //Ò»´ÎÈ«²¿´¦Àí
+            /* ï¿½ï¿½áµ¼ï¿½ï¿½websocketï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ğ´ï¿½ï¿½ï¿½ï¿½-1
+            //Ò»ï¿½ï¿½È«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             pss->pTaskLock.lock();
             if (pss->pSendTask.size() > 0) {
                 for (std::string& t1 : pss->pSendTask) {
                     printf("send:%s\n", t1.c_str());
                     sendMsgLen = t1.length();
                     if (pss->pSendBuff) {
-                        delete[] pss->pSendBuff;//TODO ÓÅ»¯
+                        delete[] pss->pSendBuff;//TODO ï¿½Å»ï¿½
                     }
                     pss->pSendBuff = new unsigned char[sendMsgLen + LWS_PRE];
                     memcpy(pss->pSendBuff + LWS_PRE, t1.c_str(), sendMsgLen);
@@ -111,19 +111,19 @@ namespace laya {
                     }
                     if (n < (int)sendMsgLen) {
                         lwsl_err("Partial write\n");
-                        //ÕâÀï²»ÖªµÀÔõÃ´´¦Àí£¬°´ÀíËµ²¿·Ö·¢ËÍµÄÇé¿ö²»ÓÃ¹Ü¡£ÏÂ´ÎLWS_CALLBACK_SERVER_WRITEABLEµÄÊ±ºòÓ¦¸ÃÒÑ¾­È«²¿·¢ËÍÁË¡£
-                        //ËùÒÔpss->continuationÓ¦¸Ã»¹ÊÇ=0
-                        //ÕâÀïÖ±½Ó·µ»Ø£¬ÕâÑùpss->continuation¾ÍÊÇ1ÁË£¬ÊÇ¹ÊÒâµÄÃ´
+                        //ï¿½ï¿½ï¿½ï²»Öªï¿½ï¿½ï¿½ï¿½Ã´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ëµï¿½ï¿½ï¿½Ö·ï¿½ï¿½Íµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã¹Ü¡ï¿½ï¿½Â´ï¿½LWS_CALLBACK_SERVER_WRITEABLEï¿½ï¿½Ê±ï¿½ï¿½Ó¦ï¿½ï¿½ï¿½Ñ¾ï¿½È«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë¡ï¿½
+                        //ï¿½ï¿½ï¿½ï¿½pss->continuationÓ¦ï¿½Ã»ï¿½ï¿½ï¿½=0
+                        //ï¿½ï¿½ï¿½ï¿½Ö±ï¿½Ó·ï¿½ï¿½Ø£ï¿½ï¿½ï¿½ï¿½ï¿½pss->continuationï¿½ï¿½ï¿½ï¿½1ï¿½Ë£ï¿½ï¿½Ç¹ï¿½ï¿½ï¿½ï¿½Ã´
                         return -1;
                     }
                 }
             }
             pss->pTaskLock.unlock();
             */
-            //lws_rx_flow_control(wsi, 1);    //ÔÊĞíÔÚ´ËÁ¬½ÓÉÏ½ÓÊÕÊı¾İ¡£
-            lws_callback_on_writable(wsi);//Ò»µ©ÓĞ»ú»á£¬´¥·¢Ğ´»Øµ÷
+            //lws_rx_flow_control(wsi, 1);    //ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½İ¡ï¿½
+            lws_callback_on_writable(wsi);//Ò»ï¿½ï¿½ï¿½Ğ»ï¿½ï¿½á£¬ï¿½ï¿½ï¿½ï¿½Ğ´ï¿½Øµï¿½
             break;
-        case LWS_CALLBACK_RECEIVE: { // ¿ÉÒÔ½ÓÊÕÁË¡£
+        case LWS_CALLBACK_RECEIVE: { // ï¿½ï¿½ï¿½Ô½ï¿½ï¿½ï¿½ï¿½Ë¡ï¿½
                                      // Create a buffer to hold our response
                                      // it has to have some pre and post padding.
                                      // You don't need to care what comes there, libwebsockets
@@ -131,14 +131,14 @@ namespace laya {
                                      // http://git.warmcat.com/cgi-bin/cgit/libwebsockets/tree/lib/libwebsockets.h#n597
 
             //amsg.first = lws_is_first_fragment(wsi);
-            pss->final = lws_is_final_fragment(wsi);    //ÊÇ·ñÊÇ×îºóÒ»¸öĞÅÏ¢¡£
-            pss->binary = lws_frame_is_binary(wsi);     //ÊÇ·ñÊÇ¶ş½øÖÆµÄ¡£
+            pss->final = lws_is_final_fragment(wsi);    //ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½
+            pss->binary = lws_frame_is_binary(wsi);     //ï¿½Ç·ï¿½ï¿½Ç¶ï¿½ï¿½ï¿½ï¿½ÆµÄ¡ï¿½
             const size_t remaining = lws_remaining_packet_payload(wsi);
             //lwsl_info("+++ test-echo: RX len %ld final %ld, pss->len=%ld\n",(long)len, (long)pss->final, (long)pss->len);
 
             if (in && len > 0) {
                 if (remaining > 0) {
-                    //Ö¡²»ÍêÕû¡£ TODO
+                    //Ö¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ TODO
                     *(int*)0 = 1;
                 }
                 else {
@@ -153,8 +153,8 @@ namespace laya {
                 }
             }
 
-            //lws_rx_flow_control(wsi, 0);//½ûÖ¹ÔÚ´ËÁ¬½ÓÉÏ½ÓÊÕÊı¾İ¡£
-            lws_callback_on_writable(wsi);//Ò»µ©ÓĞ»ú»á£¬´¥·¢Ğ´»Øµ÷
+            //lws_rx_flow_control(wsi, 0);//ï¿½ï¿½Ö¹ï¿½Ú´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½İ¡ï¿½
+            lws_callback_on_writable(wsi);//Ò»ï¿½ï¿½ï¿½Ğ»ï¿½ï¿½á£¬ï¿½ï¿½ï¿½ï¿½Ğ´ï¿½Øµï¿½
             break;
         }
 
@@ -196,8 +196,8 @@ namespace laya {
     void wsserver_run(lws_context* context) {
         int n = 0;
         while (n >= 0 && !interrupted) {
-            //nWSSVSleep ÊÇ timeout_ms: µÈ´ı³¬Ê±Ê±¼ä£¬¼´Ã»ÓĞÕÒµ½ĞèÒª´¦ÀíµÄÁ¬½ÓĞèÒªµÈ´ıµÄÊ±¼ä£¬Îª0ÔòÁ¢¼´·µ»Ø£»
-            //Õâ¸ö»áÒ»Í¨¹ı»Øµ÷´¦ÀíÏûÏ¢¡£
+            //nWSSVSleep ï¿½ï¿½ timeout_ms: ï¿½È´ï¿½ï¿½ï¿½Ê±Ê±ï¿½ä£¬ï¿½ï¿½Ã»ï¿½ï¿½ï¿½Òµï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½È´ï¿½ï¿½ï¿½Ê±ï¿½ä£¬Îª0ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø£ï¿½
+            //ï¿½ï¿½ï¿½ï¿½ï¿½Ò»Í¨ï¿½ï¿½ï¿½Øµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½
             int nSleep = 10;
             if (pCurPss) {
                 pCurPss->pTaskLock.lock();
@@ -211,6 +211,56 @@ namespace laya {
         lws_context_destroy(context);
     }
 
+#if defined(ANDROID) || defined(__APPLE__)
+    void startWSSV(int port, DebuggerAgent* pDbgAgent) {
+        gpDbgAgent = pDbgAgent;
+        interrupted = false;
+        struct lws_context* context;
+        // we're not using ssl
+        const char* cert_path = NULL;
+        const char* key_path = NULL;
+        // no special options
+        int opts = 0;
+
+
+        lws_set_log_level(LLL_ERR | LLL_WARN | LLL_NOTICE | LLL_USER/* | LLL_INFO */ /* | LLL_DEBUG */, NULL);
+
+        lws_context_creation_info cinfo;
+        memset(&cinfo, 0, sizeof(cinfo));
+        cinfo.port = port;
+        //cinfo.mounts = &mount;
+        cinfo.protocols = protocols;
+        //cinfo.extensions = lws_get_internal_extensions();
+        //if (!use_ssl) {
+        cinfo.ssl_cert_filepath = NULL;
+        cinfo.ssl_private_key_filepath = NULL;
+        //} else {
+        //  info.ssl_cert_filepath = LOCAL_RESOURCE_PATH"/libwebsockets-test-server.pem";
+        //  info.ssl_private_key_filepath = LOCAL_RESOURCE_PATH"/libwebsockets-test-server.key.pem";
+        //}
+        cinfo.gid = -1;
+        cinfo.uid = -1;
+        // è®¾ç½®TCP Keep-Aliveå‚æ•°
+        //cinfo.ka_time = 60;  // å¦‚æœ60ç§’å†…æ²¡æœ‰æ•°æ®äº¤æ¢ï¼Œå°±å‘é€ä¸€ä¸ªKeep-Aliveæ¢é’ˆ
+        //cinfo.ka_probes = 10; // å‘é€Keep-Aliveæ¢é’ˆçš„æœ€å¤§æ¬¡æ•°
+        //cinfo.ka_interval = 10;  // æ¯ä¸ªKeep-Aliveæ¢é’ˆä¹‹é—´é—´éš”10ç§’        
+        cinfo.timeout_secs = 3000;
+
+        cinfo.options |= LWS_SERVER_OPTION_DISABLE_IPV6;
+
+
+        // create libwebsocket context representing this server
+        context = lws_create_context(&cinfo);
+
+        if (context == NULL) {
+            fprintf(stderr, "libwebsocket init failed\n");
+            return;
+        }
+
+        printf("starting server...\n");
+        wssvth = new std::thread(std::bind(wsserver_run, context));;
+    }
+#else
     void startWSSV(int port, DebuggerAgent* pDbgAgent) {
         gpDbgAgent = pDbgAgent;
         interrupted = false;
@@ -270,7 +320,7 @@ namespace laya {
         printf("starting server...\n");
         wssvth  = new std::thread(std::bind(wsserver_run, context));;
     }
-
+#endif
     void stopWSSV() {
         interrupted = true;
         if (wssvth != NULL)

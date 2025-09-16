@@ -6,7 +6,6 @@
 #define INCLUDE_CPPGC_DEFAULT_PLATFORM_H_
 
 #include <memory>
-#include <vector>
 
 #include "cppgc/platform.h"
 #include "libplatform/libplatform.h"
@@ -20,15 +19,6 @@ namespace cppgc {
  */
 class V8_EXPORT DefaultPlatform : public Platform {
  public:
-  /**
-   * Use this method instead of 'cppgc::InitializeProcess' when using
-   * 'cppgc::DefaultPlatform'. 'cppgc::DefaultPlatform::InitializeProcess'
-   * will initialize cppgc and v8 if needed (for non-standalone builds).
-   *
-   * \param platform DefaultPlatform instance used to initialize cppgc/v8.
-   */
-  static void InitializeProcess(DefaultPlatform* platform);
-
   using IdleTaskSupport = v8::platform::IdleTaskSupport;
   explicit DefaultPlatform(
       int thread_pool_size = 0,
@@ -47,11 +37,12 @@ class V8_EXPORT DefaultPlatform : public Platform {
     return v8_platform_->MonotonicallyIncreasingTime();
   }
 
-  std::shared_ptr<cppgc::TaskRunner> GetForegroundTaskRunner() override {
+  std::shared_ptr<cppgc::TaskRunner> GetForegroundTaskRunner(
+      TaskPriority priority) override {
     // V8's default platform creates a new task runner when passed the
     // `v8::Isolate` pointer the first time. For non-default platforms this will
     // require getting the appropriate task runner.
-    return v8_platform_->GetForegroundTaskRunner(kNoIsolate);
+    return v8_platform_->GetForegroundTaskRunner(kNoIsolate, priority);
   }
 
   std::unique_ptr<cppgc::JobHandle> PostJob(
@@ -63,6 +54,8 @@ class V8_EXPORT DefaultPlatform : public Platform {
   TracingController* GetTracingController() override {
     return v8_platform_->GetTracingController();
   }
+
+  v8::Platform* GetV8Platform() const { return v8_platform_.get(); }
 
  protected:
   static constexpr v8::Isolate* kNoIsolate = nullptr;

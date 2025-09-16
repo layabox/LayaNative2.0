@@ -40,7 +40,7 @@ namespace laya {
 
     void JSObjBaseV8::makeWeak()
 	{
-		m_persistent_handle.SetWeak(this, WeakCallback, v8::WeakCallbackType::kFinalizer);
+		m_persistent_handle.SetWeak(this, WeakCallback, v8::WeakCallbackType::kParameter);
 
     }
 

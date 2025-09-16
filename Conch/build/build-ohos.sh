@@ -1,6 +1,6 @@
 #!/bin/sh
-OHOS_NDK_CMAKE_PATH="E:/huawei/IDE/DevEcoStudio/sdk/default/openharmony/native/build-tools/cmake/bin"
-OHOS_NDK_CMAKE_TOOLCHAIN_PATH="E:/huawei/IDE/DevEcoStudio/sdk/default/openharmony/native/build/cmake/ohos.toolchain.cmake"
+OHOS_NDK_CMAKE_PATH="E:/huawei/IDE/DevEcoStudio2/sdk/default/openharmony/native/build-tools/cmake/bin"
+OHOS_NDK_CMAKE_TOOLCHAIN_PATH="E:/huawei/IDE/DevEcoStudio2/sdk/default/openharmony/native/build/cmake/ohos.toolchain.cmake"
 
 #export PATH=${OHOS_NDK_CMAKE_PATH}:$PATH
 mkdir build

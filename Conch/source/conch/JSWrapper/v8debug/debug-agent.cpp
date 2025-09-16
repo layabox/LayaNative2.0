@@ -261,7 +261,11 @@ namespace laya {
         V8DebuggerAgentImpl，V8ProfilerAgentImpl，V8HeapProfilerAgentImpl，V8ConsoleAgentImpl，V8SchemaAgentImpl
         然后把这些AgentImpl都连接到这个SessionImpl, 这样不同的调试命令就能发给不同的Agent
         */
+#if defined(ANDROID) || defined(__APPLE__)
+        _dbg_session_ = _new_inspector->connect(1, m_pInspectorChannel, v8_inspector::StringView(), v8_inspector::V8Inspector::ClientTrustLevel::kFullyTrusted);
+#else
         _dbg_session_ = _new_inspector->connect(1, m_pInspectorChannel, v8_inspector::StringView());
+#endif
 
         //注意 由于线程问题，如果有新的前端连进来（或者前端刷新），而js又在用这个对象，可能会导致非法。不过这种情况很少，加锁的话又不好看，先忽略。
         pWsSessionData = pData;

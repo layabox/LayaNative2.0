@@ -8,13 +8,17 @@
 #include <cstdint>
 #include <type_traits>
 
+#include "cppgc/internal/member-storage.h"
 #include "cppgc/internal/write-barrier.h"
+#include "cppgc/sentinel-pointer.h"
 #include "cppgc/source-location.h"
+#include "cppgc/type-traits.h"
 #include "v8config.h"  // NOLINT(build/include_directory)
 
 namespace cppgc {
 namespace internal {
 
+class HeapBase;
 class PersistentRegion;
 class CrossThreadPersistentRegion;
 
@@ -24,15 +28,73 @@ class WeakMemberTag;
 class UntracedMemberTag;
 
 struct DijkstraWriteBarrierPolicy {
-  static void InitializingBarrier(const void*, const void*) {
     // Since in initializing writes the source object is always white, having no
     // barrier doesn't break the tri-color invariant.
-  }
-  static void AssigningBarrier(const void* slot, const void* value) {
+    V8_INLINE static void InitializingBarrier(const void*, const void*) {}
+    V8_INLINE static void InitializingBarrier(const void*, RawPointer storage) {
+    }
+#if defined(CPPGC_POINTER_COMPRESSION)
+    V8_INLINE static void InitializingBarrier(const void*,
+                                              CompressedPointer storage) {}
+#endif
+
+    template <WriteBarrierSlotType SlotType>
+    V8_INLINE static void AssigningBarrier(const void* slot,
+                                           const void* value) {
+#ifdef CPPGC_SLIM_WRITE_BARRIER
+    if (V8_UNLIKELY(WriteBarrier::IsEnabled()))
+      WriteBarrier::CombinedWriteBarrierSlow<SlotType>(slot);
+#else   // !CPPGC_SLIM_WRITE_BARRIER
     WriteBarrier::Params params;
-    switch (WriteBarrier::GetWriteBarrierType(slot, value, params)) {
+    const WriteBarrier::Type type =
+        WriteBarrier::GetWriteBarrierType(slot, value, params);
+    WriteBarrier(type, params, slot, value);
+#endif  // !CPPGC_SLIM_WRITE_BARRIER
+    }
+
+  template <WriteBarrierSlotType SlotType>
+  V8_INLINE static void AssigningBarrier(const void* slot, RawPointer storage) {
+    static_assert(
+        SlotType == WriteBarrierSlotType::kUncompressed,
+        "Assigning storages of Member and UncompressedMember is not supported");
+#ifdef CPPGC_SLIM_WRITE_BARRIER
+    if (V8_UNLIKELY(WriteBarrier::IsEnabled()))
+      WriteBarrier::CombinedWriteBarrierSlow<SlotType>(slot);
+#else   // !CPPGC_SLIM_WRITE_BARRIER
+    WriteBarrier::Params params;
+    const WriteBarrier::Type type =
+        WriteBarrier::GetWriteBarrierType(slot, storage, params);
+    WriteBarrier(type, params, slot, storage.Load());
+#endif  // !CPPGC_SLIM_WRITE_BARRIER
+  }
+
+#if defined(CPPGC_POINTER_COMPRESSION)
+  template <WriteBarrierSlotType SlotType>
+  V8_INLINE static void AssigningBarrier(const void* slot,
+                                         CompressedPointer storage) {
+    static_assert(
+        SlotType == WriteBarrierSlotType::kCompressed,
+        "Assigning storages of Member and UncompressedMember is not supported");
+#ifdef CPPGC_SLIM_WRITE_BARRIER
+    if (V8_UNLIKELY(WriteBarrier::IsEnabled()))
+      WriteBarrier::CombinedWriteBarrierSlow<SlotType>(slot);
+#else   // !CPPGC_SLIM_WRITE_BARRIER
+    WriteBarrier::Params params;
+    const WriteBarrier::Type type =
+        WriteBarrier::GetWriteBarrierType(slot, storage, params);
+    WriteBarrier(type, params, slot, storage.Load());
+#endif  // !CPPGC_SLIM_WRITE_BARRIER
+  }
+#endif  // defined(CPPGC_POINTER_COMPRESSION)
+
+ private:
+  V8_INLINE static void WriteBarrier(WriteBarrier::Type type,
+                                     const WriteBarrier::Params& params,
+                                     const void* slot, const void* value) {
+    switch (type) {
       case WriteBarrier::Type::kGenerational:
-        WriteBarrier::GenerationalBarrier(params, slot);
+        WriteBarrier::GenerationalBarrier<
+            WriteBarrier::GenerationalBarrierType::kPreciseSlot>(params, slot);
         break;
       case WriteBarrier::Type::kMarking:
         WriteBarrier::DijkstraMarkingBarrier(params, value);
@@ -44,29 +106,100 @@ struct DijkstraWriteBarrierPolicy {
 };
 
 struct NoWriteBarrierPolicy {
-  static void InitializingBarrier(const void*, const void*) {}
-  static void AssigningBarrier(const void*, const void*) {}
+  V8_INLINE static void InitializingBarrier(const void*, const void*) {}
+  V8_INLINE static void InitializingBarrier(const void*, RawPointer storage) {}
+#if defined(CPPGC_POINTER_COMPRESSION)
+  V8_INLINE static void InitializingBarrier(const void*,
+                                            CompressedPointer storage) {}
+#endif
+  template <WriteBarrierSlotType>
+  V8_INLINE static void AssigningBarrier(const void*, const void*) {}
+  template <WriteBarrierSlotType, typename MemberStorage>
+  V8_INLINE static void AssigningBarrier(const void*, MemberStorage) {}
 };
 
-class V8_EXPORT EnabledCheckingPolicy {
+class V8_EXPORT SameThreadEnabledCheckingPolicyBase {
  protected:
-  EnabledCheckingPolicy();
-  void CheckPointer(const void* ptr);
+  void CheckPointerImpl(const void* ptr, bool points_to_payload,
+                        bool check_off_heap_assignments);
+
+  const HeapBase* heap_ = nullptr;
+};
+
+template <bool kCheckOffHeapAssignments>
+class V8_EXPORT SameThreadEnabledCheckingPolicy
+    : private SameThreadEnabledCheckingPolicyBase {
+ protected:
+  template <typename T>
+  V8_INLINE void CheckPointer(RawPointer raw_pointer) {
+    if (raw_pointer.IsCleared() || raw_pointer.IsSentinel()) {
+      return;
+    }
+    CheckPointersImplTrampoline<T>::Call(
+        this, static_cast<const T*>(raw_pointer.Load()));
+  }
+#if defined(CPPGC_POINTER_COMPRESSION)
+  template <typename T>
+  V8_INLINE void CheckPointer(CompressedPointer compressed_pointer) {
+    if (compressed_pointer.IsCleared() || compressed_pointer.IsSentinel()) {
+      return;
+    }
+    CheckPointersImplTrampoline<T>::Call(
+        this, static_cast<const T*>(compressed_pointer.Load()));
+  }
+#endif
+  template <typename T>
+  void CheckPointer(const T* ptr) {
+    if (!ptr || (kSentinelPointer == ptr)) {
+      return;
+    }
+    CheckPointersImplTrampoline<T>::Call(this, ptr);
+  }
 
  private:
-  void* impl_;
+  template <typename T, bool = IsCompleteV<T>>
+  struct CheckPointersImplTrampoline {
+    static void Call(SameThreadEnabledCheckingPolicy* policy, const T* ptr) {
+      policy->CheckPointerImpl(ptr, false, kCheckOffHeapAssignments);
+    }
+  };
+
+  template <typename T>
+  struct CheckPointersImplTrampoline<T, true> {
+    static void Call(SameThreadEnabledCheckingPolicy* policy, const T* ptr) {
+      policy->CheckPointerImpl(ptr, IsGarbageCollectedTypeV<T>,
+                               kCheckOffHeapAssignments);
+    }
+  };
 };
 
 class DisabledCheckingPolicy {
  protected:
-  void CheckPointer(const void* raw) {}
+  template <typename T>
+  V8_INLINE void CheckPointer(T*) {}
+  template <typename T>
+  V8_INLINE void CheckPointer(RawPointer) {}
+#if defined(CPPGC_POINTER_COMPRESSION)
+  template <typename T>
+  V8_INLINE void CheckPointer(CompressedPointer) {}
+#endif
 };
 
-#if V8_ENABLE_CHECKS
-using DefaultCheckingPolicy = EnabledCheckingPolicy;
-#else
-using DefaultCheckingPolicy = DisabledCheckingPolicy;
-#endif
+#ifdef CPPGC_ENABLE_SLOW_API_CHECKS
+// Off heap members are not connected to object graph and thus cannot ressurect
+// dead objects.
+using DefaultMemberCheckingPolicy =
+    SameThreadEnabledCheckingPolicy<false /* kCheckOffHeapAssignments*/>;
+using DefaultPersistentCheckingPolicy =
+    SameThreadEnabledCheckingPolicy<true /* kCheckOffHeapAssignments*/>;
+#else   // !CPPGC_ENABLE_SLOW_API_CHECKS
+using DefaultMemberCheckingPolicy = DisabledCheckingPolicy;
+using DefaultPersistentCheckingPolicy = DisabledCheckingPolicy;
+#endif  // !CPPGC_ENABLE_SLOW_API_CHECKS
+// For CT(W)P neither marking information (for value), nor objectstart bitmap
+// (for slot) are guaranteed to be present because there's no synchronization
+// between heaps after marking.
+using DefaultCrossThreadPersistentCheckingPolicy = DisabledCheckingPolicy;
 
 class KeepLocationPolicy {
  public:
@@ -129,14 +262,15 @@ struct WeakCrossThreadPersistentPolicy {
 // Forward declarations setting up the default policies.
 template <typename T, typename WeaknessPolicy,
           typename LocationPolicy = DefaultLocationPolicy,
-          typename CheckingPolicy = DisabledCheckingPolicy>
+          typename CheckingPolicy = DefaultCrossThreadPersistentCheckingPolicy>
 class BasicCrossThreadPersistent;
 template <typename T, typename WeaknessPolicy,
           typename LocationPolicy = DefaultLocationPolicy,
-          typename CheckingPolicy = DefaultCheckingPolicy>
+          typename CheckingPolicy = DefaultPersistentCheckingPolicy>
 class BasicPersistent;
 template <typename T, typename WeaknessTag, typename WriteBarrierPolicy,
-          typename CheckingPolicy = DefaultCheckingPolicy>
+          typename CheckingPolicy = DefaultMemberCheckingPolicy,
+          typename StorageType = DefaultMemberStorage>
 class BasicMember;
 
 }  // namespace internal

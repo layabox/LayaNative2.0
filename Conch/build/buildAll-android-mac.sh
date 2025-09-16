@@ -1,4 +1,4 @@
 #!/bin/sh
-export PATH=/Users/joychina/Desktop/lvfulong/android-ndk-r21e:$PATH
-export NDK_DIR=/Users/joychina/Desktop/lvfulong/android-ndk-r21e
+export PATH=/Applications/AndroidNDK13676358.app/Contents/NDK:$PATH
+export NDK_DIR=/Applications/AndroidNDK13676358.app/Contents/NDK
 ./buildAll-android.sh

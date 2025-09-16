@@ -19,7 +19,7 @@ LOCAL_CFLAGS := \
   -DBT_USE_DOUBLE_PRECISION \
   -DAL_ALEXT_PROTOTYPES \
 
-LOCAL_CPPFLAGS += -std=c++17
+LOCAL_CPPFLAGS += -std=c++20
 ifeq ($(APP_PERFTEST),1)
 LOCAL_CFLAGS += -DPERFTEST 
 endif
@@ -29,11 +29,15 @@ LOCAL_CXXFLAGS := -O3
 ifeq ($(TARGET_ARCH),arm64)
    LOCAL_CFLAGS += -DV8_COMPRESS_POINTERS
    LOCAL_CPPFLAGS += -DV8_COMPRESS_POINTERS
+   LOCAL_CFLAGS += -DV8_ENABLE_SANDBOX
+   LOCAL_CPPFLAGS+= -DV8_ENABLE_SANDBOX
 endif
 
 ifeq ($(TARGET_ARCH),x86_64)
    LOCAL_CFLAGS += -DV8_COMPRESS_POINTERS
    LOCAL_CPPFLAGS += -DV8_COMPRESS_POINTERS
+   LOCAL_CFLAGS += -DV8_ENABLE_SANDBOX
+   LOCAL_CPPFLAGS+= -DV8_ENABLE_SANDBOX
 endif
 
 LOCAL_SRC_FILES := \
@@ -124,9 +128,10 @@ LOCAL_DISABLE_FATAL_LINKER_WARNINGS := true
 LOCAL_LDLIBS    := -lOpenSLES -llog -lGLESv3 -landroid -ljnigraphics -lm -lz -lc++  \
         ../../../../libs/android-$(LOCAL_IS64)/librender.a \
         ../../../../libs/android-$(LOCAL_IS64)/libcommon.a \
+        ../../../../../ThirdParty/openssl/lib/android-$(LOCAL_IS64)/libcrypto.a \
+        ../../../../../ThirdParty/openssl/lib/android-$(LOCAL_IS64)/libssl.a \
         ../../../../../ThirdParty/curl/lib/android-$(LOCAL_IS64)/libcurl.a \
         ../../../../../ThirdParty/v8/lib/android/$(LOCAL_IS64)/libv8_monolith.a \
-        ../../../../../ThirdParty/v8/lib/android/$(LOCAL_IS64)/libinspector.a \
         ../../../../../ThirdParty/websockets/lib/android-$(LOCAL_IS64)/libwebsockets.a \
         ../../../../../ThirdParty/jpeg-turbo/lib/android/$(LOCAL_IS64)/libjpeg.a \
         ../../../../../ThirdParty/jpeg-turbo/lib/android/$(LOCAL_IS64)/libturbojpeg.a \
@@ -136,8 +141,6 @@ LOCAL_LDLIBS    := -lOpenSLES -llog -lGLESv3 -landroid -ljnigraphics -lm -lz -lc
 		../../../../../ThirdParty/ogg/lib/android-$(LOCAL_IS64)/libvorbisfile.a \
 		../../../../../ThirdParty/ogg/lib/android-$(LOCAL_IS64)/libvorbis.a \
 		../../../../../ThirdParty/ogg/lib/android-$(LOCAL_IS64)/libogg.a \
-        ../../../../../ThirdParty/openssl/lib/android-$(LOCAL_IS64)/libssl.a \
-        ../../../../../ThirdParty/openssl/lib/android-$(LOCAL_IS64)/libcrypto.a \
 		../../../../../ThirdParty/bullet/lib/android-$(LOCAL_IS64)/libBulletDynamics.a \
         ../../../../../ThirdParty/bullet/lib/android-$(LOCAL_IS64)/libBulletCollision.a \
 		../../../../../ThirdParty/bullet/lib/android-$(LOCAL_IS64)/libLinearMath.a \
