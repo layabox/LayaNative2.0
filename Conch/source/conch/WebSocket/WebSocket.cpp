@@ -303,8 +303,9 @@ void WebSocket::send(const std::string& message)
 		msg->what = WS_MSG_TO_SUBTRHEAD_SENDING_STRING;
 		Data* data = new Data();
 		data->bytes = new char[message.length()+1];
-		strcpy(data->bytes, message.c_str());
+		memcpy(data->bytes, message.c_str(), message.length());
 		data->len = message.length();
+        data->bytes[message.length()] = '\0';
 		msg->obj = data;
 		m_wsHelper->sendMessageToSubThread(msg);
 	}
@@ -341,7 +342,7 @@ void WebSocket::close()
 	m_readyState = State::CLOSED;	
 	
 	m_bWantClose = true;
-
+	lws_cancel_service(m_wsContext);
 	m_wsHelper->joinSubThread();
     
 	// onClose callback needs to be invoked at the end of this method
@@ -473,7 +474,7 @@ int WebSocket::onSocketCallback(
 						int reason,
 						void *user, void *in, size_t len)
 {
-	//CCLOG("socket callback for %d reason", reason);
+
 	//assert(m_wsContext == nullptr || ctx == m_wsContext);
 	//assert(m_wsInstance == nullptr || wsi == nullptr || wsi == m_wsInstance);
 	switch (reason)
@@ -482,6 +483,7 @@ int WebSocket::onSocketCallback(
 		case LWS_CALLBACK_PROTOCOL_DESTROY:
 		case LWS_CALLBACK_CLIENT_CONNECTION_ERROR:
 			{
+				LOGI("WebSocket onSocketCallback connection error %s %d reason", in != nullptr ? (const char*)in : "", reason);
 				WsMessage* msg = nullptr;
 				if (reason == LWS_CALLBACK_CLIENT_CONNECTION_ERROR
 					|| (reason == LWS_CALLBACK_PROTOCOL_DESTROY && m_readyState == State::CONNECTING)
@@ -619,7 +621,7 @@ int WebSocket::onSocketCallback(
 			{
                 
 				// CCLOG("%s", "connection closing..");
-
+				LOGI("WebSocket onSocketCallback connection closing %d reason", reason);
 				m_wsHelper->quitSubThread();
                 
 				if (m_readyState != State::CLOSED)

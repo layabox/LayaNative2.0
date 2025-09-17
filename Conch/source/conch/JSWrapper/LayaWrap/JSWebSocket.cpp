@@ -85,7 +85,7 @@ namespace laya
         m_nWebSocketState = WSS_INIT;
         if (Init(p_sUrl))
         {
-            m_nWebSocketState = WSS_OPEN;
+            //m_nWebSocketState = WSS_OPEN;
         }
         else
         {
@@ -120,7 +120,8 @@ namespace laya
         if (!cbref.lock())return;
         closeTime = closetm;
         LOGI("JSWebSocket::onSocketCloseCallJSFunction this=%x", (long) this);
-        if (m_nWebSocketState == WSS_OPEN)
+        //if (m_nWebSocketState == WSS_OPEN || m_nWebSocketState == WSS_CLOSEING)
+        if (m_nWebSocketState != WSS_CLOSE)
         {  
             m_nWebSocketState = WSS_CLOSE;
             m_pJSFunctionOnClose.Call(p_sEvent.c_str());
@@ -136,7 +137,8 @@ namespace laya
     {
         if (!cbref.lock())
             return;
-        if (m_nWebSocketState == WSS_OPEN) 
+        //if (m_nWebSocketState == WSS_OPEN)
+        if (m_nWebSocketState != WSS_CLOSE)
         {
             m_nWebSocketState = WSS_CLOSE;
             m_pJSFunctionOnError.Call(p_sEvent.c_str());
