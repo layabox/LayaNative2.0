@@ -617,6 +617,16 @@ int WebSocket::onSocketCallback(
 			}
 			break;
             
+		case LWS_CALLBACK_WS_PEER_INITIATED_CLOSE:
+			{
+				// Remote peer sent a Close frame. Mark as closing; libwebsockets
+				// will transition to CLOSED and trigger the closed callback below.
+				m_readyState = State::CLOSING;
+				LOGI("WebSocket onSocketCallback peer initiated close (%zu bytes)", len);
+			}
+			break;
+		case LWS_CALLBACK_WSI_DESTROY:
+		case LWS_CALLBACK_CLIENT_CLOSED:
 		case LWS_CALLBACK_CLOSED:
 			{
                 

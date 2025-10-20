@@ -27,6 +27,7 @@ namespace laya
     }
     void JSWebSocketDelegate::onOpen(WebSocket* ws)
     {
+    	m_js_WebSocket->m_nWebSocketState = WSS_OPEN;
         #ifdef OHOS
         LOGI("JSWebSocketDelegate::onOpen() this=%{public}x ws=%{public}x", (long)this,(long)m_js_WebSocket);
         #else
@@ -52,7 +53,8 @@ namespace laya
     void JSWebSocketDelegate::onError(WebSocket* ws, const WebSocket::ErrorCode& error)
     {
         LOGW("JSWebSocketDelegate::onError( code=%{public}d )this=%{public}x ws=%{public}x", error, (long)this, (long)m_js_WebSocket);
-        if (m_js_WebSocket->m_nWebSocketState == WSS_OPEN)
+        //if (m_js_WebSocket->m_nWebSocketState == WSS_OPEN)
+		if (m_js_WebSocket->m_nWebSocketState != WSS_CLOSE)
         {
             LOGW("JSWebSocketDelegate::onError123( code=%{public}d )this=%{public}x ws=%{public}x", error, (long)this, (long)m_js_WebSocket);
             std::string p_sEvent = "error";
@@ -140,13 +142,13 @@ namespace laya
         //if (m_nWebSocketState == WSS_OPEN)
         if (m_nWebSocketState != WSS_CLOSE)
         {
-            m_nWebSocketState = WSS_CLOSE;
+            //m_nWebSocketState = WSS_CLOSE;
             m_pJSFunctionOnError.Call(p_sEvent.c_str());
         }
-        else
+        /*else
         {
             m_nWebSocketState = WSS_CLOSE;
-        }
+        }*/
     }
     void JSWebSocket::onSocketMessageCallJSFunctionArrayBuffer(const char* pBuf, int p_nLen, bool isBin, std::weak_ptr<int> cbref)
     {
