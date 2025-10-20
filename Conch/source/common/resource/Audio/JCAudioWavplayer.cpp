@@ -123,7 +123,7 @@ OpenALSourceInfo* JCAudioWavPlayer::playAudio( JCAudioInterface* p_pAudio,const 
         JCBuffer kBuffer;
         if (pRes && pRes->loadFromCache(kBuffer, false))
         {
-            pInfo = AddWaveInfo(p_sSrc, (unsigned char*)kBuffer.m_pPtr, kBuffer.m_nLen, NULL, p_pAudio, bIsOgg);
+            pInfo = AddWaveInfo(p_sSrc, (unsigned char*)kBuffer.m_pPtr, kBuffer.m_nLen, "", p_pAudio, bIsOgg);
         }
         else
         {

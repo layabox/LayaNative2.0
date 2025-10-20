@@ -376,7 +376,6 @@ int WebSocket::onSubThreadLoop()
 
 	return 0;
 }
-#if defined(ANDROID) || defined(__APPLE__)
 	void WebSocket::onSubThreadStarted() {
 
 
@@ -433,37 +432,6 @@ int WebSocket::onSubThreadLoop()
 		}
 	}
 }
-#else
-void WebSocket::onSubThreadStarted(){
-
-    lws_context_creation_info info = createContextCreationInfo(m_wsProtocols, true);
-	m_wsContext = lws_create_context(&info);
-    lws_vhost* p_wsvhost = createVhost(m_wsProtocols, m_SSLConnection);
-    if (s_strProxy.length() > 0) {
-        lws_set_proxy(p_wsvhost, s_strProxy.c_str());
-    }
-    //lws_set_log_level(0xff, nullptr);
-    
-	if(nullptr != m_wsContext)
-	{
-		m_readyState = State::CONNECTING;
-		std::string name;
-		for (int i = 0; m_wsProtocols[i].callback != nullptr; ++i)
-		{
-			name += (m_wsProtocols[i].name);
-            
-			if (m_wsProtocols[i+1].callback != nullptr) name += ", ";
-		}
-		//m_wsInstance = libwebsocket_client_connect(m_wsContext, m_host.c_str(), m_port, m_SSLConnection,
-		//                                     m_path.c_str(), m_host.c_str(), m_host.c_str(),
-		//                                     name.c_str(), -1);
-		m_wsInstance = lws_client_connect(m_wsContext, m_host.c_str(), m_port, m_SSLConnection,
-												m_path.c_str(), m_host.c_str(), m_origin.c_str(),
-												NULL, -1);
-
-	}
-}
-#endif
 void WebSocket::onSubThreadEnded()
 {
 

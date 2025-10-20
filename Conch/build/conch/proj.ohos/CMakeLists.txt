@@ -139,11 +139,11 @@ set(OHOS_ARM64_MACROS
     V8_TARGET_OS_LINUX
     V8_COMPRESS_POINTERS
 )
-
+if (USE_JS_V8)
 set_property(TARGET v8_monolith
     APPEND PROPERTY INTERFACE_COMPILE_DEFINITIONS ${OHOS_ARM64_MACROS}
 )
-
+endif()
 target_link_libraries(${PROJECT_NAME} ${EGL-lib} ${GLESv3-lib} ${hilog-lib} ${libuv-lib} ${Drawing-lib} ${libace-lib} ${libnapi-lib} ${rawfile-lib}
     libbundle_ndk.z.so libohaudio.so libavplayer.so libnative_window.so libnative_buffer.so libohsensor.so common render thirdParty)
 
