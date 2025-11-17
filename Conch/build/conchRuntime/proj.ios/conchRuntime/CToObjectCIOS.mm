@@ -566,9 +566,21 @@ void CToObjectCSetEditBoxForbidEdit( bool p_bForbidEdit )
 }
 const char* CToObjectCGetEditBoxValue()
 {
-    LayaEditBox* pEditBox = [conchRuntime GetIOSConchRuntime]->m_pEditBox;
-    const char* sValue = [[pEditBox getValue] cStringUsingEncoding:NSUTF8StringEncoding];
-    return sValue;
+    __block NSString* sValue;
+
+    if (strcmp(dispatch_queue_get_label(DISPATCH_CURRENT_QUEUE_LABEL), dispatch_queue_get_label(dispatch_get_main_queue())) == 0)
+    {
+        LayaEditBox* pEditBox = [conchRuntime GetIOSConchRuntime]->m_pEditBox;
+        sValue = [pEditBox getValue];
+    }
+    else
+    {
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            LayaEditBox* pEditBox = [conchRuntime GetIOSConchRuntime]->m_pEditBox;
+            sValue = [pEditBox getValue];
+        });
+    }
+    return [sValue cStringUsingEncoding:NSUTF8StringEncoding];
 }
 void CToObjectCPlayMp3Audio( const char* p_sUrl,int p_nTimes,float nCurrentTime )
 {

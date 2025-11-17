@@ -379,7 +379,21 @@ int WebSocket::onSubThreadLoop()
 	void WebSocket::onSubThreadStarted() {
 
 
-	lws_context_creation_info info = createContextCreationInfo(m_wsProtocols, true);
+        //定义重试策略（关闭 LWS 自动 ping/pong）
+           lws_retry_bo_t retry_policy = {
+               .retry_ms_table = NULL,
+               .retry_ms_table_count = 0,
+               .jitter_percent = 0,
+               .secs_since_valid_ping = 0xffff,
+               .secs_since_valid_hangup = 0xffff,
+           };
+
+           lws_context_creation_info info = createContextCreationInfo(m_wsProtocols, true);
+
+           info.retry_and_idle_policy = &retry_policy;
+           info.timeout_secs = 0xffff;
+
+        
 	m_wsContext = lws_create_context(&info);
 	if (nullptr != m_wsContext)
 	{
