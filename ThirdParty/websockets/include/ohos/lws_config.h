@@ -10,7 +10,7 @@
 #define LWS_INSTALL_LIBDIR "/data/lib/build/ohos-release-arm64/lib"
 #define LWS_LIBRARY_VERSION_MAJOR 4
 #define LWS_LIBRARY_VERSION_MINOR 3
-#define LWS_LIBRARY_VERSION_PATCH_ELABORATED 5-091e64c
+#define LWS_LIBRARY_VERSION_PATCH_ELABORATED 5-1764603
 #define LWS_LIBRARY_VERSION_PATCH 5
 
 /* LWS_LIBRARY_VERSION_NUMBER looks like 1005001 for e.g. version 1.5.1 */
@@ -25,7 +25,7 @@
 /* #undef LWS_EXT_PTHREAD_LIBRARIES */
 
 /* #undef LWS_AVOID_SIGPIPE_IGN */
-#define LWS_BUILD_HASH "091e64c"
+#define LWS_BUILD_HASH "1764603"
 /* #undef LWS_BUILTIN_GETIFADDRS */
 #define LWS_CLIENT_HTTP_PROXYING
 /* #undef LWS_DETECTED_PLAT_IOS */
@@ -34,24 +34,24 @@
 #define LWS_HAS_GETOPT_LONG
 /* #undef LWS_HAVE__ATOI64 */
 #define LWS_HAVE_ATOLL
-/* #undef LWS_HAVE_BN_bn2binpad */
+#define LWS_HAVE_BN_bn2binpad
 #define LWS_HAVE_CLOCK_GETTIME
-/* #undef LWS_HAVE_EC_POINT_get_affine_coordinates */
-/* #undef LWS_HAVE_EC_KEY_new_by_curve_name */
-/* #undef LWS_HAVE_ECDSA_SIG_set0 */
+#define LWS_HAVE_EC_POINT_get_affine_coordinates
+#define LWS_HAVE_EC_KEY_new_by_curve_name
+#define LWS_HAVE_ECDSA_SIG_set0
 #define LWS_HAVE_EVP_MD_CTX_free
-/* #undef LWS_HAVE_EVP_aes_128_wrap */
-/* #undef LWS_HAVE_EVP_aes_128_cfb8 */
-/* #undef LWS_HAVE_EVP_aes_128_cfb128 */
-/* #undef LWS_HAVE_EVP_aes_192_cfb8 */
-/* #undef LWS_HAVE_EVP_aes_192_cfb128 */
-/* #undef LWS_HAVE_EVP_aes_256_cfb8 */
-/* #undef LWS_HAVE_EVP_aes_256_cfb128 */
-/* #undef LWS_HAVE_EVP_aes_128_ofb */
-/* #undef LWS_HAVE_EVP_aes_128_xts */
-/* #undef LWS_HAVE_EVP_aes_128_ctr */
-/* #undef LWS_HAVE_EVP_aes_128_ecb */
-/* #undef LWS_HAVE_EVP_PKEY_new_raw_private_key */
+#define LWS_HAVE_EVP_aes_128_wrap
+#define LWS_HAVE_EVP_aes_128_cfb8
+#define LWS_HAVE_EVP_aes_128_cfb128
+#define LWS_HAVE_EVP_aes_192_cfb8
+#define LWS_HAVE_EVP_aes_192_cfb128
+#define LWS_HAVE_EVP_aes_256_cfb8
+#define LWS_HAVE_EVP_aes_256_cfb128
+#define LWS_HAVE_EVP_aes_128_ofb
+#define LWS_HAVE_EVP_aes_128_xts
+#define LWS_HAVE_EVP_aes_128_ctr
+#define LWS_HAVE_EVP_aes_128_ecb
+#define LWS_HAVE_EVP_PKEY_new_raw_private_key
 #define LWS_HAVE_EXECVPE
 #define LWS_HAVE_LOCALTIME_R
 #define LWS_HAVE_GMTIME_R
@@ -82,36 +82,36 @@
 /* #undef LWS_HAVE_MBEDTLS_AUTH_KEY_ID */
 /* #undef LWS_HAVE_NEW_UV_VERSION_H */
 /* #undef LWS_HAVE_OPENSSL_ECDH_H */
-/* #undef LWS_HAVE_OPENSSL_STACK */
+#define LWS_HAVE_OPENSSL_STACK
 #define LWS_HAVE_PIPE2
 /* #undef LWS_HAVE_EVENTFD */
 #define LWS_HAVE_PTHREAD_H
-/* #undef LWS_HAVE_RSA_SET0_KEY */
+#define LWS_HAVE_RSA_SET0_KEY
 /* #undef LWS_HAVE_RSA_verify_pss_mgf1 */
-/* #undef LWS_HAVE_SSL_CTX_get0_certificate */
+#define LWS_HAVE_SSL_CTX_get0_certificate
 /* #undef LWS_HAVE_SSL_CTX_load_verify_file */
 /* #undef LWS_HAVE_SSL_CTX_load_verify_dir */
-/* #undef LWS_HAVE_SSL_CTX_set1_param */
+#define LWS_HAVE_SSL_CTX_set1_param
 /* #undef LWS_HAVE_SSL_CTX_set_ciphersuites */
-/* #undef LWS_HAVE_SSL_EXTRA_CHAIN_CERTS */
-/* #undef LWS_HAVE_SSL_get0_alpn_selected */
+#define LWS_HAVE_SSL_EXTRA_CHAIN_CERTS
+#define LWS_HAVE_SSL_get0_alpn_selected
 /* #undef LWS_HAVE_SSL_CTX_EVP_PKEY_new_raw_private_key */
-/* #undef LWS_HAVE_SSL_set_alpn_protos */
-/* #undef LWS_HAVE_SSL_SET_INFO_CALLBACK */
-/* #undef LWS_HAVE_SSL_SESSION_set_time */
+#define LWS_HAVE_SSL_set_alpn_protos
+#define LWS_HAVE_SSL_SET_INFO_CALLBACK
+#define LWS_HAVE_SSL_SESSION_set_time
 /* #undef LWS_HAVE_SSL_SESSION_up_ref */
 /* #undef LWS_HAVE__STAT32I64 */
 #define LWS_HAVE_STDINT_H
 #define LWS_HAVE_SYS_CAPABILITY_H
 #define LWS_HAVE_TIMEGM
-/* #undef LWS_HAVE_TLS_CLIENT_METHOD */
-/* #undef LWS_HAVE_TLSV1_2_CLIENT_METHOD */
+#define LWS_HAVE_TLS_CLIENT_METHOD
+#define LWS_HAVE_TLSV1_2_CLIENT_METHOD
 #define LWS_HAVE_SUSECONDS_T
 /* #undef LWS_HAVE_UV_VERSION_H */
 #define LWS_HAVE_VFORK
-/* #undef LWS_HAVE_X509_get_key_usage */
-/* #undef LWS_HAVE_X509_VERIFY_PARAM_set1_host */
-#define LWS_LIBRARY_VERSION "4.3.5-091e64c"
+#define LWS_HAVE_X509_get_key_usage
+#define LWS_HAVE_X509_VERIFY_PARAM_set1_host
+#define LWS_LIBRARY_VERSION "4.3.5-1764603"
 #define LWS_LOGGING_BITFIELD_CLEAR 0
 #define LWS_LOGGING_BITFIELD_SET 0
 #define LWS_LOG_TAG_LIFECYCLE
