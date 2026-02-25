@@ -79,8 +79,8 @@ namespace laya
 
         void setSetWorldTransformFunction(JSValueAsParam p_pFunction);
 
+        void offUnhandledRejection(JSValueAsParam p_pFunction);
 		void setOnUnhandledRejection(JSValueAsParam p_pFunction);
-
 		JsValue getOnUnhandledRejection();
     public:
 		static JSRuntime* getInstance();

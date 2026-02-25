@@ -11,6 +11,13 @@
 #include "egl_core.h"
 #include "../WorkerMessageQueue.h"
 
+typedef struct {
+    // key event action
+    OH_NativeXComponent_KeyAction action;
+    // key event code
+    OH_NativeXComponent_KeyCode code;
+} LAYA_KeyEvent;
+
 class PluginRender {
 public:
     PluginRender();
@@ -56,7 +63,7 @@ public:
     void OnSurfaceShow(void* window);
 
     void DispatchTouchEvent(OH_NativeXComponent* component, void* window, OH_NativeXComponent_TouchEvent* touchEvent);
-    void DispatchKeyEvent(OH_NativeXComponent* component, void* window);
+    void DispatchKeyEvent(OH_NativeXComponent* component, void* window, LAYA_KeyEvent* keyEvent);
     void DispatchMouseEvent(OH_NativeXComponent* component, void* window, OH_NativeXComponent_MouseEvent* mouseEvent);
 
     void OnCreateNative(napi_env env, uv_loop_t* loop);

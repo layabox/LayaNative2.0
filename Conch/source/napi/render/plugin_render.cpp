@@ -89,7 +89,21 @@ void DispatchTouchEventCB(OH_NativeXComponent* component, void* window)
 void dispatchKeyEventCB(OH_NativeXComponent* component, void* window) {
     OH_NativeXComponent_KeyEvent* keyEvent;
     if (OH_NativeXComponent_GetKeyEvent(component, &keyEvent) >= 0) {
-        PluginRender::GetInstance()->sendMsgToWorker(MessageType::WM_XCOMPONENT_KEY_EVENT, component, window);
+        static const int keyCodeUnknownInOH = -1;
+        static const int keyActionUnknownInOH = -1;
+        OH_NativeXComponent_KeyAction action;
+        OH_NativeXComponent_GetKeyEventAction(keyEvent, &action);
+        OH_NativeXComponent_KeyCode code;
+        OH_NativeXComponent_GetKeyEventCode(keyEvent, &code);
+        if (code == keyCodeUnknownInOH || action == keyActionUnknownInOH) {
+            // "unknown code and action dont't callback"
+            return;
+        }
+        LAYA_KeyEvent* event = new LAYA_KeyEvent();
+        event->action = action;
+        event->code = code;
+        
+        PluginRender::GetInstance()->sendMsgToWorker(MessageType::WM_XCOMPONENT_KEY_EVENT, component, window, event);
     } else {
         // OpenHarmonyPlatform::getKeyEventError
     }
@@ -152,7 +166,8 @@ void PluginRender::onMessageCallback(const uv_async_t* /* req */) {
                 OH_NativeXComponent_TouchEvent* touchEvent = reinterpret_cast<OH_NativeXComponent_TouchEvent*>(msgData.eventData);
                 render->DispatchTouchEvent(nativexcomponet, msgData.window, touchEvent);
             } else if (msgData.type == MessageType::WM_XCOMPONENT_KEY_EVENT) {
-                render->DispatchKeyEvent(nativexcomponet, msgData.window);
+                LAYA_KeyEvent* keyEvent = reinterpret_cast<LAYA_KeyEvent*>(msgData.eventData);
+                render->DispatchKeyEvent(nativexcomponet, msgData.window, keyEvent);
             } else if (msgData.type == MessageType::WM_XCOMPONENT_MOUSE_EVENT) {
                 OH_NativeXComponent_MouseEvent* mouseEvent = reinterpret_cast<OH_NativeXComponent_MouseEvent*>(msgData.eventData);
                 render->DispatchMouseEvent(nativexcomponet, msgData.window, mouseEvent);
@@ -363,24 +378,10 @@ void PluginRender::DispatchTouchEvent(OH_NativeXComponent* component, void* wind
     delete touchEvent;
 }
 
-void PluginRender::DispatchKeyEvent(OH_NativeXComponent* component, void* window)
+void PluginRender::DispatchKeyEvent(OH_NativeXComponent* component, void* window, LAYA_KeyEvent* keyEvent)
 {
-    OH_NativeXComponent_KeyEvent* keyEvent;
-    if (OH_NativeXComponent_GetKeyEvent(component, &keyEvent) >= 0) {
-        static const int keyCodeUnknownInOH = -1;
-        static const int keyActionUnknownInOH = -1;
-        OH_NativeXComponent_KeyAction action;
-        OH_NativeXComponent_GetKeyEventAction(keyEvent, &action);
-        OH_NativeXComponent_KeyCode code;
-        OH_NativeXComponent_GetKeyEventCode(keyEvent, &code);
-        if (code == keyCodeUnknownInOH || action == keyActionUnknownInOH) {
-            // "unknown code and action dont't callback"
-            return;
-        }
-        nativeHandleKey(action, code);
-    } else {
-        // OpenHarmonyPlatform::getKeyEventError
-    }
+    nativeHandleKey(keyEvent->action, keyEvent->code);
+    delete keyEvent;
 }
 
 void PluginRender::DispatchMouseEvent(OH_NativeXComponent* component, void* window, OH_NativeXComponent_MouseEvent* mouseEvent)

@@ -10,6 +10,8 @@
 #define __JCScriptRuntime_H__
 
 #include <vector>
+#include <algorithm>
+#include <cstring>
 #include <util/JCCommonMethod.h>
 #include "JSWrapper/JSInterface/JSInterface.h"
 #include <fontMgr/JCFreeTypeRender.h>
@@ -113,9 +115,7 @@ namespace laya
         E_DEVICEORIENTATION,
         E_TYPE_COUNT,
     };
-#ifdef JS_V8
-    class DebuggerAgent;
-#elif JS_JSVM
+#if defined(JS_V8) || defined(JS_JSVM)
     class DebuggerAgent;
 #endif
     class JSLayaGL;
@@ -235,7 +235,6 @@ namespace laya
         JsObjHandle                         m_pJSOnceOtherEvtFuction;       //注册一次的事件 如截屏
         JsObjHandle					        m_pJSNetworkEvtFunction;        //网络事件的监听
         JsObjHandle					        m_pJSOnBackPressedFunction;
-        JsObjHandle                         m_pJSOnUnhandledRejectionFunction;
         bool 						        m_bJSOnBackPressedFunctionSet;
         JsObjHandle                         m_bJSBulletGetWorldTransformHandle;
         JsObjHandle                         m_bJSBulletSetWorldTransformHandle;
@@ -269,10 +268,51 @@ namespace laya
         void onJsObjHandle(std::string key ,std::string value);
         void onJsObjHandleCallJSFunction(std::string key ,std::string value);
 #endif
+#if defined(JS_V8) || defined(JS_JSVM)
+        DebuggerAgent*				        m_pDbgAgent;
+        // Promise rejection tracking - multiple callback support
 #ifdef JS_V8
-        DebuggerAgent*				        m_pDbgAgent;
+        std::vector<v8::Global<v8::Function>> m_vJSOnUnhandledRejectionFunctions;
 #elif JS_JSVM
-        DebuggerAgent*				        m_pDbgAgent;
+        std::vector<JSVM_Ref> m_vJSOnUnhandledRejectionFunctions;
+#endif
+    public:
+        void HandlePromiseRejectionEvent(JSValueAsParam promise, JSValueAsParam reason, const char* type);
+    private:
+        struct PromiseRejectionRecord {
+            enum class ReasonType {
+                ReasonTypeString,
+                ReasonTypeObject,
+            };
+            uint64_t uid = 0;
+            bool warned = false;
+#ifdef JS_V8
+            v8::Global<v8::Value> promise;
+            v8::Global<v8::Value> reason;
+#elif JS_JSVM
+            JSVM_Ref promise = nullptr;
+            JSVM_Ref reason = nullptr;
+#endif
+            std::string reasonString;
+            ReasonType reasonType = ReasonType::ReasonTypeString;
+        };
+        using PromiseRejectionList = std::vector<PromiseRejectionRecord>;
+
+        PromiseRejectionList m_pendingUnhandledRejections;
+        PromiseRejectionList m_maybeUnhandledRejections;
+        std::vector<uint64_t> m_asyncHandledRejections;
+        uint64_t m_lastPromiseRejectionId = 0;
+        bool m_isProcessingScheduled = false;
+
+        PromiseRejectionList::iterator FindPromiseRecord(PromiseRejectionList& list, JSValueAsParam promise);
+        bool RemovePromiseRecord(PromiseRejectionList& list, JSValueAsParam promise);
+        void EmitPromiseRejectionEvent(const char* type, const PromiseRejectionRecord& record);
+        void ProcessPromiseRejectionEvents();
+        void SchedulePromiseRejectionProcessing();
+        void EnqueueUnhandledRejection(JSValueAsParam promise, JSValueAsParam reason);
+        void EnqueueRejectionHandled(JSValueAsParam promise);
+        void ClearPromiseRejectionTracking();
+        void ReleaseRecord(PromiseRejectionRecord& record);
 #endif
     private:
         bool                                m_bRunDraw;

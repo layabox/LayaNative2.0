@@ -8,6 +8,7 @@
 
 #include "JCScriptRuntime.h"
 #include <algorithm>
+#include <cstring>
 #include <util/Log.h>
 #include "JSWrapper/JSInterface/JSInterface.h"
 #include "JSWrapper/LayaWrap/JSFileReader.h"
@@ -211,30 +212,313 @@ namespace laya
         m_pAssetsRes = pAssetRes;
         m_pPoster = pThreadCmdSender;
     }
-    static void onUnhandledRejection(JSValueAsParam pPromise, JSValueAsParam pReason, const char* type)
+#if defined(JS_V8) || defined(JS_JSVM)
+    // Promise rejection pipeline - engine-specific helpers
+
+    void JCScriptRuntime::ReleaseRecord(PromiseRejectionRecord& record)
     {
 #ifdef JS_V8
-        JSPromiseRejectionEvent* event = new JSPromiseRejectionEvent;
-        event->setPromise(pPromise);
-        event->setReason(pReason);
-        event->setType(type);
-        JCScriptRuntime::s_JSRT->m_pJSOnUnhandledRejectionFunction.Call(JSP_TO_JS(JSPromiseRejectionEvent*, event));
+        record.promise.Reset();
+        record.reason.Reset();
 #elif JS_JSVM
-        JSPromiseRejectionEvent* event = new JSPromiseRejectionEvent;
-        event->setPromise(pPromise);
-        event->setReason(pReason);
-        event->setType(type);
-        JCScriptRuntime::s_JSRT->m_pJSOnUnhandledRejectionFunction.Call(JSP_TO_JS(JSPromiseRejectionEvent*, event));
+        auto env = Javascript::getEnv();
+        JSVM_Status status;
+        if (record.promise) { JSVM_API_CALL(status, env, OH_JSVM_DeleteReference(env, record.promise)); }
+        if (record.reason) { JSVM_API_CALL(status, env, OH_JSVM_DeleteReference(env, record.reason)); }
 #endif
     }
+
+    JCScriptRuntime::PromiseRejectionList::iterator JCScriptRuntime::FindPromiseRecord(
+        PromiseRejectionList& list, JSValueAsParam promise)
+    {
+#ifdef JS_V8
+        v8::Isolate* isolate = v8::Isolate::GetCurrent();
+        for (auto it = list.begin(); it != list.end(); ++it)
+        {
+            v8::Local<v8::Value> p = v8::Local<v8::Value>::New(isolate, it->promise);
+            if (p->StrictEquals(promise))
+            {
+                return it;
+            }
+        }
+#elif JS_JSVM
+        auto env = Javascript::getEnv();
+        JSVM_Status status;
+        for (auto it = list.begin(); it != list.end(); ++it)
+        {
+            JSVM_Value p;
+            JSVM_API_CALL(status, env, OH_JSVM_GetReferenceValue(env, it->promise, &p));
+            bool equals = false;
+            JSVM_API_CALL(status, env, OH_JSVM_StrictEquals(env, p, promise, &equals));
+            if (equals)
+            {
+                return it;
+            }
+        }
+#endif
+        return list.end();
+    }
+
+    bool JCScriptRuntime::RemovePromiseRecord(PromiseRejectionList& list, JSValueAsParam promise)
+    {
+        auto it = FindPromiseRecord(list, promise);
+        if (it != list.end())
+        {
+            ReleaseRecord(*it);
+            list.erase(it);
+            return true;
+        }
+        return false;
+    }
+
+    void JCScriptRuntime::EmitPromiseRejectionEvent(const char* type, const PromiseRejectionRecord& record)
+    {
+        if (m_vJSOnUnhandledRejectionFunctions.empty())
+            return;
+
+#ifdef JS_V8
+        v8::Isolate* isolate = v8::Isolate::GetCurrent();
+        v8::HandleScope scope(isolate);
+        v8::Local<v8::Context> context = isolate->GetCurrentContext();
+
+        v8::Local<v8::Object> eventObj = v8::Object::New(isolate);
+        eventObj->Set(context,
+            v8::String::NewFromUtf8(isolate, "promise").ToLocalChecked(),
+            v8::Local<v8::Value>::New(isolate, record.promise)).Check();
+
+        if (record.reasonType == PromiseRejectionRecord::ReasonType::ReasonTypeString)
+        {
+            eventObj->Set(context,
+                v8::String::NewFromUtf8(isolate, "reason").ToLocalChecked(),
+                v8::String::NewFromUtf8(isolate, record.reasonString.c_str()).ToLocalChecked()).Check();
+        }
+        else if (record.reasonType == PromiseRejectionRecord::ReasonType::ReasonTypeObject)
+        {
+            eventObj->Set(context,
+                v8::String::NewFromUtf8(isolate, "reason").ToLocalChecked(),
+                v8::Local<v8::Value>::New(isolate, record.reason)).Check();
+        }
+
+        eventObj->Set(context,
+            v8::String::NewFromUtf8(isolate, "type").ToLocalChecked(),
+            v8::String::NewFromUtf8(isolate, type).ToLocalChecked()).Check();
+
+        for (auto& funcGlobal : m_vJSOnUnhandledRejectionFunctions)
+        {
+            v8::Local<v8::Function> func = v8::Local<v8::Function>::New(isolate, funcGlobal);
+            v8::Local<v8::Value> argv[] = { eventObj };
+            func->Call(context, context->Global(), 1, argv).FromMaybe(v8::Local<v8::Value>());
+        }
+#elif JS_JSVM
+        auto env = Javascript::getEnv();
+        JSVM_Status status;
+        AutoHandleScope scope;
+
+        JSVM_Value eventObj;
+        JSVM_API_CALL(status, env, OH_JSVM_CreateObject(env, &eventObj));
+
+        JSVM_Value promiseVal;
+        JSVM_API_CALL(status, env, OH_JSVM_GetReferenceValue(env, record.promise, &promiseVal));
+        JSVM_API_CALL(status, env, OH_JSVM_SetNamedProperty(env, eventObj, "promise", promiseVal));
+
+        if (record.reasonType == PromiseRejectionRecord::ReasonType::ReasonTypeString)
+        {
+            JSVM_Value reasonVal;
+            JSVM_API_CALL(status, env, OH_JSVM_CreateStringUtf8(env, record.reasonString.c_str(), record.reasonString.size(), &reasonVal));
+            JSVM_API_CALL(status, env, OH_JSVM_SetNamedProperty(env, eventObj, "reason", reasonVal));
+        }
+        else if (record.reasonType == PromiseRejectionRecord::ReasonType::ReasonTypeObject)
+        {
+            JSVM_Value reasonVal;
+            JSVM_API_CALL(status, env, OH_JSVM_GetReferenceValue(env, record.reason, &reasonVal));
+            JSVM_API_CALL(status, env, OH_JSVM_SetNamedProperty(env, eventObj, "reason", reasonVal));
+        }
+
+        JSVM_Value typeVal;
+        JSVM_API_CALL(status, env, OH_JSVM_CreateStringUtf8(env, type, strlen(type), &typeVal));
+        JSVM_API_CALL(status, env, OH_JSVM_SetNamedProperty(env, eventObj, "type", typeVal));
+
+        JSVM_Value global;
+        JSVM_API_CALL(status, env, OH_JSVM_GetGlobal(env, &global));
+        for (auto& funcRef : m_vJSOnUnhandledRejectionFunctions)
+        {
+            JSVM_Value func;
+            JSVM_API_CALL(status, env, OH_JSVM_GetReferenceValue(env, funcRef, &func));
+            JSVM_Value argv[] = { eventObj };
+            JSVM_Value result;
+            JSVM_API_CALL(status, env, OH_JSVM_CallFunction(env, global, func, 1, argv, &result));
+        }
+#endif
+    }
+
+    void JCScriptRuntime::EnqueueUnhandledRejection(JSValueAsParam promise, JSValueAsParam reason)
+    {
+        PromiseRejectionRecord record;
+        record.uid = ++m_lastPromiseRejectionId;
+#ifdef JS_V8
+        v8::Isolate* isolate = v8::Isolate::GetCurrent();
+        record.promise.Reset(isolate, promise);
+
+        if (!reason.IsEmpty() && reason->IsString())
+        {
+            record.reasonType = PromiseRejectionRecord::ReasonType::ReasonTypeString;
+            v8::String::Utf8Value str(isolate, reason);
+            record.reasonString = *str ? *str : "";
+        }
+        else if (!reason.IsEmpty() && reason->IsObject())
+        {
+            record.reasonType = PromiseRejectionRecord::ReasonType::ReasonTypeObject;
+            record.reasonString = "";
+            record.reason.Reset(isolate, reason);
+        }
+        else
+        {
+            record.reasonType = PromiseRejectionRecord::ReasonType::ReasonTypeString;
+            record.reasonString = "";
+        }
+#elif JS_JSVM
+        auto env = Javascript::getEnv();
+        JSVM_Status status;
+        JSVM_API_CALL(status, env, OH_JSVM_CreateReference(env, promise, 1, &record.promise));
+
+        bool isString = false;
+        bool isObject = false;
+        if (reason != nullptr)
+        {
+            JSVM_API_CALL(status, env, OH_JSVM_IsString(env, reason, &isString));
+            if (!isString)
+            {
+                JSVM_API_CALL(status, env, OH_JSVM_IsObject(env, reason, &isObject));
+            }
+        }
+
+        if (isString)
+        {
+            record.reasonType = PromiseRejectionRecord::ReasonType::ReasonTypeString;
+            record.reasonString = __TransferToCpp<std::string>::ToCpp(reason);
+        }
+        else if (isObject)
+        {
+            record.reasonType = PromiseRejectionRecord::ReasonType::ReasonTypeObject;
+            record.reasonString = "";
+            JSVM_API_CALL(status, env, OH_JSVM_CreateReference(env, reason, 1, &record.reason));
+        }
+        else
+        {
+            record.reasonType = PromiseRejectionRecord::ReasonType::ReasonTypeString;
+            record.reasonString = "";
+        }
+#endif
+        m_pendingUnhandledRejections.emplace_back(std::move(record));
+        SchedulePromiseRejectionProcessing();
+    }
+
+    // Promise rejection pipeline - unified methods (no engine-specific code)
+
+    void JCScriptRuntime::SchedulePromiseRejectionProcessing()
+    {
+        if (m_isProcessingScheduled)
+            return;
+        m_isProcessingScheduled = true;
+        m_pScriptThread->post([this]() {
+            this->ProcessPromiseRejectionEvents();
+        });
+    }
+
+    void JCScriptRuntime::ProcessPromiseRejectionEvents()
+    {
+        m_isProcessingScheduled = false;
+
+        PromiseRejectionList pending;
+        pending.swap(m_pendingUnhandledRejections);
+
+        for (auto& record : pending)
+        {
+            record.warned = true;
+            EmitPromiseRejectionEvent("unhandledrejection", record);
+            m_maybeUnhandledRejections.emplace_back(std::move(record));
+        }
+
+        if (!m_asyncHandledRejections.empty())
+        {
+            std::vector<uint64_t> handled;
+            handled.swap(m_asyncHandledRejections);
+
+            for (const auto uid : handled)
+            {
+                auto it = std::find_if(
+                    m_maybeUnhandledRejections.begin(),
+                    m_maybeUnhandledRejections.end(),
+                    [uid](const PromiseRejectionRecord& entry) { return entry.uid == uid; });
+                if (it != m_maybeUnhandledRejections.end())
+                {
+                    EmitPromiseRejectionEvent("rejectionhandled", *it);
+                    ReleaseRecord(*it);
+                    m_maybeUnhandledRejections.erase(it);
+                }
+            }
+        }
+    }
+
+    void JCScriptRuntime::EnqueueRejectionHandled(JSValueAsParam promise)
+    {
+        if (RemovePromiseRecord(m_pendingUnhandledRejections, promise))
+            return;
+
+        auto it = FindPromiseRecord(m_maybeUnhandledRejections, promise);
+        if (it != m_maybeUnhandledRejections.end())
+        {
+            if (std::find(m_asyncHandledRejections.begin(),
+                          m_asyncHandledRejections.end(),
+                          it->uid) == m_asyncHandledRejections.end())
+            {
+                m_asyncHandledRejections.push_back(it->uid);
+                SchedulePromiseRejectionProcessing();
+            }
+        }
+    }
+
+    void JCScriptRuntime::ClearPromiseRejectionTracking()
+    {
+        for (auto& record : m_pendingUnhandledRejections)
+            ReleaseRecord(record);
+        m_pendingUnhandledRejections.clear();
+
+        for (auto& record : m_maybeUnhandledRejections)
+            ReleaseRecord(record);
+        m_maybeUnhandledRejections.clear();
+
+        m_asyncHandledRejections.clear();
+        m_lastPromiseRejectionId = 0;
+        m_isProcessingScheduled = false;
+    }
+
+    void JCScriptRuntime::HandlePromiseRejectionEvent(JSValueAsParam promise, JSValueAsParam reason, const char* type)
+    {
+        if (type == nullptr)
+            return;
+
+        if (std::strcmp(type, "unhandledrejection") == 0)
+        {
+            EnqueueUnhandledRejection(promise, reason);
+        }
+        else if (std::strcmp(type, "rejectionhandled") == 0)
+        {
+            EnqueueRejectionHandled(promise);
+        }
+    }
+#endif
     void JCScriptRuntime::start(const char* pStartJS) 
     {
         LOGI("Start js %s", pStartJS);
         if (pStartJS)m_strStartJS = pStartJS;
-#ifdef JS_V8
-        m_pScriptThread->initialize(JCConch::s_pConch->m_nJSDebugPort, std::bind(&onUnhandledRejection, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
-#elif JS_JSVM
-        m_pScriptThread->initialize(JCConch::s_pConch->m_nJSDebugPort, std::bind(&onUnhandledRejection, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+#if defined(JS_V8) || defined(JS_JSVM)
+        m_pScriptThread->initialize(JCConch::s_pConch->m_nJSDebugPort,
+            [](JSValueAsParam promise, JSValueAsParam reason, const char* type) {
+                if (JCScriptRuntime::s_JSRT) {
+                    JCScriptRuntime::s_JSRT->HandlePromiseRejectionEvent(promise, reason, type);
+                }
+            });
 #else
         m_pScriptThread->initialize(JCConch::s_pConch->m_nJSDebugPort);
 #endif
@@ -426,7 +710,20 @@ namespace laya
         m_pJSOnDrawFunction.Reset();
         m_bJSBulletGetWorldTransformHandle.Reset();
         m_bJSBulletSetWorldTransformHandle.Reset();
-		m_pJSOnUnhandledRejectionFunction.Reset();
+#if defined(JS_V8) || defined(JS_JSVM)
+        ClearPromiseRejectionTracking();
+#ifdef JS_JSVM
+        {
+            auto env = Javascript::getEnv();
+            JSVM_Status status;
+            for (auto& ref : m_vJSOnUnhandledRejectionFunctions)
+            {
+                if (ref) { JSVM_API_CALL(status, env, OH_JSVM_DeleteReference(env, ref)); }
+            }
+        }
+#endif
+        m_vJSOnUnhandledRejectionFunctions.clear();
+#endif
 #ifdef OHOS
         m_pGameJsOnMessage.Reset();
 #endif

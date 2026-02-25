@@ -70,28 +70,21 @@ namespace laya
 	static void PromiseRejectHandlerInMainThread(v8::PromiseRejectMessage data) {
 		v8::Local<v8::Promise> promise = data.GetPromise();
 		v8::Isolate* isolate = promise->GetIsolate();
-		if (data.GetEvent() == v8::kPromiseHandlerAddedAfterReject) {
-			return;
-		} else if (data.GetEvent() == v8::kPromiseRejectAfterResolved || data.GetEvent() == v8::kPromiseResolveAfterResolved) {
+		if (data.GetEvent() == v8::kPromiseRejectAfterResolved || data.GetEvent() == v8::kPromiseResolveAfterResolved) {
 			// Ignore reject/resolve after resolved.
 			return;
 		}
-		v8::Local<v8::Value> exception = data.GetValue();
-		char* error_message = nullptr;
-		v8::Local<v8::Message> message = v8::Exception::CreateMessage(isolate, exception);
-		if (!message.IsEmpty()) {
-			if (message->Get().IsEmpty() || message->Get()->IsNull())
-				error_message = "";
-			error_message = __TransferToCpp<char*>::ToCpp(message->Get().As<v8::Value>());
-		}
-
-		//std::string kBuf = "if(conch.onunhandledrejection){conch.onunhandledrejection('";
-		//kBuf += UrlEncode(error_message != nullptr ? error_message : "");
-		//kBuf += "');};";
-		//__JSRun::Run(kBuf.c_str());
 		IsolateData* pIsolateData = IsolateData::From(isolate);
 		Javascript* pJavascript = (Javascript*)pIsolateData->m_data;
-		pJavascript->m_promiseRejectHandler(data.GetPromise(), data.GetValue(), "unhandledrejection");
+		if (data.GetEvent() == v8::kPromiseRejectWithNoHandler) {
+			v8::Local<v8::Value> reason = data.GetValue();
+			if (reason.IsEmpty()) {
+				reason = v8::Undefined(isolate);
+			}
+			pJavascript->m_promiseRejectHandler(promise, reason, "unhandledrejection");
+		} else if (data.GetEvent() == v8::kPromiseHandlerAddedAfterReject) {
+			pJavascript->m_promiseRejectHandler(promise, v8::Undefined(isolate), "rejectionhandled");
+		}
 	}
 
     void Javascript::initJSEngine()

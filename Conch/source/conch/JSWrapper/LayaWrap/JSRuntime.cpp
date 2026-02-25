@@ -423,14 +423,152 @@ namespace laya
         return JSWebGLPlus::getInstance()->updateArrayBufferRef(nID, bSyncToRender, pArrayBuffer);
     }*/
 
+#ifdef JS_V8
     void JSRuntime::setOnUnhandledRejection(JSValueAsParam p_pFunction)
     {
-	    m_pScrpitRuntime->m_pJSOnUnhandledRejectionFunction.set(onunhandledrejection, this, p_pFunction);
+        if (p_pFunction.IsEmpty() || !p_pFunction->IsFunction())
+            return;
+
+        v8::Isolate* isolate = v8::Isolate::GetCurrent();
+        v8::Local<v8::Function> func = v8::Local<v8::Function>::Cast(p_pFunction);
+        auto& list = m_pScrpitRuntime->m_vJSOnUnhandledRejectionFunctions;
+
+        // Check for duplicates
+        for (auto& existing : list)
+        {
+            v8::Local<v8::Function> existingLocal = v8::Local<v8::Function>::New(isolate, existing);
+            if (existingLocal->StrictEquals(func))
+                return;
+        }
+
+        v8::Global<v8::Function> globalFunc;
+        globalFunc.Reset(isolate, func);
+        list.push_back(std::move(globalFunc));
+    }
+    void JSRuntime::offUnhandledRejection(JSValueAsParam p_pFunction)
+    {
+        auto& list = m_pScrpitRuntime->m_vJSOnUnhandledRejectionFunctions;
+
+        if (p_pFunction.IsEmpty() || p_pFunction->IsUndefined() || p_pFunction->IsNull())
+        {
+            list.clear();
+            return;
+        }
+
+        if (p_pFunction->IsFunction())
+        {
+            v8::Isolate* isolate = v8::Isolate::GetCurrent();
+            v8::Local<v8::Function> func = v8::Local<v8::Function>::Cast(p_pFunction);
+            for (auto it = list.begin(); it != list.end(); ++it)
+            {
+                v8::Local<v8::Function> existing = v8::Local<v8::Function>::New(isolate, *it);
+                if (existing->StrictEquals(func))
+                {
+                    list.erase(it);
+                    break;
+                }
+            }
+        }
     }
     JsValue JSRuntime::getOnUnhandledRejection()
     {
-        return m_pScrpitRuntime->m_pJSOnUnhandledRejectionFunction.getJsObj();
+        auto& list = m_pScrpitRuntime->m_vJSOnUnhandledRejectionFunctions;
+        if (list.empty()) return v8::Undefined(v8::Isolate::GetCurrent());
+        v8::Isolate* isolate = v8::Isolate::GetCurrent();
+        return v8::Local<v8::Value>::Cast(v8::Local<v8::Function>::New(isolate, list.front()));
     }
+#elif JS_JSVM
+    void JSRuntime::setOnUnhandledRejection(JSValueAsParam p_pFunction)
+    {
+        auto env = Javascript::getEnv();
+        JSVM_Status status;
+        bool isFunc = false;
+        if (p_pFunction == nullptr) return;
+        JSVM_API_CALL(status, env, OH_JSVM_IsFunction(env, p_pFunction, &isFunc));
+        if (!isFunc) return;
+
+        auto& list = m_pScrpitRuntime->m_vJSOnUnhandledRejectionFunctions;
+
+        // Check for duplicates
+        for (auto& existing : list)
+        {
+            JSVM_Value existingVal;
+            JSVM_API_CALL(status, env, OH_JSVM_GetReferenceValue(env, existing, &existingVal));
+            bool equals = false;
+            JSVM_API_CALL(status, env, OH_JSVM_StrictEquals(env, existingVal, p_pFunction, &equals));
+            if (equals) return;
+        }
+
+        JSVM_Ref ref = nullptr;
+        JSVM_API_CALL(status, env, OH_JSVM_CreateReference(env, p_pFunction, 1, &ref));
+        list.push_back(ref);
+    }
+    void JSRuntime::offUnhandledRejection(JSValueAsParam p_pFunction)
+    {
+        auto env = Javascript::getEnv();
+        JSVM_Status status;
+        auto& list = m_pScrpitRuntime->m_vJSOnUnhandledRejectionFunctions;
+
+        bool isUndef = false, isNull = false;
+        if (p_pFunction == nullptr) { isNull = true; }
+        else {
+            JSVM_API_CALL(status, env, OH_JSVM_IsUndefined(env, p_pFunction, &isUndef));
+            JSVM_API_CALL(status, env, OH_JSVM_IsNull(env, p_pFunction, &isNull));
+        }
+        if (isUndef || isNull)
+        {
+            for (auto& ref : list)
+            {
+                if (ref) { JSVM_API_CALL(status, env, OH_JSVM_DeleteReference(env, ref)); }
+            }
+            list.clear();
+            return;
+        }
+
+        bool isFunc = false;
+        JSVM_API_CALL(status, env, OH_JSVM_IsFunction(env, p_pFunction, &isFunc));
+        if (isFunc)
+        {
+            for (auto it = list.begin(); it != list.end(); ++it)
+            {
+                JSVM_Value existingVal;
+                JSVM_API_CALL(status, env, OH_JSVM_GetReferenceValue(env, *it, &existingVal));
+                bool equals = false;
+                JSVM_API_CALL(status, env, OH_JSVM_StrictEquals(env, existingVal, p_pFunction, &equals));
+                if (equals)
+                {
+                    JSVM_API_CALL(status, env, OH_JSVM_DeleteReference(env, *it));
+                    list.erase(it);
+                    break;
+                }
+            }
+        }
+    }
+    JsValue JSRuntime::getOnUnhandledRejection()
+    {
+        auto& list = m_pScrpitRuntime->m_vJSOnUnhandledRejectionFunctions;
+        if (list.empty()) return JsObjBase::getUndefined();
+        auto env = Javascript::getEnv();
+        JSVM_Status status;
+        JSVM_Value result;
+        JSVM_API_CALL(status, env, OH_JSVM_GetReferenceValue(env, list.front(), &result));
+        return result;
+    }
+#elif defined(JS_JSC)
+    void JSRuntime::setOnUnhandledRejection(JSValueAsParam p_pFunction)
+    {
+        // Stub: JSC does not support promise rejection tracking via C API
+    }
+    void JSRuntime::offUnhandledRejection(JSValueAsParam p_pFunction)
+    {
+        // Stub: JSC does not support promise rejection tracking via C API
+    }
+    JsValue JSRuntime::getOnUnhandledRejection()
+    {
+        JSContextRef ctx = __TlsData::GetInstance()->GetCurContext();
+        return JSValueMakeUndefined(ctx);
+    }
+#endif
 #if OHOS
     std::string JSRuntime::postMessage(const char* eventName, const char* data){
         std::string result = NapiHelper::GetInstance()->postMessageToUIThread(eventName,data);
@@ -484,6 +622,7 @@ namespace laya
 		JSP_GLOBAL_ADD_METHOD("convertBitmapToJpeg", JSRuntime::convertBitmapToJpeg);
 		JSP_GLOBAL_ADD_METHOD("callWebviewJS", JSRuntime::callWebviewJS);
         JSP_GLOBAL_ADD_PROPERTY(onunhandledrejection, JSRuntime, getOnUnhandledRejection, setOnUnhandledRejection);
+		//JSP_GLOBAL_ADD_METHOD("offUnhandledRejection", JSRuntime::offUnhandledRejection);
 		//JSP_GLOBAL_ADD_METHOD("updateArrayBufferRef", JSRuntime::updateArrayBufferRef);
 		JSP_GLOBAL_ADD_METHOD("exit", JSRuntime::exit);
         #ifdef OHOS
